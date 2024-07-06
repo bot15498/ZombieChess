@@ -9,16 +9,21 @@ public class Rook : MonoBehaviour, IMoveablePiece
     private int _xPos = -1;
     [SerializeField]
     private int _yPos = -1;
+    private CurrentTurn _owner = CurrentTurn.Player;
+    private bool _canAct = true;
+    private int _numActions = 1;
+    private int _health = 1;
+    private int _maxHealth = 1;
     [SerializeField]
     private Board board;
 
     public int xPos { get => _xPos; set => _xPos = value; }
     public int yPos { get => _yPos; set => _yPos = value; }
-    public int health { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public int maxHealth { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public int numActions { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public bool canAct { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public CurrentTurn owner { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public int health { get => _health; set => _health = value; }
+    public int maxHealth { get => _maxHealth; set => _maxHealth = value; }
+    public int numActions { get => _numActions; set => _numActions = value; }
+    public bool canAct { get => _canAct; set => _canAct = value; }
+    public CurrentTurn owner { get => _owner; set => _owner = value; }
 
     void Start()
     {

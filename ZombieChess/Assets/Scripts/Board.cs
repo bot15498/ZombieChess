@@ -13,22 +13,28 @@ public enum BoardDirections
 
 public class Board : MonoBehaviour
 {
-    public Transform originPoint;
-    public GameObject tilePrefab;
+    public GameObject tile1Prefab;
+    public GameObject tile2Prefab;
     public float gridStep;
+    public float pieceYOffset;
     private List<IMoveablePiece> playerPieces;
     private List<IMoveablePiece> enemyPieces;
     [SerializeField]
-    private Dictionary<(int xPos, int yPos), IMoveablePiece> theBoard = new Dictionary<(int xPos, int yPos), IMoveablePiece>();
+    private Dictionary<(int xPos, int yPos), IMoveablePiece> allPieces = new Dictionary<(int xPos, int yPos), IMoveablePiece>();
+    [SerializeField]
+    private Dictionary<(int xPos, int yPos), bool> theBoard = new Dictionary<(int xPos, int yPos), bool>();
+    [SerializeField]
     private int minXPos = 0;
+    [SerializeField]
     private int minYPos = 0;
-    private int maxXPos = 7;
-    private int maxYPos = 7;
+    [SerializeField]
+    private int maxXPos = 0;
+    [SerializeField]
+    private int maxYPos = 0;
 
     void Start()
     {
-        // On start, auto spawn in the tiles on the board. 
-        // Start with an 8x8 grid
+
     }
 
     void Update()
@@ -41,7 +47,7 @@ public class Board : MonoBehaviour
         // Given the boards x and y position, find the position inside the actual
         // list representation, then return if there is a piece there or not
         IMoveablePiece piece;
-        bool returnval = theBoard.TryGetValue((xPos, yPos), out piece);
+        bool returnval = allPieces.TryGetValue((xPos, yPos), out piece);
         if (returnval)
         {
             return piece;
@@ -62,30 +68,105 @@ public class Board : MonoBehaviour
         }
 
         // Instantiate object
-        Vector3 pos = new Vector3(xPos * gridStep + originPoint.position.x, 0, yPos * gridStep + originPoint.position.z);
+        Vector3 pos = new Vector3(xPos * gridStep, 0 + pieceYOffset, yPos * gridStep);
         GameObject newObject = Instantiate(obj, pos, Quaternion.identity, transform);
-        Debug.Log("hello");
         IMoveablePiece piece = newObject.GetComponent<IMoveablePiece>();
         piece.Spawn(this, xPos, yPos, owner);
-        theBoard.Add((xPos, yPos), piece);
+        allPieces.Add((xPos, yPos), piece);
 
         return true;
     }
 
     public void ExpandBoard(int val, BoardDirections direction)
     {
+        // On a standard chess board, if you are white, the bottom left square is BLACK
         switch (direction)
         {
             case BoardDirections.North:
+                // for each column
+                for(int i=minXPos; i <= maxXPos; i++)
+                {
+                    // for each row you want to add
+                    for(int j=maxYPos + 1; j<=maxYPos + val; j++)
+                    {
+                        Vector3 position = new Vector3(i * gridStep, 0, j * gridStep);
+                        if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))
+                        {
+                            // spawn a black one
+                            Instantiate(tile2Prefab, position, Quaternion.identity, transform);
+                        }
+                        else
+                        {
+                            // spawn a white one
+                            Instantiate(tile1Prefab, position, Quaternion.identity, transform);
+                        }
+                    }
+                }
                 maxYPos += val;
                 break;
             case BoardDirections.South:
-                maxYPos -= val;
+                for (int i = minXPos; i <= maxXPos; i++)
+                {
+                    // for each row you want to add
+                    for (int j = minYPos - 1; j >= minYPos - val; j--)
+                    {
+                        Vector3 position = new Vector3(i * gridStep, 0, j * gridStep);
+                        if ((j % 2 == 0 && i % 2 == 0) || (j % 2 != 0 && i % 2 != 0))
+                        {
+                            // spawn a black one
+                            Instantiate(tile2Prefab, position, Quaternion.identity, transform);
+                        }
+                        else
+                        {
+                            // spawn a white one
+                            Instantiate(tile1Prefab, position, Quaternion.identity, transform);
+                        }
+                    }
+                }
+                minYPos -= val;
                 break;
             case BoardDirections.East:
-                minXPos += val;
+                // For each row
+                for (int i = minYPos; i <= maxYPos; i++)
+                {
+                    // for each column you want to add
+                    for (int j = maxXPos + 1; j <= maxXPos + val; j++)
+                    {
+                        Vector3 position = new Vector3(j * gridStep, 0, i * gridStep);
+                        if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))
+                        {
+                            // spawn a black one
+                            Instantiate(tile2Prefab, position,Quaternion.identity,transform);
+                        }
+                        else
+                        {
+                            // spawn a white one
+                            Instantiate(tile1Prefab, position, Quaternion.identity, transform);
+                        }
+                    }
+                }
+                maxXPos += val;
                 break;
             case BoardDirections.West:
+                // For each row
+                for (int i = minYPos; i <= maxYPos; i++)
+                {
+                    // for each column you want to add
+                    for (int j = minXPos - 1; j >= minXPos - val; j--)
+                    {
+                        Vector3 position = new Vector3(j * gridStep, 0, i * gridStep);
+                        if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))
+                        {
+                            // spawn a black one
+                            Instantiate(tile2Prefab, position, Quaternion.identity, transform);
+                        }
+                        else
+                        {
+                            // spawn a white one
+                            Instantiate(tile1Prefab, position, Quaternion.identity, transform);
+                        }
+                    }
+                }
                 minXPos -= val;
                 break;
 
