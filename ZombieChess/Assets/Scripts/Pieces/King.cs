@@ -22,12 +22,31 @@ public class King : MonoBehaviour, IMoveablePiece
 
     void Start()
     {
-
+        UpgradeManager.current.ActivateKingUpgrade += KingUpgrade;
     }
 
     void Update()
     {
 
+    }
+
+    void KingUpgrade(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                //upgrade stuff goes here upgrade id 0
+                Debug.Log("AAAAAAAA");
+                break;
+
+            case 1:
+                //upgrade stuff goes here upgrade id 1 
+                break;
+
+            default:
+
+                break;
+        }
     }
 
     public bool Move(int newXPos, int newYPos)

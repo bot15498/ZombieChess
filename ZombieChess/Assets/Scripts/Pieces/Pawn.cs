@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using static UnityEngine.UI.GridLayoutGroup;
 
 public class Pawn : MonoBehaviour, IMoveablePiece
@@ -24,12 +25,32 @@ public class Pawn : MonoBehaviour, IMoveablePiece
 
     void Start()
     {
-
+        UpgradeManager.current.ActivatePawnUpgrade += pawnUpgrade;
     }
 
     void Update()
     {
 
+    }
+
+    void pawnUpgrade(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                //upgrade stuff goes here
+                Debug.Log("AAAAAAAA");
+                break;
+
+            case 1:
+
+                break;
+
+            default:
+
+                break;
+        }
+        //Do upgrade stuff
     }
 
     public bool Move(int newXPos, int newYPos)

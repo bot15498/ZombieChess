@@ -22,14 +22,32 @@ public class Rook : MonoBehaviour, IMoveablePiece
 
     void Start()
     {
-
+        UpgradeManager.current.ActivateRookUpgrade += RookUpgrade;
     }
 
     void Update()
     {
 
     }
+    void RookUpgrade(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                //upgrade stuff goes here
+                Debug.Log("AAAAAAAA");
+                break;
 
+            case 1:
+
+                break;
+
+            default:
+
+                break;
+        }
+        //Do upgrade stuff
+    }
     public bool Move(int newXPos, int newYPos)
     {
         // Return true if this is a valid move, other wise return false;
