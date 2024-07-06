@@ -14,10 +14,12 @@ public enum BoardDirections
 public class Board : MonoBehaviour
 {
     public Transform originPoint;
-    public int gridStep;
+    public GameObject tilePrefab;
+    public float gridStep;
     private List<IMoveablePiece> playerPieces;
     private List<IMoveablePiece> enemyPieces;
-    private Dictionary<(int xPos, int yPos), IMoveablePiece> theBoard;
+    [SerializeField]
+    private Dictionary<(int xPos, int yPos), IMoveablePiece> theBoard = new Dictionary<(int xPos, int yPos), IMoveablePiece>();
     private int minXPos = 0;
     private int minYPos = 0;
     private int maxXPos = 7;
@@ -25,7 +27,8 @@ public class Board : MonoBehaviour
 
     void Start()
     {
-        theBoard = new Dictionary<(int xPos, int yPos), IMoveablePiece>();
+        // On start, auto spawn in the tiles on the board. 
+        // Start with an 8x8 grid
     }
 
     void Update()
@@ -52,15 +55,16 @@ public class Board : MonoBehaviour
     public bool PlacePiece(int xPos, int yPos, CurrentTurn owner, GameObject obj)
     {
         // First check if we can put the piece there or not
-        bool canPlace = theBoard.ContainsKey((xPos, yPos));
-        if (!canPlace)
+        bool somethingThere = theBoard.ContainsKey((xPos, yPos));
+        if (somethingThere)
         {
             return false;
         }
 
         // Instantiate object
-        Vector3 pos = new Vector3(xPos * gridStep, 0, yPos * gridStep);
+        Vector3 pos = new Vector3(xPos * gridStep + originPoint.position.x, 0, yPos * gridStep + originPoint.position.z);
         GameObject newObject = Instantiate(obj, pos, Quaternion.identity, transform);
+        Debug.Log("hello");
         IMoveablePiece piece = newObject.GetComponent<IMoveablePiece>();
         piece.Spawn(this, xPos, yPos, owner);
         theBoard.Add((xPos, yPos), piece);
