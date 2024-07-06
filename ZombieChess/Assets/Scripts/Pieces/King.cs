@@ -69,12 +69,9 @@ public class King : MonoBehaviour, IMoveablePiece
         return true;
     }
 
-    public bool PreviewMove(out List<int> newXPos, out List<int> newYPos)
+    public List<(int xPos, int yPos)> PreviewMove()
     {
-
-        newXPos = new List<int> { xPos };
-        newYPos = new List<int> { yPos };
-
-        return true;
+        // Give all the possible places that the pawn can move to.
+        return null;
     }
 }

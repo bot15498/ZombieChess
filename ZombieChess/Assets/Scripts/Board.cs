@@ -80,6 +80,7 @@ public class Board : MonoBehaviour
     public void ExpandBoard(int val, BoardDirections direction)
     {
         // On a standard chess board, if you are white, the bottom left square is BLACK
+        GameObject obj;
         switch (direction)
         {
             case BoardDirections.North:
@@ -93,13 +94,14 @@ public class Board : MonoBehaviour
                         if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))
                         {
                             // spawn a black one
-                            Instantiate(tile2Prefab, position, Quaternion.identity, transform);
+                            obj = Instantiate(tile2Prefab, position, Quaternion.identity, transform);
                         }
                         else
                         {
                             // spawn a white one
-                            Instantiate(tile1Prefab, position, Quaternion.identity, transform);
+                            obj = Instantiate(tile1Prefab, position, Quaternion.identity, transform);
                         }
+                        obj.GetComponent<BoardTile>().SetCoord(i, j);
                     }
                 }
                 maxYPos += val;
@@ -114,13 +116,14 @@ public class Board : MonoBehaviour
                         if ((j % 2 == 0 && i % 2 == 0) || (j % 2 != 0 && i % 2 != 0))
                         {
                             // spawn a black one
-                            Instantiate(tile2Prefab, position, Quaternion.identity, transform);
+                            obj = Instantiate(tile2Prefab, position, Quaternion.identity, transform);
                         }
                         else
                         {
                             // spawn a white one
-                            Instantiate(tile1Prefab, position, Quaternion.identity, transform);
+                            obj = Instantiate(tile1Prefab, position, Quaternion.identity, transform);
                         }
+                        obj.GetComponent<BoardTile>().SetCoord(i, j);
                     }
                 }
                 minYPos -= val;
@@ -136,13 +139,14 @@ public class Board : MonoBehaviour
                         if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))
                         {
                             // spawn a black one
-                            Instantiate(tile2Prefab, position,Quaternion.identity,transform);
+                            obj = Instantiate(tile2Prefab, position,Quaternion.identity,transform);
                         }
                         else
                         {
                             // spawn a white one
-                            Instantiate(tile1Prefab, position, Quaternion.identity, transform);
+                            obj = Instantiate(tile1Prefab, position, Quaternion.identity, transform);
                         }
+                        obj.GetComponent<BoardTile>().SetCoord(j, i);
                     }
                 }
                 maxXPos += val;
@@ -158,13 +162,14 @@ public class Board : MonoBehaviour
                         if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))
                         {
                             // spawn a black one
-                            Instantiate(tile2Prefab, position, Quaternion.identity, transform);
+                            obj = Instantiate(tile2Prefab, position, Quaternion.identity, transform);
                         }
                         else
                         {
                             // spawn a white one
-                            Instantiate(tile1Prefab, position, Quaternion.identity, transform);
+                            obj = Instantiate(tile1Prefab, position, Quaternion.identity, transform);
                         }
+                        obj.GetComponent<BoardTile>().SetCoord(j, i);
                     }
                 }
                 minXPos -= val;

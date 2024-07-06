@@ -11,12 +11,18 @@ public enum CurrentTurn
 public enum GameState
 { 
     TurnStart,
-    PieceSelect,
+    WaitForPieceSelect,
+    PieceSelected,
+    WaitForPieceMove,
+    PieceMove,
     TurnEnd
 }
 
 public class BoardStateManager : MonoBehaviour
 {
+    public static BoardStateManager current;
+
+    public MeshClickDetector detector;
     public Board board;
     public GameObject pawnPrefab;
     public GameObject rookPrefab;
@@ -26,6 +32,15 @@ public class BoardStateManager : MonoBehaviour
     public GameObject kingPrefab;
     public GameState currState;
     public CurrentTurn currentTurn;
+
+    private IMoveablePiece currSelectedPiece;
+    private BoardTile currSelectedBoardTile;
+
+    private void Awake()
+    {
+        // I swear to god unity sucks this isn't how you make a singleton.
+        current = this;
+    }
 
     void Start()
     {
@@ -60,16 +75,76 @@ public class BoardStateManager : MonoBehaviour
         {
             case GameState.TurnStart:
                 // Any animation or something.
-                currState = GameState.PieceSelect;
+                if (currentTurn == CurrentTurn.Player)
+                {
+                    detector.canClickPiece = true;
+                    detector.canClickTile = false;
+                }
+                currState = GameState.WaitForPieceSelect;
                 break;
-            case GameState.PieceSelect:
-                // For player, enable selecting pieces to move / attack
+            case GameState.WaitForPieceSelect:
+                if (currentTurn == CurrentTurn.Player)
+                {
+                    // Wait for player to select the piece to move
+                    if (currSelectedPiece != null)
+                    {
+                        currState = GameState.PieceSelected;
+                    }
+                }
+                break;
+            case GameState.PieceSelected:
+                if (currentTurn == CurrentTurn.Player)
+                {
+                    // Piece selected. Highlight the spots you can move to, then go to next state
+                    List<(int, int)> possiblePlacesToMove = currSelectedPiece.PreviewMove();
+                    if (possiblePlacesToMove.Count == 0)
+                    {
+                        // go back you doofus you can't move this piece.
+                        currState = GameState.WaitForPieceSelect;
+                        currSelectedPiece = null;
+                    }
+                    else
+                    {
+                        currState = GameState.WaitForPieceMove;
+                    }
+                }
+                break;
+            case GameState.WaitForPieceMove:
+                if (currentTurn == CurrentTurn.Player)
+                {
+                    // Wait for player to select a place to move to
+                }
+                break;
+            case GameState.PieceMove:
+                if (currentTurn == CurrentTurn.Player)
+                {
+                    // Enable selecting the tile to move to
+
+                    // If piece has more thane one move, go to previous state. Otherwise go forward in time.
+                }
                 break;
             case GameState.TurnEnd:
                 // animation
+                if (currentTurn == CurrentTurn.Player)
+                {
+                    detector.canClickPiece = false;
+                    detector.canClickTile = false;
+                    currSelectedPiece = null;
+                    currSelectedBoardTile = null;
+                }
                 // change whose turn it is.
                 currentTurn = currentTurn == CurrentTurn.Player ? CurrentTurn.Zombie : CurrentTurn.Player;
                 break;
         }
+    }
+
+    public void PieceSelectedForMovement(IMoveablePiece piece)
+    {
+        currSelectedPiece = piece;
+    }
+
+    public void TileSelectedForMovement(BoardTile tile)
+    {
+        currSelectedBoardTile = tile;
     }
 }

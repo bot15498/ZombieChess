@@ -11,7 +11,7 @@ public interface IMoveablePiece
     public int yPos { get; set; }
     public bool canAct { get; set; }
     public CurrentTurn owner { get; set; }
-    public bool PreviewMove(out List<int> newXPos, out List<int> newYPos);
+    public List<(int xPos, int yPos)> PreviewMove();
     public bool Move(int newXPos, int newYPos);
     public bool Spawn(Board board, int xPos, int yPos, CurrentTurn owner);
 }

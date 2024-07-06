@@ -74,18 +74,19 @@ public class Pawn : MonoBehaviour, IMoveablePiece
         return true;
     }
 
-    public bool PreviewMove(out List<int> newXPos, out List<int> newYPos)
+    public List<(int xPos, int yPos)> PreviewMove()
     {
-        // Pawns can only move forward one square, or two squares if it's the first move for this pawn
-        newXPos = new List<int> { xPos };
-        newYPos = new List<int> { yPos };
+        // Give all the possible places that the pawn can move to.
+        List<(int xPos, int yPos)> possibleMoves = new List<(int xPos, int yPos)>
+        {
+            (xPos, yPos + 1)
+        };
 
         if (isFirstMove)
         {
-            newXPos.Add(xPos);
-            newYPos.Add(yPos + 2);
+            possibleMoves.Add((xPos, yPos + 2));
         }
 
-        return true;
+        return possibleMoves;
     }
 }
