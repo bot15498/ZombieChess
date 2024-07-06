@@ -22,15 +22,35 @@ public class Knight : MonoBehaviour, IMoveablePiece
 
     void Start()
     {
-
+        UpgradeManager.current.ActivateKnightUpgrade += KnightUpgrade;
     }
 
     void Update()
     {
 
     }
+    void KnightUpgrade(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                //upgrade stuff goes here upgrade id 0
+                Debug.Log("AAAAAAAA");
+                break;
 
-    public bool Move(int newXPos, int newYPos)
+            case 1:
+                //upgrade stuff goes here upgrade id 1 
+                break;
+
+            default:
+
+                break;
+        }
+    }
+
+
+
+        public bool Move(int newXPos, int newYPos)
     {
         // Return true if this is a valid move, other wise return false;
         return false;
