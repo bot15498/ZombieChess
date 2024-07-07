@@ -7,7 +7,9 @@ public class Boomer : MoveablePiece, IZombiePiece
     [SerializeField]
     private int alertRadius = 5;
     [SerializeField]
-    private int turnsUntilExplode = 2;
+    private int turnsUntilExplode = 1;
+    [SerializeField]
+    private int explodeRadius = 1;
     [SerializeField]
     private bool isArmed = false;
 
@@ -16,7 +18,7 @@ public class Boomer : MoveablePiece, IZombiePiece
         // Boomers arm themselves, so the next turn they "explode" and then 
         List<BoardTile> result = new List<BoardTile>();
         BoardTile tile;
-        if(board.theBoard.TryGetValue((xPos, yPos), out tile))
+        if (board.theBoard.TryGetValue((xPos, yPos), out tile))
         {
             result.Add(tile);
         }
@@ -27,7 +29,7 @@ public class Boomer : MoveablePiece, IZombiePiece
     {
         // Boomers can only in 1 square radius
         List<BoardTile> result = new List<BoardTile>();
-        BoardTile tile; 
+        BoardTile tile;
         for (int xCounter = -1; xCounter <= 1; xCounter++)
         {
             for (int yCounter = -1; yCounter <= 1; yCounter++)
@@ -52,11 +54,18 @@ public class Boomer : MoveablePiece, IZombiePiece
         if (isArmed)
         {
             turnsUntilExplode--;
-            if(turnsUntilExplode < 0)
+            if (turnsUntilExplode < 0)
             {
                 // time to explode
+                int numShamblersToSpawn = Random.Range(2, 5);
+                List<BoardTile> freespaces = FreeSpaces(explodeRadius);
+                numShamblersToSpawn = Mathf.Min(numShamblersToSpawn, freespaces.Count);
+                for (int i = 0; i < numShamblersToSpawn; i++)
+                {
+                    int spawnLocIdx = Random.Range(0, freespaces.Count);
+                    board.PlacePiece(freespaces[spawnLocIdx].xCoord, freespaces[spawnLocIdx].yCoord, CurrentTurn.Zombie, BoardStateManager.current.shamblerPrefab);
+                }
                 Die();
-                Debug.Log("exploded!");
             }
         }
         else
@@ -75,7 +84,6 @@ public class Boomer : MoveablePiece, IZombiePiece
             {
                 // arm myself
                 isArmed = true;
-                Debug.Log("armed!");
             }
             else if (yPos <= (board.maxYPos - board.minYPos) / 2 + board.minYPos)
             {
@@ -84,7 +92,6 @@ public class Boomer : MoveablePiece, IZombiePiece
                 if (roll >= 0.5)
                 {
                     isArmed = true;
-                    Debug.Log("armed through chance");
                 }
             }
             else
@@ -103,15 +110,35 @@ public class Boomer : MoveablePiece, IZombiePiece
         }
     }
 
+    private List<BoardTile> FreeSpaces(int radius)
+    {
+        // Figure out how many free spaces are around the current unit (not including self). So min is 1
+        List<BoardTile> result = new List<BoardTile>();
+        BoardTile tile;
+        for (int x = xPos - radius; x <= xPos + radius; x++)
+        {
+            for (int y = yPos - radius; y <= yPos + radius; y++)
+            {
+                if(!board.allPieces.ContainsKey((x, y)) && board.theBoard.TryGetValue((x,y), out tile))
+                {
+                    result.Add(tile);
+                }
+            }
+        }
+        board.theBoard.TryGetValue((xPos, yPos), out tile);
+        result.Add(tile);
+        return result;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

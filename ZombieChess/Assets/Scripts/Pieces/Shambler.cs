@@ -49,19 +49,18 @@ public class Shambler : MoveablePiece, IZombiePiece
     public void ZombieAiAction()
     {
         List<BoardTile> possibleAttacks = this.PreviewAttack();
+        List<BoardTile> possibleMoves = this.PreviewMove();
 
         if (possibleAttacks.Count > 0)
         {
             int pickedAttack = Random.Range(0, possibleAttacks.Count);
             this.Attack(possibleAttacks[pickedAttack].xCoord, possibleAttacks[pickedAttack].yCoord);
         }
-        else
+        else if (possibleMoves.Count > 0)
         {
-            List<BoardTile> moves = this.PreviewMove();
             int moveRoll = Random.Range(0, moveChanceOneInX);
             if (moveRoll == 0)
             {
-                List<BoardTile> possibleMoves = this.PreviewMove();
                 this.Move(possibleMoves[0].xCoord, possibleMoves[0].yCoord);
             }
 

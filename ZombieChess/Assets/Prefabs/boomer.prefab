@@ -157,5 +157,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alertRadius: 2
-  turnsUntilExplode: 2
+  turnsUntilExplode: 1
+  explodeRadius: 1
   isArmed: 0
