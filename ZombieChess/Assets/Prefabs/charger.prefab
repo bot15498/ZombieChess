@@ -27,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 51398062275512415}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.3, z: 0}
-  m_LocalScale: {x: 1.5, y: 2.5, z: 1.5}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 0.5, y: 2.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4126888727082621607}
@@ -204,7 +204,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4126888727082621607}
   - component: {fileID: 5885891785173408661}
-  - component: {fileID: 7427792468980360969}
+  - component: {fileID: 1653894968889555978}
   m_Layer: 0
   m_Name: charger
   m_TagString: Untagged
@@ -222,7 +222,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7200632556842967651}
   - {fileID: 7124927938523041285}
@@ -240,9 +240,9 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.88, z: 1}
+  m_Size: {x: 0.5, y: 2.5, z: 0.5}
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &7427792468980360969
+--- !u!114 &1653894968889555978
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

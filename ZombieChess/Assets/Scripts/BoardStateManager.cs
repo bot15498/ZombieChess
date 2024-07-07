@@ -115,7 +115,7 @@ public class BoardStateManager : MonoBehaviour
                     // Piece selected. Highlight the spots you can move to, then go to next state
                     possiblePlacesToMove = currSelectedPiece.PreviewMove();
                     possiblePlacesToAttack = currSelectedPiece.PreviewAttack();
-                    if (possiblePlacesToMove.Count == 0 && possiblePlacesToAttack.Count == 0)
+                    if ((possiblePlacesToMove.Count == 0 && possiblePlacesToAttack.Count == 0) || currSelectedPiece.numActions <= 0)
                     {
                         // go back you doofus you can't move this piece.
                         currState = GameState.WaitForPieceSelect;
@@ -180,13 +180,13 @@ public class BoardStateManager : MonoBehaviour
             case GameState.PieceMove:
                 if (currentTurn == CurrentTurn.Player)
                 {
-                    // If piece has more thane one move, go to previous state. Otherwise go forward in time.
+                    // If piece has more than one move, go to previous state. Otherwise go forward in time.
                     if (board.objectsMoving.Count == 0)
                     {
                         currSelectedPiece.numActions--;
                         if (currSelectedPiece.numActions > 0)
                         {
-                            // Recalculate the pieces' allowed places it can move / attackl
+                            // Recalculate the pieces' allowed places it can move / attack
                             possiblePlacesToMove = currSelectedPiece.PreviewMove();
                             possiblePlacesToAttack = currSelectedPiece.PreviewAttack();
                             currState = GameState.WaitForPieceMove;
@@ -302,6 +302,7 @@ public class BoardStateManager : MonoBehaviour
             {
                 int numZombies = Random.Range(3, 5);
                 SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
+                SpawnZombieAtBackRow(3, 1, chargerPrefab);
             }
             else if (zombieLevel > 2 && zombieLevel <= 4)
             {
