@@ -9,7 +9,7 @@ public class Charger : MoveablePiece, IZombiePiece
     private int waitTimer = 3;
 
     private bool grappling = false;
-    private BoardTile grappleTarget;
+    private MoveablePiece grappleTarget;
 
     public override List<BoardTile> PreviewMove()
     {
@@ -41,7 +41,7 @@ public class Charger : MoveablePiece, IZombiePiece
         // return only southmost tile
         result.RemoveRange(0, result.Count - 1);
 
-        return result;
+        return result[0];
     }
 
     public void ZombieAiAction()
@@ -79,7 +79,7 @@ public class Charger : MoveablePiece, IZombiePiece
             else
             {
                 // time to attack
-                this.Attack(grappleTarget.xPos.get(), grappleTarget.yPos.get());
+                this.Attack(grappleTarget.xPos, grappleTarget.yPos);
             }
             
         }
