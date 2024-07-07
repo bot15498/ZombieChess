@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.UI.GridLayoutGroup;
 
-public class ZombiePawn : MonoBehaviour, IMoveablePiece
+public class Shambler : MonoBehaviour, IMoveablePiece
 {
     [SerializeField]
     private int _xPos = -1;
