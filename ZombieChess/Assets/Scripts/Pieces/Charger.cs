@@ -87,6 +87,7 @@ public class Charger : MoveablePiece, IZombiePiece
                     // Grapple the target
                     this.grappling = true;
                     this.grappleTarget = enemyPiece;
+                    this.grappleTarget.numActions = 0;
                     this.grappleTarget.maxNumActions = 0;
                 }
                 else
@@ -121,6 +122,8 @@ public class Charger : MoveablePiece, IZombiePiece
         // If we kill, reset timer to charge
         if (!board.allPieces.ContainsKey((targetXPos, targetYPos)))
         {
+            this.grappling = false;
+            this.grappleTarget = null;
             this.waitTimer = this.initialWaitTimer;
         }
 
