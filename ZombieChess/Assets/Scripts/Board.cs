@@ -17,7 +17,7 @@ public class Board : MonoBehaviour
     public GameObject tile2Prefab;
     public float gridStep;
     public float pieceYOffset;
-    public Dictionary<(int xPos, int yPos), IMoveablePiece> allPieces = new Dictionary<(int xPos, int yPos), IMoveablePiece>();
+    public Dictionary<(int xPos, int yPos), MoveablePiece> allPieces = new Dictionary<(int xPos, int yPos), MoveablePiece>();
     public Dictionary<(int xPos, int yPos), BoardTile> theBoard = new Dictionary<(int xPos, int yPos), BoardTile>();
     public int minXPos = 0;
     public int minYPos = 0;
@@ -34,11 +34,11 @@ public class Board : MonoBehaviour
 
     }
 
-    public IMoveablePiece Get(int xPos, int yPos)
+    public MoveablePiece Get(int xPos, int yPos)
     {
         // Given the boards x and y position, find the position inside the actual
         // list representation, then return if there is a piece there or not
-        IMoveablePiece piece;
+        MoveablePiece piece;
         bool returnval = allPieces.TryGetValue((xPos, yPos), out piece);
         if (returnval)
         {
@@ -62,7 +62,7 @@ public class Board : MonoBehaviour
         // Instantiate object
         Vector3 pos = new Vector3(xPos * gridStep, 0 + pieceYOffset, yPos * gridStep);
         GameObject newObject = Instantiate(obj, pos, Quaternion.identity, transform);
-        IMoveablePiece piece = newObject.GetComponent<IMoveablePiece>();
+        MoveablePiece piece = newObject.GetComponent<MoveablePiece>();
         piece.Spawn(this, xPos, yPos, owner);
         allPieces.Add((xPos, yPos), piece);
 
@@ -71,7 +71,7 @@ public class Board : MonoBehaviour
 
     public bool MovePiece(GameObject obj, int newXPos, int newYPos)
     {
-        IMoveablePiece piece = obj.GetComponent<IMoveablePiece>();
+        MoveablePiece piece = obj.GetComponent<MoveablePiece>();
         if (piece != null)
         {
             allPieces.Remove((piece.xPos, piece.yPos));

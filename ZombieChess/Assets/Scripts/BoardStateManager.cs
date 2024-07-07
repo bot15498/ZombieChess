@@ -36,7 +36,7 @@ public class BoardStateManager : MonoBehaviour
     public GameState currState;
     public CurrentTurn currentTurn;
 
-    private IMoveablePiece currSelectedPiece;
+    private MoveablePiece currSelectedPiece;
     private BoardTile currSelectedBoardTile;
     private List<BoardTile> possiblePlacesToMove = new List<BoardTile>();
     private List<BoardTile> possiblePlacesToAttack = new List<BoardTile>();
@@ -203,7 +203,7 @@ public class BoardStateManager : MonoBehaviour
         }
     }
 
-    public void PieceSelectedForMovement(IMoveablePiece piece)
+    public void PieceSelectedForMovement(MoveablePiece piece)
     {
         if (currentTurn == piece.owner)
         {
@@ -224,7 +224,7 @@ public class BoardStateManager : MonoBehaviour
 
     private void ResetMoveCount(CurrentTurn whois)
     {
-        foreach(IMoveablePiece piece in board.allPieces.Values)
+        foreach(MoveablePiece piece in board.allPieces.Values)
         {
             if(piece.owner == whois)
             {

@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
-public class Shambler : MoveablePiece
+public class Boomer : MoveablePiece
 {
     public override List<BoardTile> PreviewAttack()
     {
@@ -16,11 +14,13 @@ public class Shambler : MoveablePiece
         throw new System.NotImplementedException();
     }
 
+    // Start is called before the first frame update
     void Start()
     {
         
     }
 
+    // Update is called once per frame
     void Update()
     {
         
