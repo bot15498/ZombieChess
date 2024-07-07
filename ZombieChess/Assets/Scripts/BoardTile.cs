@@ -13,6 +13,7 @@ public class BoardTile : MonoBehaviour
 {
     public int xCoord = 0;
     public int yCoord = 0;
+    public bool canBeOccupied = true;
     private Color startMaterialColor;
 
     void Start()

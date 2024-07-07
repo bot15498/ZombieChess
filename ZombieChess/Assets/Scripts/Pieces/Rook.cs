@@ -71,6 +71,28 @@ public class Rook : MonoBehaviour, IMoveablePiece
         return true;
     }
 
+    public bool Attack(int targetXPos, int targetYPos)
+    {
+        // Do damage
+        IMoveablePiece enemy;
+        if (board.allPieces.TryGetValue((targetXPos, targetYPos), out enemy) && enemy.owner != owner)
+        {
+            enemy.health--;
+            if (enemy.health <= 0)
+            {
+                enemy.Die();
+            }
+        }
+
+        // If we are normal attacking, and we defeat the enemy, then also do a move.
+        if (!board.allPieces.ContainsKey((targetXPos, targetYPos)))
+        {
+            Move(targetXPos, targetYPos);
+        }
+
+        return true;
+    }
+
     public bool Spawn(Board board, int xPos, int yPos, CurrentTurn owner)
     {
         this.board = board;
@@ -108,24 +130,22 @@ public class Rook : MonoBehaviour, IMoveablePiece
         List<BoardTile> result = new List<BoardTile>();
         BoardTile tile;
 
-        // north checkl
+        // north check
         for (int i = yPos + 1; i <= board.maxYPos; i++)
         {
-            board.theBoard.TryGetValue((xPos, i), out tile);
-            result.Add(tile);
-            if (board.allPieces.ContainsKey((xPos, i)))
+            if (board.theBoard.TryGetValue((xPos, i), out tile) && tile.canBeOccupied) { result.Add(tile); }
+            if (board.allPieces.ContainsKey((xPos, i)) || !tile.canBeOccupied)
             {
                 // Founda piece, so stop looking.
                 break;
             }
         }
 
-        // south checkl
+        // south check
         for (int i = yPos - 1; i >= board.minYPos; i--)
         {
-            board.theBoard.TryGetValue((xPos, i), out tile);
-            result.Add(tile);
-            if (board.allPieces.ContainsKey((xPos, i)))
+            if (board.theBoard.TryGetValue((xPos, i), out tile) && tile.canBeOccupied) { result.Add(tile); }
+            if (board.allPieces.ContainsKey((xPos, i)) || !tile.canBeOccupied)
             {
                 break;
             }
@@ -134,9 +154,8 @@ public class Rook : MonoBehaviour, IMoveablePiece
         // weast check
         for (int i = xPos - 1; i >= board.minXPos; i--)
         {
-            board.theBoard.TryGetValue((i, yPos), out tile);
-            result.Add(tile);
-            if(board.allPieces.ContainsKey((i, yPos)))
+            if (board.theBoard.TryGetValue((i, yPos), out tile) && tile.canBeOccupied) { result.Add(tile); }
+            if (board.allPieces.ContainsKey((i, yPos)) || !tile.canBeOccupied)
             {
                 break;
             }
@@ -145,14 +164,22 @@ public class Rook : MonoBehaviour, IMoveablePiece
         // east check
         for (int i = xPos + 1; i <= board.maxXPos; i++)
         {
-            board.theBoard.TryGetValue((i, yPos), out tile);
-            result.Add(tile);
-            if (board.allPieces.ContainsKey((i, yPos)))
+            if (board.theBoard.TryGetValue((i, yPos), out tile) && tile.canBeOccupied) { result.Add(tile); }
+            if (board.allPieces.ContainsKey((i, yPos)) || !tile.canBeOccupied)
             {
                 break;
             }
         }
 
         return result;
+    }
+
+    public bool Die()
+    {
+        // delete yourself from the board
+        board.allPieces.Remove((xPos, yPos));
+        // delete yourself from existence
+        Destroy(gameObject);
+        return true;
     }
 }

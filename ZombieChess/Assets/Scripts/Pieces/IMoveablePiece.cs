@@ -16,4 +16,6 @@ public interface IMoveablePiece
     public List<BoardTile> PreviewAttack();
     public bool Move(int newXPos, int newYPos);
     public bool Spawn(Board board, int xPos, int yPos, CurrentTurn owner);
+    public bool Attack(int targetXPos, int targetYPos);
+    public bool Die();
 }

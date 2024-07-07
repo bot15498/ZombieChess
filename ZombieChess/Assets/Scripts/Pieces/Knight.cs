@@ -72,6 +72,28 @@ public class Knight : MonoBehaviour, IMoveablePiece
         return true;
     }
 
+    public bool Attack(int targetXPos, int targetYPos)
+    {
+        // Do damage
+        IMoveablePiece enemy;
+        if (board.allPieces.TryGetValue((targetXPos, targetYPos), out enemy) && enemy.owner != owner)
+        {
+            enemy.health--;
+            if (enemy.health <= 0)
+            {
+                enemy.Die();
+            }
+        }
+
+        // If we are normal attacking, and we defeat the enemy, then also do a move.
+        if (!board.allPieces.ContainsKey((targetXPos, targetYPos)))
+        {
+            Move(targetXPos, targetYPos);
+        }
+
+        return true;
+    }
+
     public bool Spawn(Board board, int xPos, int yPos, CurrentTurn owner)
     {
         this.board = board;
@@ -108,15 +130,24 @@ public class Knight : MonoBehaviour, IMoveablePiece
         // This returns all valid move tiles, regardless if something is there or not
         List<BoardTile> result = new List<BoardTile>();
         BoardTile tile;
-        if (board.theBoard.TryGetValue((xPos - 2, yPos + 1), out tile)) { result.Add(tile); }
-        if (board.theBoard.TryGetValue((xPos - 1, yPos + 2), out tile)) { result.Add(tile); }
-        if (board.theBoard.TryGetValue((xPos + 1, yPos + 2), out tile)) { result.Add(tile); }
-        if (board.theBoard.TryGetValue((xPos + 2, yPos + 1), out tile)) { result.Add(tile); }
-        if (board.theBoard.TryGetValue((xPos + 2, yPos - 1), out tile)) { result.Add(tile); }
-        if (board.theBoard.TryGetValue((xPos + 1, yPos - 2), out tile)) { result.Add(tile); }
-        if (board.theBoard.TryGetValue((xPos - 1, yPos - 2), out tile)) { result.Add(tile); }
-        if (board.theBoard.TryGetValue((xPos - 2, yPos - 1), out tile)) { result.Add(tile); }
+        if (board.theBoard.TryGetValue((xPos - 2, yPos + 1), out tile) && tile.canBeOccupied) { result.Add(tile); }
+        if (board.theBoard.TryGetValue((xPos - 1, yPos + 2), out tile) && tile.canBeOccupied) { result.Add(tile); }
+        if (board.theBoard.TryGetValue((xPos + 1, yPos + 2), out tile) && tile.canBeOccupied) { result.Add(tile); }
+        if (board.theBoard.TryGetValue((xPos + 2, yPos + 1), out tile) && tile.canBeOccupied) { result.Add(tile); }
+        if (board.theBoard.TryGetValue((xPos + 2, yPos - 1), out tile) && tile.canBeOccupied) { result.Add(tile); }
+        if (board.theBoard.TryGetValue((xPos + 1, yPos - 2), out tile) && tile.canBeOccupied) { result.Add(tile); }
+        if (board.theBoard.TryGetValue((xPos - 1, yPos - 2), out tile) && tile.canBeOccupied) { result.Add(tile); }
+        if (board.theBoard.TryGetValue((xPos - 2, yPos - 1), out tile) && tile.canBeOccupied) { result.Add(tile); }
 
         return result;
+    }
+
+    public bool Die()
+    {
+        // delete yourself from the board
+        board.allPieces.Remove((xPos, yPos));
+        // delete yourself from existence
+        Destroy(gameObject);
+        return true;
     }
 }

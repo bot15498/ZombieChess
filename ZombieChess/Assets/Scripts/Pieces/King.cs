@@ -71,6 +71,28 @@ public class King : MonoBehaviour, IMoveablePiece
         return true;
     }
 
+    public bool Attack(int targetXPos, int targetYPos)
+    {
+        // Do damage
+        IMoveablePiece enemy;
+        if (board.allPieces.TryGetValue((targetXPos, targetYPos), out enemy) && enemy.owner != owner)
+        {
+            enemy.health--;
+            if (enemy.health <= 0)
+            {
+                enemy.Die();
+            }
+        }
+
+        // If we are normal attacking, and we defeat the enemy, then also do a move.
+        if (!board.allPieces.ContainsKey((targetXPos, targetYPos)))
+        {
+            Move(targetXPos, targetYPos);
+        }
+
+        return true;
+    }
+
     public bool Spawn(Board board, int xPos, int yPos, CurrentTurn owner)
     {
         this.board = board;
@@ -128,5 +150,15 @@ public class King : MonoBehaviour, IMoveablePiece
             }
         }
         return result;
+    }
+
+    public bool Die()
+    {
+        // delete yourself from the board
+        board.allPieces.Remove((xPos, yPos));
+        // delete yourself from existence
+        Destroy(gameObject);
+        // When the king dies, you lose the game
+        return true;
     }
 }

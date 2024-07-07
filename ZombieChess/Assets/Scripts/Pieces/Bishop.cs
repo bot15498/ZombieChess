@@ -70,6 +70,28 @@ public class Bishop : MonoBehaviour, IMoveablePiece
         return true;
     }
 
+    public bool Attack(int targetXPos, int targetYPos)
+    {
+        // Do damage
+        IMoveablePiece enemy;
+        if (board.allPieces.TryGetValue((targetXPos, targetYPos), out enemy) && enemy.owner != owner)
+        {
+            enemy.health--;
+            if(enemy.health <= 0)
+            {
+                enemy.Die();
+            }
+        }
+
+        // If we are normal attacking, and we defeat the enemy, then also do a move.
+        if (!board.allPieces.ContainsKey((targetXPos, targetYPos)))
+        {
+            Move(targetXPos, targetYPos);
+        }
+
+        return true;
+    }
+
     public bool Spawn(Board board, int xPos, int yPos, CurrentTurn owner)
     {
         this.board = board;
@@ -115,11 +137,11 @@ public class Bishop : MonoBehaviour, IMoveablePiece
         // Check going north east
         for (int i = 1; i <= northEastMaxCheck; i++)
         {
-            if (board.theBoard.TryGetValue((xPos + i, yPos + i), out tile))
+            if (board.theBoard.TryGetValue((xPos + i, yPos + i), out tile) && tile.canBeOccupied)
             {
                 result.Add(tile);
             }
-            if (board.allPieces.ContainsKey((xPos + i, yPos + i)))
+            if (board.allPieces.ContainsKey((xPos + i, yPos + i)) || !tile.canBeOccupied)
             {
                 // Hit a piece, break out
                 break;
@@ -128,11 +150,11 @@ public class Bishop : MonoBehaviour, IMoveablePiece
         // check going north weast
         for (int i = 1; i <= northWestMaxCheck; i++)
         {
-            if (board.theBoard.TryGetValue((xPos - i, yPos + i), out tile))
+            if (board.theBoard.TryGetValue((xPos - i, yPos + i), out tile) && tile.canBeOccupied)
             {
                 result.Add(tile);
             }
-            if (board.allPieces.ContainsKey((xPos - i, yPos + i)))
+            if (board.allPieces.ContainsKey((xPos - i, yPos + i)) || !tile.canBeOccupied)
             {
                 break;
             }
@@ -140,11 +162,11 @@ public class Bishop : MonoBehaviour, IMoveablePiece
         // check going south east
         for (int i = 1; i <= southEastMaxCheck; i++)
         {
-            if (board.theBoard.TryGetValue((xPos + i, yPos - i), out tile))
+            if (board.theBoard.TryGetValue((xPos + i, yPos - i), out tile) && tile.canBeOccupied)
             {
                 result.Add(tile);
             }
-            if (board.allPieces.ContainsKey((xPos + i, yPos - i)))
+            if (board.allPieces.ContainsKey((xPos + i, yPos - i)) || !tile.canBeOccupied)
             {
                 break;
             }
@@ -152,15 +174,24 @@ public class Bishop : MonoBehaviour, IMoveablePiece
         // check going south weast
         for (int i = 1; i <= southWestMaxCheck; i++)
         {
-            if (board.theBoard.TryGetValue((xPos - i, yPos - i), out tile))
+            if (board.theBoard.TryGetValue((xPos - i, yPos - i), out tile) && tile.canBeOccupied)
             {
                 result.Add(tile);
             }
-            if (board.allPieces.ContainsKey((xPos - i, yPos - i)))
+            if (board.allPieces.ContainsKey((xPos - i, yPos - i)) || !tile.canBeOccupied)
             {
                 break;
             }
         }
         return result;
+    }
+
+    public bool Die()
+    {
+        // delete yourself from the board
+        board.allPieces.Remove((xPos, yPos));
+        // delete yourself from existence
+        Destroy(gameObject);
+        return true;
     }
 }

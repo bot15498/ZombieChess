@@ -31,6 +31,7 @@ public class BoardStateManager : MonoBehaviour
     public GameObject bishopPrefab;
     public GameObject queenPrefab;
     public GameObject kingPrefab;
+    public GameObject zombiePawnPrefab;
     public GameState currState;
     public CurrentTurn currentTurn;
 
@@ -71,6 +72,9 @@ public class BoardStateManager : MonoBehaviour
         board.PlacePiece(5, 0, CurrentTurn.Player, bishopPrefab);
         board.PlacePiece(3, 0, CurrentTurn.Player, queenPrefab);
         board.PlacePiece(4, 0, CurrentTurn.Player, kingPrefab);
+
+        // Place a few zombies to test
+        board.PlacePiece(5, 5, CurrentTurn.Zombie, zombiePawnPrefab);
     }
 
     void Update()
@@ -133,7 +137,16 @@ public class BoardStateManager : MonoBehaviour
                 if (currentTurn == CurrentTurn.Player)
                 {
                     // move the stupid thing.
-                    currSelectedPiece.Move(currSelectedBoardTile.xCoord, currSelectedBoardTile.yCoord);
+                    if(possiblePlacesToAttack.Contains(currSelectedBoardTile))
+                    {
+                        // attacking
+                        currSelectedPiece.Attack(currSelectedBoardTile.xCoord, currSelectedBoardTile.yCoord);
+                    }
+                    else
+                    {
+                        // just moving
+                        currSelectedPiece.Move(currSelectedBoardTile.xCoord, currSelectedBoardTile.yCoord);
+                    }
 
                     // Clear out the highlighted tiles
                     SetTileHighlightColor(possiblePlacesToMove, TileHighlightType.Idle);
@@ -182,6 +195,7 @@ public class BoardStateManager : MonoBehaviour
 
     public void TileSelectedForMovement(int xPos, int yPos)
     {
+        // Depite the name, this is for movement and for attacking
         BoardTile tile;
         bool found = board.theBoard.TryGetValue((xPos, yPos), out tile);
         if (found && (possiblePlacesToAttack.Contains(tile) || possiblePlacesToMove.Contains(tile)))
