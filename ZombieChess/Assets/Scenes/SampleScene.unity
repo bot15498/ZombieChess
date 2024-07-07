@@ -5170,7 +5170,7 @@ MonoBehaviour:
   kingPrefab: {fileID: 4126888727082621601, guid: 2c289065765536a4fa69d2f4b02ba09b, type: 3}
   shamblerPrefab: {fileID: 4126888727082621601, guid: 033930345b5099e49886614eef31d815, type: 3}
   boomerPrefab: {fileID: 4126888727082621601, guid: 0d04ae4fe4bfd644088905db0be3b59b, type: 3}
-  chargerPrefab: {fileID: 0}
+  chargerPrefab: {fileID: 4126888727082621601, guid: db635c5c865f4de4eb3f2e7e3e831da4, type: 3}
   currState: 0
   currentTurn: 0
   turnCount: 1
