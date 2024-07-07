@@ -57,7 +57,7 @@ public class BoardStateManager : MonoBehaviour
         // First make the board a 8x8 board. We start with 1 tile, so increase it by 7
         board.theBoard.Add((0, 0), startTile.GetComponent<BoardTile>());
         board.ExpandBoard(7, BoardDirections.East);
-        board.ExpandBoard(13, BoardDirections.North);
+        board.ExpandBoard(13, BoardDirections.North); board.ExpandBoard(13, BoardDirections.West);
 
         // On Start, set up the board like a normal chess match
         board.PlacePiece(0, 1, CurrentTurn.Player, pawnPrefab);
@@ -149,7 +149,7 @@ public class BoardStateManager : MonoBehaviour
                             // just moving
                             currSelectedPiece.Move(currSelectedBoardTile.xCoord, currSelectedBoardTile.yCoord);
                         }
-
+                        
                         // Clear out the highlighted tiles
                         SetTileHighlightColor(possiblePlacesToMove, TileHighlightType.Idle);
                         SetTileHighlightColor(possiblePlacesToAttack, TileHighlightType.Idle);
