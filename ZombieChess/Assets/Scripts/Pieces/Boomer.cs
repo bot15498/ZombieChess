@@ -79,7 +79,12 @@ public class Boomer : MoveablePiece, IZombiePiece
                     closestEnemy = piece;
                 }
             }
-            if (closestEnemy.ManDistance(this) <= alertRadius)
+            if(closestEnemy == null)
+            {
+                // didn't find anything. just arm yourslf.
+                isArmed = true;
+            }
+            else if (closestEnemy.ManDistance(this) <= alertRadius)
             {
                 // arm myself
                 isArmed = true;
