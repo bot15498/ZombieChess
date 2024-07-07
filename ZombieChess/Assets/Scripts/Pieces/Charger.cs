@@ -47,6 +47,10 @@ public class Charger : MoveablePiece, IZombiePiece
     {
         // Similar to rook, but the only valid move tile is the one furthest to the south
         List<BoardTile> result = this.GetValidMovePath();
+        if(result.Count == 0)
+        {
+            return null;
+        }
 
         // return only southmost tile
         result.RemoveRange(0, result.Count - 1);
@@ -62,9 +66,9 @@ public class Charger : MoveablePiece, IZombiePiece
         }
         else
         {
-            if (!grappling)
+            BoardTile validMove = this.GetValidMoveTile();
+            if (!grappling && validMove != null)
             {
-                BoardTile validMove = this.GetValidMoveTile();
                 MoveablePiece enemyPiece;
 
                 // Kill all zombies in the way
@@ -96,7 +100,7 @@ public class Charger : MoveablePiece, IZombiePiece
                     this.Move(this.xPos, validMove.yCoord);
                 }
             }
-            else
+            else if(grappling)
             {
                 // time to attack
                 this.Attack(grappleTarget.xPos, grappleTarget.yPos);

@@ -312,6 +312,7 @@ public class BoardStateManager : MonoBehaviour
                 int numZombies = Random.Range(3, 5);
                 SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
                 SpawnZombieAtBackRow(3, 1, chargerPrefab);
+                SpawnZombieAtBackRow(3, 1, hunterPrefab);
             }
             else if (zombieLevel > 2 && zombieLevel <= 4)
             {
