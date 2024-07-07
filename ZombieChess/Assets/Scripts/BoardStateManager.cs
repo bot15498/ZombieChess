@@ -32,7 +32,8 @@ public class BoardStateManager : MonoBehaviour
     public GameObject bishopPrefab;
     public GameObject queenPrefab;
     public GameObject kingPrefab;
-    public GameObject zombiePawnPrefab;
+    public GameObject shamblerPrefab;
+    public GameObject boomerPrefab;
     public GameState currState;
     public CurrentTurn currentTurn;
 
@@ -75,10 +76,11 @@ public class BoardStateManager : MonoBehaviour
         board.PlacePiece(4, 0, CurrentTurn.Player, kingPrefab);
 
         // Place a few zombies to test
-        board.PlacePiece(5, 6, CurrentTurn.Zombie, zombiePawnPrefab);
-        board.PlacePiece(6, 7, CurrentTurn.Zombie, zombiePawnPrefab);
-        board.PlacePiece(2, 6, CurrentTurn.Zombie, zombiePawnPrefab);
-        board.PlacePiece(3, 7, CurrentTurn.Zombie, zombiePawnPrefab);
+        board.PlacePiece(5, 6, CurrentTurn.Zombie, shamblerPrefab);
+        board.PlacePiece(6, 7, CurrentTurn.Zombie, shamblerPrefab);
+        board.PlacePiece(2, 6, CurrentTurn.Zombie, shamblerPrefab);
+        board.PlacePiece(3, 7, CurrentTurn.Zombie, shamblerPrefab);
+        board.PlacePiece(4, 6, CurrentTurn.Zombie, boomerPrefab);
     }
 
     void Update()
@@ -105,7 +107,8 @@ public class BoardStateManager : MonoBehaviour
                 }
                 else if (currentTurn == CurrentTurn.Zombie)
                 {
-                    // Randomly pick the pieces to move. 
+                    // Zombie moves all pieces at once, so go to next state.
+                    currState = GameState.PieceMove;
                 }
                 break;
             case GameState.PieceSelected:
@@ -183,6 +186,16 @@ public class BoardStateManager : MonoBehaviour
                     {
                         currState = GameState.TurnEnd;
                     }
+                }
+                else
+                {
+                    List<IZombiePiece> pieces = board.allPieces.Values.Where(x => x.owner == currentTurn).Cast<IZombiePiece>().ToList();
+                    foreach (IZombiePiece zom in pieces)
+                    {
+                        zom.ZombieAiAction();
+                    }
+                    // Pause or something, i dunno
+                    currState = GameState.TurnEnd;
                 }
                 break;
             case GameState.TurnEnd:

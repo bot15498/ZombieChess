@@ -66,4 +66,14 @@ public abstract class MoveablePiece: MonoBehaviour
         Destroy(gameObject);
         return true;
     }
+    public int ManDistance(MoveablePiece other)
+    {
+        // Returns the manhattan distance between this piece and another
+        return Mathf.Abs(other.xPos - xPos) + Mathf.Abs(other.yPos - yPos);
+    }
+    public int ManDistance(BoardTile tile)
+    {
+        // Returns the manhattan distance between this piece and another tile
+        return Mathf.Abs(tile.xCoord - xPos) + Mathf.Abs(tile.yCoord - yPos);
+    }
 }

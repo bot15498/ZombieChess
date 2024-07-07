@@ -284,7 +284,8 @@ MonoBehaviour:
   bishopPrefab: {fileID: 4126888727082621601, guid: f6f72d6990198f14ab0512c2bb5cd1bd, type: 3}
   queenPrefab: {fileID: 4126888727082621601, guid: e6069ec080979ee4fb34743746ca4ef8, type: 3}
   kingPrefab: {fileID: 4126888727082621601, guid: 2c289065765536a4fa69d2f4b02ba09b, type: 3}
-  zombiePawnPrefab: {fileID: 4126888727082621601, guid: 033930345b5099e49886614eef31d815, type: 3}
+  shamblerPrefab: {fileID: 4126888727082621601, guid: 033930345b5099e49886614eef31d815, type: 3}
+  boomerPrefab: {fileID: 4126888727082621601, guid: 0d04ae4fe4bfd644088905db0be3b59b, type: 3}
   currState: 0
   currentTurn: 0
 --- !u!4 &1125217716
