@@ -4,7 +4,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.UI.GridLayoutGroup;
 
-public class Shambler : MoveablePiece
+
+public class Shambler : MoveablePiece, IZombiePiece
+
 {
     public override List<BoardTile> PreviewAttack()
     {
@@ -12,6 +14,11 @@ public class Shambler : MoveablePiece
     }
 
     public override List<BoardTile> PreviewMove()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public BoardTile ZombieAiAction()
     {
         throw new System.NotImplementedException();
     }
