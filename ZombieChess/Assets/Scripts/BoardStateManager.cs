@@ -34,6 +34,7 @@ public class BoardStateManager : MonoBehaviour
     public GameObject kingPrefab;
     public GameObject shamblerPrefab;
     public GameObject boomerPrefab;
+    public GameObject chargerPrefab;
     public GameState currState;
     public CurrentTurn currentTurn;
     public int turnCount = 1;
@@ -56,7 +57,7 @@ public class BoardStateManager : MonoBehaviour
         // First make the board a 8x8 board. We start with 1 tile, so increase it by 7
         board.theBoard.Add((0, 0), startTile.GetComponent<BoardTile>());
         board.ExpandBoard(7, BoardDirections.East);
-        board.ExpandBoard(7, BoardDirections.North);
+        board.ExpandBoard(13, BoardDirections.North);
 
         // On Start, set up the board like a normal chess match
         board.PlacePiece(0, 1, CurrentTurn.Player, pawnPrefab);
@@ -217,6 +218,12 @@ public class BoardStateManager : MonoBehaviour
                 }
                 else
                 {
+                    bool didLose = board.allPieces.Values.Where(x => x.owner == currentTurn).Any(x => x.LoseCheck());
+                    if(didLose)
+                    {
+                        Lose();
+                    }
+
                     turnCount++;
                     ZombieSpawnCheck();
                 }
@@ -336,5 +343,11 @@ public class BoardStateManager : MonoBehaviour
         }
 
         return toSpawn != numZombies;
+    }
+
+    public void Lose()
+    {
+        // rip in peace lose 
+        Debug.Log("You lose.");
     }
 }

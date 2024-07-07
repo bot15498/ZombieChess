@@ -4,13 +4,15 @@ using UnityEngine;
 
 public abstract class MoveablePiece: MonoBehaviour
 {
-    public int health { get; set; }
-    public int maxHealth { get; set; }
-    public int numActions { get; set; }
-    public int maxNumActions { get; set; }
-    public int xPos { get; set; }
-    public int yPos { get; set; }
-    public bool canAct { get; set; }
+    public int health { get; set; } = 1;
+    public int maxHealth { get; set; } = 1;
+    public int numActions { get; set; } = 1;
+    public int maxNumActions { get; set; } = 1;
+    public int xPos { get; set; } = 0;
+    public int yPos { get; set; } = 0;
+    public bool canAct { get; set; } = true;
+    public int size { get; set; } = 1;
+    protected bool justKilledKing = false;
     public CurrentTurn owner { get; set; }
     protected Board board { get; set; }
     public abstract List<BoardTile> PreviewMove();
@@ -46,6 +48,7 @@ public abstract class MoveablePiece: MonoBehaviour
             enemy.health--;
             if (enemy.health <= 0)
             {
+                justKilledKing = enemy.GetComponent<King>() != null;
                 enemy.Die();
             }
         }
@@ -75,5 +78,20 @@ public abstract class MoveablePiece: MonoBehaviour
     {
         // Returns the manhattan distance between this piece and another tile
         return Mathf.Abs(tile.xCoord - xPos) + Mathf.Abs(tile.yCoord - yPos);
+    }
+    public bool LoseCheck()
+    {
+        // Checks to see if the player has lost the game
+        //If you are a zombie and are at minYPos, then you lose
+        if(owner == CurrentTurn.Zombie && yPos == board.minYPos)
+        {
+            return true;
+        }
+        if(owner == CurrentTurn.Zombie && justKilledKing)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

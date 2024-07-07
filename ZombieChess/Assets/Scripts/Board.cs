@@ -62,7 +62,7 @@ public class Board : MonoBehaviour
         }
 
         // Instantiate object
-        Vector3 pos = new Vector3(xPos * gridStep, 0 + pieceYOffset, yPos * gridStep);
+        Vector3 pos = new Vector3(xPos * gridStep, 0 + pieceYOffset, yPos * gridStep) + transform.position;
         GameObject newObject = Instantiate(obj, pos, Quaternion.identity, transform);
         MoveablePiece piece = newObject.GetComponent<MoveablePiece>();
         piece.Spawn(this, xPos, yPos, owner);
@@ -92,7 +92,7 @@ public class Board : MonoBehaviour
     {
         objectsMoving.Add(obj.GetComponent<MoveablePiece>());
         Vector3 origPosition = obj.transform.position;
-        Vector3 newPosition = new Vector3(newXPos * gridStep, 0 + pieceYOffset, newYPos * gridStep);
+        Vector3 newPosition = new Vector3(newXPos * gridStep, 0 + pieceYOffset, newYPos * gridStep) + transform.position;
         float elapsedTime = 0;
         while (Mathf.Sin(elapsedTime / moveTime * (Mathf.PI / 2)) <= 0.95f)
         {
@@ -118,7 +118,7 @@ public class Board : MonoBehaviour
                     // for each row you want to add
                     for (int j = maxYPos + 1; j <= maxYPos + val; j++)
                     {
-                        Vector3 position = new Vector3(i * gridStep, 0, j * gridStep);
+                        Vector3 position = new Vector3(i * gridStep, 0, j * gridStep) + transform.position;
                         if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))
                         {
                             // spawn a black one
@@ -142,7 +142,7 @@ public class Board : MonoBehaviour
                     // for each row you want to add
                     for (int j = minYPos - 1; j >= minYPos - val; j--)
                     {
-                        Vector3 position = new Vector3(i * gridStep, 0, j * gridStep);
+                        Vector3 position = new Vector3(i * gridStep, 0, j * gridStep) + transform.position;
                         if ((j % 2 == 0 && i % 2 == 0) || (j % 2 != 0 && i % 2 != 0))
                         {
                             // spawn a black one
@@ -167,7 +167,7 @@ public class Board : MonoBehaviour
                     // for each column you want to add
                     for (int j = maxXPos + 1; j <= maxXPos + val; j++)
                     {
-                        Vector3 position = new Vector3(j * gridStep, 0, i * gridStep);
+                        Vector3 position = new Vector3(j * gridStep, 0, i * gridStep) + transform.position;
                         if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))
                         {
                             // spawn a black one
@@ -192,7 +192,7 @@ public class Board : MonoBehaviour
                     // for each column you want to add
                     for (int j = minXPos - 1; j >= minXPos - val; j--)
                     {
-                        Vector3 position = new Vector3(j * gridStep, 0, i * gridStep);
+                        Vector3 position = new Vector3(j * gridStep, 0, i * gridStep) + transform.position;
                         if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))
                         {
                             // spawn a black one
