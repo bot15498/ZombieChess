@@ -35,6 +35,7 @@ public class BoardStateManager : MonoBehaviour
     public GameObject shamblerPrefab;
     public GameObject boomerPrefab;
     public GameObject chargerPrefab;
+    public GameObject hunterPrefab;
     public GameState currState;
     public CurrentTurn currentTurn;
     public int turnCount = 1;
