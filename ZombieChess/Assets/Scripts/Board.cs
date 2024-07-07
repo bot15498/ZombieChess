@@ -102,6 +102,10 @@ public class Board : MonoBehaviour
         float elapsedTime = 0;
         while (Mathf.Sin(elapsedTime / moveTime * (Mathf.PI / 2)) <= 0.95f)
         {
+            if (!obj)
+            {
+                break;
+            }
             obj.transform.position = Vector3.Lerp(origPosition, newPosition, Mathf.Sin(elapsedTime / moveTime * (Mathf.PI / 2)));
             elapsedTime += Time.deltaTime;
             yield return null;
