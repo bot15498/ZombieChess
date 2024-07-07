@@ -55,7 +55,24 @@ public class Shambler : MonoBehaviour, IMoveablePiece
 
     public bool Attack(int targetXPos, int targetYPos)
     {
-        throw new System.NotImplementedException();
+        // Do damage
+        IMoveablePiece enemy;
+        if (board.allPieces.TryGetValue((targetXPos, targetYPos), out enemy) && enemy.owner != owner)
+        {
+            enemy.health--;
+            if (enemy.health <= 0)
+            {
+                enemy.Die();
+            }
+        }
+
+        // If we are normal attacking, and we defeat the enemy, then also do a move.
+        if (!board.allPieces.ContainsKey((targetXPos, targetYPos)))
+        {
+            Move(targetXPos, targetYPos);
+        }
+
+        return true;
     }
 
     public List<BoardTile> PreviewAttack()
