@@ -5,7 +5,10 @@ using UnityEngine;
 public class PurchaseUpgrade : MonoBehaviour
 {
     public bool UpgradePrerequisite;
-    public GameObject subsequentUpgradeButton;
+    public bool UpgradeBranch;
+    public GameObject[] subsequentUpgradeButton;
+    public GameObject[] rivalupgrades;
+     
     UpgradeManager uManager;
     public int purchaseID;
 
@@ -20,9 +23,20 @@ public class PurchaseUpgrade : MonoBehaviour
         if (uManager.PawnUpgradeCosts[purchaseID] <= uManager.zombieBucks && uManager.PawnPurchaseStatus[purchaseID] == false)
         {
             uManager.PawnUpgrade(purchaseID);
+
+            if(UpgradeBranch == true)
+            {
+                foreach(GameObject rivalup in rivalupgrades)
+                {
+                    rivalup.SetActive(false);
+                }
+            }
             if(UpgradePrerequisite == true)
             {
-                subsequentUpgradeButton.SetActive(true);
+                foreach(GameObject subsequentupgrades in subsequentUpgradeButton)
+                {
+                    subsequentupgrades.SetActive(true);
+                }
             }
             //disable purchase button
         }else if (uManager.PawnUpgradeCosts[purchaseID] > uManager.zombieBucks)
@@ -38,7 +52,10 @@ public class PurchaseUpgrade : MonoBehaviour
             uManager.RookUpgrade(purchaseID);
             if (UpgradePrerequisite == true)
             {
-                subsequentUpgradeButton.SetActive(true);
+                foreach (GameObject subsequentupgrades in subsequentUpgradeButton)
+                {
+                    subsequentupgrades.SetActive(true);
+                }
             }
             //disable purchase button
         }else if (uManager.RookUpgradeCosts[purchaseID] > uManager.zombieBucks)
@@ -54,7 +71,10 @@ public class PurchaseUpgrade : MonoBehaviour
             uManager.KnightUpgrade(purchaseID);
             if (UpgradePrerequisite == true)
             {
-                subsequentUpgradeButton.SetActive(true);
+                foreach (GameObject subsequentupgrades in subsequentUpgradeButton)
+                {
+                    subsequentupgrades.SetActive(true);
+                }
             }
             //disable purchase button
         }
@@ -71,7 +91,10 @@ public class PurchaseUpgrade : MonoBehaviour
             uManager.BishopUpgrade(purchaseID);
             if (UpgradePrerequisite == true)
             {
-                subsequentUpgradeButton.SetActive(true);
+                foreach (GameObject subsequentupgrades in subsequentUpgradeButton)
+                {
+                    subsequentupgrades.SetActive(true);
+                }
             }
             //disable purchase button
         }
@@ -83,12 +106,17 @@ public class PurchaseUpgrade : MonoBehaviour
 
     public void QueenUpgrade()
     {
+
+        
         if (uManager.QueenUpgradeCosts[purchaseID] <= uManager.zombieBucks && uManager.QueenPurchaseStatus[purchaseID] == false)
         {
             uManager.QueenUpgrade(purchaseID);
             if (UpgradePrerequisite == true)
             {
-                subsequentUpgradeButton.SetActive(true);
+                foreach (GameObject subsequentupgrades in subsequentUpgradeButton)
+                {
+                    subsequentupgrades.SetActive(true);
+                }
             }
             //disable purchase button
         }
@@ -104,7 +132,10 @@ public class PurchaseUpgrade : MonoBehaviour
             uManager.KingUpgrade(purchaseID);
             if (UpgradePrerequisite == true)
             {
-                subsequentUpgradeButton.SetActive(true);
+                foreach (GameObject subsequentupgrades in subsequentUpgradeButton)
+                {
+                    subsequentupgrades.SetActive(true);
+                }
             }
             //disable purchase button
         }
