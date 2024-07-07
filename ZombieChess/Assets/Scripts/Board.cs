@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -79,7 +78,13 @@ public class Board : MonoBehaviour
             allPieces.Remove((piece.xPos, piece.yPos));
             allPieces.Add((newXPos, newYPos), piece);
             // Move it physically
-            StartCoroutine(MovePieceLerp(obj, newXPos, newYPos));
+            // If this is a zombie, give it a random delay before hand
+            float delay = 0f;
+            if(piece.owner == CurrentTurn.Zombie)
+            {
+                delay = Random.Range(0f, 1f);
+            }
+            StartCoroutine(MovePieceLerp(obj, newXPos, newYPos, delay));
             return true;
         }
         else
@@ -88,8 +93,9 @@ public class Board : MonoBehaviour
         }
     }
 
-    private IEnumerator MovePieceLerp(GameObject obj, int newXPos, int newYPos)
+    private IEnumerator MovePieceLerp(GameObject obj, int newXPos, int newYPos, float delay = 0f)
     {
+        yield return new WaitForSeconds(delay);
         objectsMoving.Add(obj.GetComponent<MoveablePiece>());
         Vector3 origPosition = obj.transform.position;
         Vector3 newPosition = new Vector3(newXPos * gridStep, 0 + pieceYOffset, newYPos * gridStep) + transform.position;

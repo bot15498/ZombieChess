@@ -218,12 +218,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tile1Prefab: {fileID: 5760001661751187078, guid: 70de5604fdd5f8440a53e46ffa66e686, type: 3}
   tile2Prefab: {fileID: 5760001661751187078, guid: e17ce4ec3903af246917bf7fef474671, type: 3}
-  gridStep: 6
-  pieceYOffset: 0.6
+  gridStep: 1
+  pieceYOffset: 0.15
   minXPos: 0
   minYPos: 0
   maxXPos: 0
   maxYPos: 0
+  objectsMoving: []
+  moveTime: 0.5
 --- !u!4 &832055205
 Transform:
   m_ObjectHideFlags: 0
@@ -286,8 +288,10 @@ MonoBehaviour:
   kingPrefab: {fileID: 4126888727082621601, guid: 2c289065765536a4fa69d2f4b02ba09b, type: 3}
   shamblerPrefab: {fileID: 4126888727082621601, guid: 033930345b5099e49886614eef31d815, type: 3}
   boomerPrefab: {fileID: 4126888727082621601, guid: 0d04ae4fe4bfd644088905db0be3b59b, type: 3}
+  chargerPrefab: {fileID: 0}
   currState: 0
   currentTurn: 0
+  turnCount: 1
 --- !u!4 &1125217716
 Transform:
   m_ObjectHideFlags: 0
@@ -406,14 +410,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1573303346}
-  m_LocalRotation: {x: 0.2755089, y: -0, z: -0, w: 0.9612985}
-  m_LocalPosition: {x: 21.3, y: 28.7, z: -23.5}
+  m_LocalRotation: {x: 0.2594288, y: -0, z: -0, w: 0.96576226}
+  m_LocalPosition: {x: 4.4, y: 11.8, z: -8.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 31.985, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 30.072, y: 0, z: 0}
 --- !u!114 &1573303350
 MonoBehaviour:
   m_ObjectHideFlags: 0
