@@ -12,6 +12,7 @@ public class King : MonoBehaviour, IMoveablePiece
     private CurrentTurn _owner = CurrentTurn.Player;
     private bool _canAct = true;
     private int _numActions = 1;
+    private int _maxNumActions = 1;
     private int _health = 1;
     private int _maxHealth = 1;
     [SerializeField]
@@ -22,6 +23,8 @@ public class King : MonoBehaviour, IMoveablePiece
     public int health { get => _health; set => _health = value; }
     public int maxHealth { get => _maxHealth; set => _maxHealth = value; }
     public int numActions { get => _numActions; set => _numActions = value; }
+    public int maxNumActions { get => _maxNumActions; set => _maxNumActions = value; }
+
     public bool canAct { get => _canAct; set => _canAct = value; }
     public CurrentTurn owner { get => _owner; set => _owner = value; }
 
@@ -69,7 +72,13 @@ public class King : MonoBehaviour, IMoveablePiece
         return true;
     }
 
-    public List<(int xPos, int yPos)> PreviewMove()
+    public List<BoardTile> PreviewMove()
+    {
+        // Give all the possible places that the pawn can move to.
+        return null;
+    }
+
+    public List<BoardTile> PreviewAttack()
     {
         // Give all the possible places that the pawn can move to.
         return null;

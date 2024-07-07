@@ -35,6 +35,8 @@ public class BoardStateManager : MonoBehaviour
 
     private IMoveablePiece currSelectedPiece;
     private BoardTile currSelectedBoardTile;
+    private List<BoardTile> possiblePlacesToMove = new List<BoardTile>();
+    private List<BoardTile> possiblePlacesToAttack = new List<BoardTile>();
 
     private void Awake()
     {
@@ -96,8 +98,9 @@ public class BoardStateManager : MonoBehaviour
                 if (currentTurn == CurrentTurn.Player)
                 {
                     // Piece selected. Highlight the spots you can move to, then go to next state
-                    List<(int, int)> possiblePlacesToMove = currSelectedPiece.PreviewMove();
-                    if (possiblePlacesToMove.Count == 0)
+                    possiblePlacesToMove = currSelectedPiece.PreviewMove();
+                    possiblePlacesToAttack = currSelectedPiece.PreviewAttack();
+                    if (possiblePlacesToMove.Count == 0 && possiblePlacesToAttack.Count == 0)
                     {
                         // go back you doofus you can't move this piece.
                         currState = GameState.WaitForPieceSelect;
@@ -105,6 +108,11 @@ public class BoardStateManager : MonoBehaviour
                     }
                     else
                     {
+                        // highlight all the tiles
+                        SetTileHighlightColor(possiblePlacesToMove, TileHighlightType.Move);
+                        SetTileHighlightColor(possiblePlacesToAttack, TileHighlightType.Attack);
+                        detector.canClickTile = true;
+                        detector.canClickPiece = false;
                         currState = GameState.WaitForPieceMove;
                     }
                 }
@@ -113,14 +121,35 @@ public class BoardStateManager : MonoBehaviour
                 if (currentTurn == CurrentTurn.Player)
                 {
                     // Wait for player to select a place to move to
+                    if(currSelectedBoardTile != null)
+                    {
+                        currState = GameState.PieceMove;
+                    }
                 }
                 break;
             case GameState.PieceMove:
                 if (currentTurn == CurrentTurn.Player)
                 {
-                    // Enable selecting the tile to move to
+                    // move the stupid thing.
+                    currSelectedPiece.Move(currSelectedBoardTile.xCoord, currSelectedBoardTile.yCoord);
+
+                    // Clear out the highlighted tiles
+                    SetTileHighlightColor(possiblePlacesToMove, TileHighlightType.Idle);
+                    SetTileHighlightColor(possiblePlacesToAttack, TileHighlightType.Idle);
 
                     // If piece has more thane one move, go to previous state. Otherwise go forward in time.
+                    currSelectedPiece.numActions--;
+                    if (currSelectedPiece.numActions > 0)
+                    {
+                        // Recalculate the pieces' allowed places it can move / attackl
+                        possiblePlacesToMove = currSelectedPiece.PreviewMove();
+                        possiblePlacesToAttack = currSelectedPiece.PreviewAttack();
+                        currState = GameState.WaitForPieceMove;
+                    }
+                    else
+                    {
+                        currState = GameState.TurnEnd;
+                    }
                 }
                 break;
             case GameState.TurnEnd:
@@ -131,20 +160,54 @@ public class BoardStateManager : MonoBehaviour
                     detector.canClickTile = false;
                     currSelectedPiece = null;
                     currSelectedBoardTile = null;
+                    possiblePlacesToMove.Clear();
                 }
                 // change whose turn it is.
+                ResetMoveCount(currentTurn);
                 currentTurn = currentTurn == CurrentTurn.Player ? CurrentTurn.Zombie : CurrentTurn.Player;
+                currState = GameState.TurnStart;
                 break;
         }
     }
 
     public void PieceSelectedForMovement(IMoveablePiece piece)
     {
-        currSelectedPiece = piece;
+        if (currentTurn == piece.owner)
+        {
+            currSelectedPiece = piece;
+        }
     }
 
-    public void TileSelectedForMovement(BoardTile tile)
+    public void TileSelectedForMovement(int xPos, int yPos)
     {
-        currSelectedBoardTile = tile;
+        BoardTile tile;
+        bool found = board.theBoard.TryGetValue((xPos, yPos), out tile);
+        if (found && (possiblePlacesToAttack.Contains(tile) || possiblePlacesToMove.Contains(tile)))
+        {
+            currSelectedBoardTile = tile;
+        }
+    }
+
+    private void ResetMoveCount(CurrentTurn whois)
+    {
+        foreach(IMoveablePiece piece in board.allPieces.Values)
+        {
+            if(piece.owner == whois)
+            {
+                piece.numActions = piece.maxNumActions;
+            }
+        }
+    }
+
+    private void SetTileHighlightColor(List<BoardTile> tiles, TileHighlightType highlightType)
+    {
+        foreach (BoardTile tile in tiles)
+        {
+            bool foundTile = board.theBoard.ContainsKey((tile.xCoord, tile.yCoord));
+            if (foundTile)
+            {
+                tile.Highlight(highlightType);
+            }
+        }
     }
 }

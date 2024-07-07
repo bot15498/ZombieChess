@@ -27,7 +27,7 @@ public class MeshClickDetector : MonoBehaviour
             {
                 // Clicking a piece to select it to move
                 IMoveablePiece piece = hit.transform.GetComponent<IMoveablePiece>();
-                if (piece != null && BoardStateManager.current.currentTurn == piece.owner)
+                if (piece != null)
                 {
                     BoardStateManager.current.PieceSelectedForMovement(piece);
                 }
@@ -35,6 +35,17 @@ public class MeshClickDetector : MonoBehaviour
             else if (canClickTile)
             {
                 // click a tile or a enemy to move to.
+                // When you are here, if you click a piece with a IMoveablePiece on it, check if it's an enemy, if it is, then use that instead. 
+                IMoveablePiece piece = hit.transform.GetComponent<IMoveablePiece>();
+                BoardTile tile = hit.transform.GetComponent<BoardTile>();
+                if(piece != null)
+                {
+                    BoardStateManager.current.TileSelectedForMovement(piece.xPos, piece.yPos);
+                }
+                else if (tile != null)
+                {
+                    BoardStateManager.current.TileSelectedForMovement(tile.xCoord, tile.yCoord);
+                }
             }
         }
         Debug.DrawRay(ray.origin, ray.direction * 9999, Color.red);
