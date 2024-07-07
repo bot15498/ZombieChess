@@ -105,7 +105,7 @@ public class BoardStateManager : MonoBehaviour
                 else if (currentTurn == CurrentTurn.Zombie)
                 {
                     // Zombie moves all pieces at once, so go to next state.
-                    currState = GameState.PieceMove;
+                    currState = GameState.WaitForPieceMove;
                 }
                 break;
             case GameState.PieceSelected:
@@ -137,6 +137,22 @@ public class BoardStateManager : MonoBehaviour
                     // Wait for player to select a place to move to
                     if (currSelectedBoardTile != null)
                     {
+                        // move the stupid thing.
+                        if (possiblePlacesToAttack.Contains(currSelectedBoardTile))
+                        {
+                            // attacking
+                            currSelectedPiece.Attack(currSelectedBoardTile.xCoord, currSelectedBoardTile.yCoord);
+                        }
+                        else
+                        {
+                            // just moving
+                            currSelectedPiece.Move(currSelectedBoardTile.xCoord, currSelectedBoardTile.yCoord);
+                        }
+
+                        // Clear out the highlighted tiles
+                        SetTileHighlightColor(possiblePlacesToMove, TileHighlightType.Idle);
+                        SetTileHighlightColor(possiblePlacesToAttack, TileHighlightType.Idle);
+
                         currState = GameState.PieceMove;
                     }
                     if (Input.GetMouseButtonDown(1))
@@ -150,40 +166,6 @@ public class BoardStateManager : MonoBehaviour
                         currState = GameState.WaitForPieceSelect;
                     }
                 }
-                break;
-            case GameState.PieceMove:
-                if (currentTurn == CurrentTurn.Player)
-                {
-                    // move the stupid thing.
-                    if (possiblePlacesToAttack.Contains(currSelectedBoardTile))
-                    {
-                        // attacking
-                        currSelectedPiece.Attack(currSelectedBoardTile.xCoord, currSelectedBoardTile.yCoord);
-                    }
-                    else
-                    {
-                        // just moving
-                        currSelectedPiece.Move(currSelectedBoardTile.xCoord, currSelectedBoardTile.yCoord);
-                    }
-
-                    // Clear out the highlighted tiles
-                    SetTileHighlightColor(possiblePlacesToMove, TileHighlightType.Idle);
-                    SetTileHighlightColor(possiblePlacesToAttack, TileHighlightType.Idle);
-
-                    // If piece has more thane one move, go to previous state. Otherwise go forward in time.
-                    currSelectedPiece.numActions--;
-                    if (currSelectedPiece.numActions > 0)
-                    {
-                        // Recalculate the pieces' allowed places it can move / attackl
-                        possiblePlacesToMove = currSelectedPiece.PreviewMove();
-                        possiblePlacesToAttack = currSelectedPiece.PreviewAttack();
-                        currState = GameState.WaitForPieceMove;
-                    }
-                    else
-                    {
-                        currState = GameState.TurnEnd;
-                    }
-                }
                 else
                 {
                     List<IZombiePiece> pieces = board.allPieces.Values.Where(x => x.owner == currentTurn).Cast<IZombiePiece>().ToList();
@@ -191,8 +173,36 @@ public class BoardStateManager : MonoBehaviour
                     {
                         zom.ZombieAiAction();
                     }
+                    currState = GameState.PieceMove;
+                }
+                break;
+            case GameState.PieceMove:
+                if (currentTurn == CurrentTurn.Player)
+                {
+                    // If piece has more thane one move, go to previous state. Otherwise go forward in time.
+                    if (board.objectsMoving.Count == 0)
+                    {
+                        currSelectedPiece.numActions--;
+                        if (currSelectedPiece.numActions > 0)
+                        {
+                            // Recalculate the pieces' allowed places it can move / attackl
+                            possiblePlacesToMove = currSelectedPiece.PreviewMove();
+                            possiblePlacesToAttack = currSelectedPiece.PreviewAttack();
+                            currState = GameState.WaitForPieceMove;
+                        }
+                        else
+                        {
+                            currState = GameState.TurnEnd;
+                        }
+                    }
+                }
+                else
+                {
                     // Pause or something, i dunno
-                    currState = GameState.TurnEnd;
+                    if(board.objectsMoving.Count == 0)
+                    {
+                        currState = GameState.TurnEnd;
+                    }
                 }
                 break;
             case GameState.TurnEnd:

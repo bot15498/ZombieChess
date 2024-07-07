@@ -14,11 +14,6 @@ public class Pawn : MoveablePiece
         UpgradeManager.current.ActivatePawnUpgrade += pawnUpgrade;
     }
 
-    void Update()
-    {
-
-    }
-
     void pawnUpgrade(int id)
     {
         switch (id)
@@ -37,6 +32,12 @@ public class Pawn : MoveablePiece
                 break;
         }
         //Do upgrade stuff
+    }
+
+    public override bool Move(int newXPos, int newYPos)
+    {
+        isFirstMove = false;
+        return base.Move(newXPos, newYPos);
     }
 
     public override List<BoardTile> PreviewMove()

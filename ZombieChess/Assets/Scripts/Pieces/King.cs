@@ -10,11 +10,6 @@ public class King : MoveablePiece
         UpgradeManager.current.ActivateKingUpgrade += KingUpgrade;
     }
 
-    void Update()
-    {
-
-    }
-
     void KingUpgrade(int id)
     {
         switch (id)

@@ -11,10 +11,6 @@ public class Bishop : MoveablePiece
         UpgradeManager.current.ActivateBishopUpgrade += BishopUpgrade;
     }
 
-    void Update()
-    {
-
-    }
     void BishopUpgrade(int id)
     {
         switch (id)

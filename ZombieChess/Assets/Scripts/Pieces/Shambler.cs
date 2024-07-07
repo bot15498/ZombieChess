@@ -74,9 +74,4 @@ public class Shambler : MoveablePiece, IZombiePiece
     {
         
     }
-
-    void Update()
-    {
-        
-    }
 }

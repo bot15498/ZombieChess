@@ -11,11 +11,6 @@ public class Queen : MoveablePiece
         UpgradeManager.current.ActivateQueenUpgrade += QueenUpgrade;
     }
 
-    void Update()
-    {
-
-    }
-
     void QueenUpgrade(int id)
     {
         switch (id)

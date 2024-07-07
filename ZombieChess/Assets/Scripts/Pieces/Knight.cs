@@ -12,10 +12,6 @@ public class Knight : MoveablePiece
         UpgradeManager.current.ActivateKnightUpgrade += KnightUpgrade;
     }
 
-    void Update()
-    {
-
-    }
     void KnightUpgrade(int id)
     {
         switch (id)

@@ -135,10 +135,4 @@ public class Boomer : MoveablePiece, IZombiePiece
     {
 
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

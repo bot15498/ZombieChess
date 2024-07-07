@@ -12,10 +12,6 @@ public class Rook : MoveablePiece
         UpgradeManager.current.ActivateRookUpgrade += RookUpgrade;
     }
 
-    void Update()
-    {
-
-    }
     void RookUpgrade(int id)
     {
         switch (id)

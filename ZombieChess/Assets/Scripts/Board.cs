@@ -23,6 +23,8 @@ public class Board : MonoBehaviour
     public int minYPos = 0;
     public int maxXPos = 0;
     public int maxYPos = 0;
+    public List<MoveablePiece> objectsMoving = new List<MoveablePiece>();
+    public float moveTime = 0.5f;
 
     void Start()
     {
@@ -77,13 +79,30 @@ public class Board : MonoBehaviour
             allPieces.Remove((piece.xPos, piece.yPos));
             allPieces.Add((newXPos, newYPos), piece);
             // Move it physically
-            obj.transform.position = new Vector3(newXPos * gridStep, 0 + pieceYOffset, newYPos * gridStep);
+            StartCoroutine(MovePieceLerp(obj, newXPos, newYPos));
             return true;
         }
         else
         {
             return false;
         }
+    }
+
+    private IEnumerator MovePieceLerp(GameObject obj, int newXPos, int newYPos)
+    {
+        objectsMoving.Add(obj.GetComponent<MoveablePiece>());
+        Vector3 origPosition = obj.transform.position;
+        Vector3 newPosition = new Vector3(newXPos * gridStep, 0 + pieceYOffset, newYPos * gridStep);
+        float elapsedTime = 0;
+        while (Mathf.Sin(elapsedTime / moveTime * (Mathf.PI / 2)) <= 0.95f)
+        {
+            obj.transform.position = Vector3.Lerp(origPosition, newPosition, Mathf.Sin(elapsedTime / moveTime * (Mathf.PI / 2)));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        obj.transform.position = newPosition;
+        objectsMoving.Remove(obj.GetComponent<MoveablePiece>());
+        yield return null;
     }
 
     public void ExpandBoard(int val, BoardDirections direction)
