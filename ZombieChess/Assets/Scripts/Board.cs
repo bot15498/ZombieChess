@@ -19,14 +19,10 @@ public class Board : MonoBehaviour
     public float pieceYOffset;
     public Dictionary<(int xPos, int yPos), IMoveablePiece> allPieces = new Dictionary<(int xPos, int yPos), IMoveablePiece>();
     public Dictionary<(int xPos, int yPos), BoardTile> theBoard = new Dictionary<(int xPos, int yPos), BoardTile>();
-    [SerializeField]
-    private int minXPos = 0;
-    [SerializeField]
-    private int minYPos = 0;
-    [SerializeField]
-    private int maxXPos = 0;
-    [SerializeField]
-    private int maxYPos = 0;
+    public int minXPos = 0;
+    public int minYPos = 0;
+    public int maxXPos = 0;
+    public int maxYPos = 0;
 
     void Start()
     {

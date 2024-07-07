@@ -59,8 +59,16 @@ public class King : MonoBehaviour, IMoveablePiece
 
     public bool Move(int newXPos, int newYPos)
     {
-        // Return true if this is a valid move, other wise return false;
-        return false;
+        // Update the board with the new place we are at 
+        board.allPieces.Remove((xPos, yPos));
+        xPos = newXPos;
+        yPos = newYPos;
+        board.allPieces.Add((xPos, yPos), this);
+
+        // move the actual thing
+        board.MovePiece(gameObject, newXPos, newYPos);
+
+        return true;
     }
 
     public bool Spawn(Board board, int xPos, int yPos, CurrentTurn owner)
@@ -74,13 +82,51 @@ public class King : MonoBehaviour, IMoveablePiece
 
     public List<BoardTile> PreviewMove()
     {
-        // Give all the possible places that the pawn can move to.
-        return null;
+        // Give all the possible places that the king can move to.
+        List<BoardTile> result = new List<BoardTile>();
+        BoardTile tile;
+        for (int xCounter = -1; xCounter <= 1; xCounter++)
+        {
+            for (int yCounter = -1; yCounter <= 1; yCounter++)
+            {
+                if(xCounter == 0 && yCounter == 0)
+                {
+                    continue;
+                }
+
+                // If you are in the 1 square radius around the king.
+                if (board.theBoard.TryGetValue((xPos + xCounter, yPos + yCounter), out tile) && !board.allPieces.ContainsKey((xPos + xCounter, yPos + yCounter)))
+                {
+                    result.Add(tile);
+                }
+            }
+        }
+        return result;
     }
 
     public List<BoardTile> PreviewAttack()
     {
-        // Give all the possible places that the pawn can move to.
-        return null;
+        // Give all the possible places that the king can attack to.
+        List<BoardTile> result = new List<BoardTile>();
+        BoardTile tile;
+        IMoveablePiece enemyPiece;
+        for (int xCounter = -1; xCounter <= 1; xCounter++)
+        {
+            for (int yCounter = -1; yCounter <= 1; yCounter++)
+            {
+                if (xCounter == 0 && yCounter == 0)
+                {
+                    continue;
+                }
+
+                // If you are in the 1 square radius around the king.
+                if (board.allPieces.TryGetValue((xPos + xCounter, yPos + yCounter), out enemyPiece) && enemyPiece.owner != owner)
+                {
+                    board.theBoard.TryGetValue((xPos + xCounter, yPos + yCounter), out tile);
+                    result.Add(tile);
+                }
+            }
+        }
+        return result;
     }
 }

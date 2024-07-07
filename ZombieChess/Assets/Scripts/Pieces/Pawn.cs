@@ -107,12 +107,12 @@ public class Pawn : MonoBehaviour, IMoveablePiece
         List<BoardTile> result = new List<BoardTile>();
         BoardTile tile;
         IMoveablePiece enemyPiece;
-        if (board.allPieces.TryGetValue((xPos, yPos + 1), out enemyPiece) && enemyPiece.owner != owner)
+        if (board.allPieces.TryGetValue((xPos - 1, yPos + 1), out enemyPiece) && enemyPiece.owner != owner)
         {
             board.theBoard.TryGetValue((xPos, yPos + 1), out tile);
             result.Add(tile);
         }
-        if (isFirstMove && board.allPieces.TryGetValue((xPos, yPos + 2), out enemyPiece) && enemyPiece.owner != owner)
+        if (isFirstMove && board.allPieces.TryGetValue((xPos + 1, yPos + 2), out enemyPiece) && enemyPiece.owner != owner)
         {
             board.theBoard.TryGetValue((xPos, yPos + 2), out tile);
             result.Add(tile);

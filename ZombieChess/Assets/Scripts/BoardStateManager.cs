@@ -23,6 +23,7 @@ public class BoardStateManager : MonoBehaviour
     public static BoardStateManager current;
 
     public MeshClickDetector detector;
+    public GameObject startTile;
     public Board board;
     public GameObject pawnPrefab;
     public GameObject rookPrefab;
@@ -48,6 +49,7 @@ public class BoardStateManager : MonoBehaviour
     {
         currentTurn = CurrentTurn.Player;
         // First make the board a 8x8 board. We start with 1 tile, so increase it by 7
+        board.theBoard.Add((0, 0), startTile.GetComponent<BoardTile>());
         board.ExpandBoard(7, BoardDirections.East);
         board.ExpandBoard(7, BoardDirections.North);
 
@@ -164,7 +166,7 @@ public class BoardStateManager : MonoBehaviour
                 }
                 // change whose turn it is.
                 ResetMoveCount(currentTurn);
-                currentTurn = currentTurn == CurrentTurn.Player ? CurrentTurn.Zombie : CurrentTurn.Player;
+                //currentTurn = currentTurn == CurrentTurn.Player ? CurrentTurn.Zombie : CurrentTurn.Player;
                 currState = GameState.TurnStart;
                 break;
         }
