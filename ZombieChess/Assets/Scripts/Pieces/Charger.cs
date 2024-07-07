@@ -105,8 +105,6 @@ public class Charger : MoveablePiece, IZombiePiece
 
     }
 
-<<<<<<< HEAD
-=======
     public new bool Attack(int targetXPos, int targetYPos)
     {
         // Do damage
