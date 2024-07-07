@@ -14,6 +14,7 @@ public class ZombiePawn : MonoBehaviour, IMoveablePiece
     private bool _canAct = true;
     private int _numActions = 1;
     private int _maxNumActions = 1;
+    [SerializeField]
     private int _health = 1;
     private int _maxHealth = 1;
     [SerializeField]

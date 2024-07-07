@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum CurrentTurn
@@ -74,7 +75,10 @@ public class BoardStateManager : MonoBehaviour
         board.PlacePiece(4, 0, CurrentTurn.Player, kingPrefab);
 
         // Place a few zombies to test
-        board.PlacePiece(5, 5, CurrentTurn.Zombie, zombiePawnPrefab);
+        board.PlacePiece(5, 6, CurrentTurn.Zombie, zombiePawnPrefab);
+        board.PlacePiece(6, 7, CurrentTurn.Zombie, zombiePawnPrefab);
+        board.PlacePiece(2, 6, CurrentTurn.Zombie, zombiePawnPrefab);
+        board.PlacePiece(3, 7, CurrentTurn.Zombie, zombiePawnPrefab);
     }
 
     void Update()
@@ -98,6 +102,10 @@ public class BoardStateManager : MonoBehaviour
                     {
                         currState = GameState.PieceSelected;
                     }
+                }
+                else if (currentTurn == CurrentTurn.Zombie)
+                {
+                    // Randomly pick the pieces to move. 
                 }
                 break;
             case GameState.PieceSelected:
@@ -130,6 +138,16 @@ public class BoardStateManager : MonoBehaviour
                     if(currSelectedBoardTile != null)
                     {
                         currState = GameState.PieceMove;
+                    }
+                    if(Input.GetMouseButtonDown(1))
+                    {
+                        // Cancelled!
+                        SetTileHighlightColor(possiblePlacesToMove, TileHighlightType.Idle);
+                        SetTileHighlightColor(possiblePlacesToAttack, TileHighlightType.Idle);
+                        detector.canClickTile = false;
+                        detector.canClickPiece = true;
+                        currSelectedPiece = null;
+                        currState = GameState.WaitForPieceSelect;
                     }
                 }
                 break;
@@ -179,7 +197,7 @@ public class BoardStateManager : MonoBehaviour
                 }
                 // change whose turn it is.
                 ResetMoveCount(currentTurn);
-                //currentTurn = currentTurn == CurrentTurn.Player ? CurrentTurn.Zombie : CurrentTurn.Player;
+                currentTurn = currentTurn == CurrentTurn.Player ? CurrentTurn.Zombie : CurrentTurn.Player;
                 currState = GameState.TurnStart;
                 break;
         }
