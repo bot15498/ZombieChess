@@ -27,7 +27,12 @@ public class MeshClickDetector : MonoBehaviour
             {
                 // Clicking a piece to select it to move
                 IMoveablePiece piece = hit.transform.GetComponent<IMoveablePiece>();
+                BoardTile tile = hit.transform.GetComponent<BoardTile>();
                 if (piece != null)
+                {
+                    BoardStateManager.current.PieceSelectedForMovement(piece);
+                }
+                else if (tile != null && BoardStateManager.current.board.allPieces.TryGetValue((tile.xCoord, tile.yCoord), out piece))
                 {
                     BoardStateManager.current.PieceSelectedForMovement(piece);
                 }
