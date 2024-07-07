@@ -5,19 +5,19 @@ using UnityEngine;
 public enum TileHighlightType
 {
     Move,
-    Attack
+    Attack,
+    Idle
 }
 
 public class BoardTile : MonoBehaviour
 {
-    [SerializeField]
-    private int xCoord = 0;
-    [SerializeField]
-    private int yCoord = 0;
+    public int xCoord = 0;
+    public int yCoord = 0;
+    private Color startMaterialColor;
 
     void Start()
     {
-        
+        startMaterialColor = GetComponent<MeshRenderer>().material.color;
     }
 
     void Update()
@@ -36,8 +36,13 @@ public class BoardTile : MonoBehaviour
         switch(highLightType)
         {
             case TileHighlightType.Move:
+                GetComponent<MeshRenderer>().material.color = Color.blue;
                 break;
             case TileHighlightType.Attack:
+                GetComponent<MeshRenderer>().material.color = Color.red;
+                break;
+            case TileHighlightType.Idle:
+                GetComponent<MeshRenderer>().material.color = startMaterialColor;
                 break;
         }
     }

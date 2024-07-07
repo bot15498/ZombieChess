@@ -17,12 +17,8 @@ public class Board : MonoBehaviour
     public GameObject tile2Prefab;
     public float gridStep;
     public float pieceYOffset;
-    private List<IMoveablePiece> playerPieces;
-    private List<IMoveablePiece> enemyPieces;
-    [SerializeField]
-    private Dictionary<(int xPos, int yPos), IMoveablePiece> allPieces = new Dictionary<(int xPos, int yPos), IMoveablePiece>();
-    [SerializeField]
-    private Dictionary<(int xPos, int yPos), bool> theBoard = new Dictionary<(int xPos, int yPos), bool>();
+    public Dictionary<(int xPos, int yPos), IMoveablePiece> allPieces = new Dictionary<(int xPos, int yPos), IMoveablePiece>();
+    public Dictionary<(int xPos, int yPos), BoardTile> theBoard = new Dictionary<(int xPos, int yPos), BoardTile>();
     [SerializeField]
     private int minXPos = 0;
     [SerializeField]
@@ -61,7 +57,7 @@ public class Board : MonoBehaviour
     public bool PlacePiece(int xPos, int yPos, CurrentTurn owner, GameObject obj)
     {
         // First check if we can put the piece there or not
-        bool somethingThere = theBoard.ContainsKey((xPos, yPos));
+        bool somethingThere = allPieces.ContainsKey((xPos, yPos));
         if (somethingThere)
         {
             return false;
@@ -77,6 +73,23 @@ public class Board : MonoBehaviour
         return true;
     }
 
+    public bool MovePiece(GameObject obj, int newXPos, int newYPos)
+    {
+        IMoveablePiece piece = obj.GetComponent<IMoveablePiece>();
+        if (piece != null)
+        {
+            allPieces.Remove((piece.xPos, piece.yPos));
+            allPieces.Add((newXPos, newYPos), piece);
+            // Move it physically
+            obj.transform.position = new Vector3(newXPos * gridStep, 0 + pieceYOffset, newYPos * gridStep);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void ExpandBoard(int val, BoardDirections direction)
     {
         // On a standard chess board, if you are white, the bottom left square is BLACK
@@ -85,10 +98,10 @@ public class Board : MonoBehaviour
         {
             case BoardDirections.North:
                 // for each column
-                for(int i=minXPos; i <= maxXPos; i++)
+                for (int i = minXPos; i <= maxXPos; i++)
                 {
                     // for each row you want to add
-                    for(int j=maxYPos + 1; j<=maxYPos + val; j++)
+                    for (int j = maxYPos + 1; j <= maxYPos + val; j++)
                     {
                         Vector3 position = new Vector3(i * gridStep, 0, j * gridStep);
                         if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))
@@ -101,7 +114,9 @@ public class Board : MonoBehaviour
                             // spawn a white one
                             obj = Instantiate(tile1Prefab, position, Quaternion.identity, transform);
                         }
-                        obj.GetComponent<BoardTile>().SetCoord(i, j);
+                        BoardTile tile = obj.GetComponent<BoardTile>();
+                        tile.SetCoord(i, j);
+                        theBoard.Add((i, j), tile);
                     }
                 }
                 maxYPos += val;
@@ -123,7 +138,9 @@ public class Board : MonoBehaviour
                             // spawn a white one
                             obj = Instantiate(tile1Prefab, position, Quaternion.identity, transform);
                         }
-                        obj.GetComponent<BoardTile>().SetCoord(i, j);
+                        BoardTile tile = obj.GetComponent<BoardTile>();
+                        tile.SetCoord(i, j);
+                        theBoard.Add((i, j), tile);
                     }
                 }
                 minYPos -= val;
@@ -139,14 +156,16 @@ public class Board : MonoBehaviour
                         if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))
                         {
                             // spawn a black one
-                            obj = Instantiate(tile2Prefab, position,Quaternion.identity,transform);
+                            obj = Instantiate(tile2Prefab, position, Quaternion.identity, transform);
                         }
                         else
                         {
                             // spawn a white one
                             obj = Instantiate(tile1Prefab, position, Quaternion.identity, transform);
                         }
-                        obj.GetComponent<BoardTile>().SetCoord(j, i);
+                        BoardTile tile = obj.GetComponent<BoardTile>();
+                        tile.SetCoord(j, i);
+                        theBoard.Add((j, i), tile);
                     }
                 }
                 maxXPos += val;
@@ -169,7 +188,9 @@ public class Board : MonoBehaviour
                             // spawn a white one
                             obj = Instantiate(tile1Prefab, position, Quaternion.identity, transform);
                         }
-                        obj.GetComponent<BoardTile>().SetCoord(j, i);
+                        BoardTile tile = obj.GetComponent<BoardTile>();
+                        tile.SetCoord(j, i);
+                        theBoard.Add((j, i), tile);
                     }
                 }
                 minXPos -= val;
