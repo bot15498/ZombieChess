@@ -48,7 +48,9 @@ public class Pawn : MoveablePiece
         {
             result.Add(tile);
         }
-        if (isFirstMove && board.theBoard.TryGetValue((xPos, yPos + 2), out tile) && tile.canBeOccupied && !board.allPieces.ContainsKey((xPos, yPos + 2)))
+        if (isFirstMove && board.theBoard.TryGetValue((xPos, yPos + 2), out tile) 
+            && tile.canBeOccupied && !board.allPieces.ContainsKey((xPos, yPos + 2))
+            && !board.allPieces.ContainsKey((xPos, yPos + 1)))
         {
             result.Add(tile);
         }

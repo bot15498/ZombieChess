@@ -10,7 +10,7 @@ public enum CurrentTurn
 }
 
 public enum GameState
-{ 
+{
     TurnStart,
     WaitForPieceSelect,
     PieceSelected,
@@ -36,7 +36,9 @@ public class BoardStateManager : MonoBehaviour
     public GameObject boomerPrefab;
     public GameState currState;
     public CurrentTurn currentTurn;
+    public int turnCount = 1;
 
+    private int zombieLevel = 0;
     private MoveablePiece currSelectedPiece;
     private BoardTile currSelectedBoardTile;
     private List<BoardTile> possiblePlacesToMove = new List<BoardTile>();
@@ -75,17 +77,12 @@ public class BoardStateManager : MonoBehaviour
         board.PlacePiece(3, 0, CurrentTurn.Player, queenPrefab);
         board.PlacePiece(4, 0, CurrentTurn.Player, kingPrefab);
 
-        // Place a few zombies to test
-        board.PlacePiece(5, 6, CurrentTurn.Zombie, shamblerPrefab);
-        board.PlacePiece(6, 7, CurrentTurn.Zombie, shamblerPrefab);
-        board.PlacePiece(2, 6, CurrentTurn.Zombie, shamblerPrefab);
-        board.PlacePiece(3, 7, CurrentTurn.Zombie, shamblerPrefab);
-        board.PlacePiece(4, 6, CurrentTurn.Zombie, boomerPrefab);
+        ZombieSpawnCheck();
     }
 
     void Update()
     {
-        switch(currState)
+        switch (currState)
         {
             case GameState.TurnStart:
                 // Any animation or something.
@@ -138,11 +135,11 @@ public class BoardStateManager : MonoBehaviour
                 if (currentTurn == CurrentTurn.Player)
                 {
                     // Wait for player to select a place to move to
-                    if(currSelectedBoardTile != null)
+                    if (currSelectedBoardTile != null)
                     {
                         currState = GameState.PieceMove;
                     }
-                    if(Input.GetMouseButtonDown(1))
+                    if (Input.GetMouseButtonDown(1))
                     {
                         // Cancelled!
                         SetTileHighlightColor(possiblePlacesToMove, TileHighlightType.Idle);
@@ -158,7 +155,7 @@ public class BoardStateManager : MonoBehaviour
                 if (currentTurn == CurrentTurn.Player)
                 {
                     // move the stupid thing.
-                    if(possiblePlacesToAttack.Contains(currSelectedBoardTile))
+                    if (possiblePlacesToAttack.Contains(currSelectedBoardTile))
                     {
                         // attacking
                         currSelectedPiece.Attack(currSelectedBoardTile.xCoord, currSelectedBoardTile.yCoord);
@@ -208,6 +205,11 @@ public class BoardStateManager : MonoBehaviour
                     currSelectedBoardTile = null;
                     possiblePlacesToMove.Clear();
                 }
+                else
+                {
+                    turnCount++;
+                    ZombieSpawnCheck();
+                }
                 // change whose turn it is.
                 ResetMoveCount(currentTurn);
                 currentTurn = currentTurn == CurrentTurn.Player ? CurrentTurn.Zombie : CurrentTurn.Player;
@@ -237,9 +239,9 @@ public class BoardStateManager : MonoBehaviour
 
     private void ResetMoveCount(CurrentTurn whois)
     {
-        foreach(MoveablePiece piece in board.allPieces.Values)
+        foreach (MoveablePiece piece in board.allPieces.Values)
         {
-            if(piece.owner == whois)
+            if (piece.owner == whois)
             {
                 piece.numActions = piece.maxNumActions;
             }
@@ -256,5 +258,71 @@ public class BoardStateManager : MonoBehaviour
                 tile.Highlight(highlightType);
             }
         }
+    }
+
+    private void ZombieSpawnCheck()
+    {
+        bool spawnNow = false;
+        // Logic for determining if we are going to spawn more zombies or not. 
+        int zombieCount = board.allPieces.Values.Where(x => x.owner == CurrentTurn.Zombie).Count();
+        if (zombieCount == 0)
+        {
+            // Immediately go up a level
+            zombieLevel++;
+            spawnNow = true;
+        }
+        else if (turnCount % 5 == 0 && zombieLevel * 5 <= turnCount)
+        {
+            // 5 turns have passed, go up a level if you haven't already
+            zombieLevel++;
+            spawnNow = true;
+        }
+
+        if (spawnNow)
+        {
+            // based on the spawn level, do something different
+            if (zombieLevel >= 0 && zombieLevel <= 2)
+            {
+                int numZombies = Random.Range(3, 5);
+                SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
+            }
+            else if (zombieLevel > 2 && zombieLevel <= 4)
+            {
+                int numZombies = Random.Range(4, 5);
+                SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
+            }
+            else
+            {
+                int numZombies = Random.Range(7, 11);
+                SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
+            }
+        }
+    }
+
+    private bool SpawnZombieAtBackRow(int backRowRange, int numZombies, GameObject zombie)
+    {
+        // Figure out how many free spaces
+        List<BoardTile> openTiles = new List<BoardTile>();
+        BoardTile tile;
+        for (int x = board.minXPos; x <= board.maxXPos; x++)
+        {
+            for (int y = board.maxYPos - backRowRange + 1; y <= board.maxYPos; y++)
+            {
+                if (!board.allPieces.ContainsKey((x, y)) && board.theBoard.TryGetValue((x, y), out tile))
+                {
+                    openTiles.Add(tile);
+                }
+            }
+        }
+
+        int toSpawn = Mathf.Min(numZombies, openTiles.Count);
+
+        for (int i = 0; i < toSpawn; i++)
+        {
+            int openTileIdx = Random.Range(0, openTiles.Count);
+            board.PlacePiece(openTiles[openTileIdx].xCoord, openTiles[openTileIdx].yCoord, CurrentTurn.Zombie, zombie);
+        }
+
+        return toSpawn != numZombies;
     }
 }
