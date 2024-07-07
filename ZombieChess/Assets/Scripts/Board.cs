@@ -110,8 +110,12 @@ public class Board : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        obj.transform.position = newPosition;
-        objectsMoving.Remove(obj.GetComponent<MoveablePiece>());
+        if (obj)
+        {
+            obj.transform.position = newPosition;
+            objectsMoving.Remove(obj.GetComponent<MoveablePiece>());
+        }
+
         yield return null;
     }
 
