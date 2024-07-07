@@ -7,9 +7,17 @@ using static UnityEngine.UI.GridLayoutGroup;
 
 public class Rook : MoveablePiece
 {
+    public bool isFirstMove = true;
+
     void Start()
     {
         UpgradeManager.current.ActivateRookUpgrade += RookUpgrade;
+    }
+
+    public override bool Move(int newXPos, int newYPos)
+    {
+        isFirstMove = false;
+        return base.Move(newXPos, newYPos);
     }
 
     void RookUpgrade(int id)
