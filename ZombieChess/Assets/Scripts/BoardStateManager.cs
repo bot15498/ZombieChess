@@ -288,13 +288,15 @@ public class BoardStateManager : MonoBehaviour
             }
             else if (zombieLevel > 2 && zombieLevel <= 4)
             {
-                int numZombies = Random.Range(4, 5);
+                int numZombies = Random.Range(2,4);
                 SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
+                SpawnZombieAtBackRow(3, 1, boomerPrefab);
             }
             else
             {
-                int numZombies = Random.Range(7, 11);
+                int numZombies = Random.Range(5, 8);
                 SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
+                SpawnZombieAtBackRow(3, 2, boomerPrefab);
             }
         }
     }
