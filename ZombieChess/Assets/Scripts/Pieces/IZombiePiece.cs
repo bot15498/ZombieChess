@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IZombiePiece
 {
-    public BoardTile ZombieAiAction();
+    public void ZombieAiAction();
 }

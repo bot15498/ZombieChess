@@ -15,6 +15,7 @@ public abstract class MoveablePiece: MonoBehaviour
     protected Board board { get; set; }
     public abstract List<BoardTile> PreviewMove();
     public abstract List<BoardTile> PreviewAttack();
+
     public virtual bool Move(int newXPos, int newYPos)
     {
         // Update the board with the new place we are at 
