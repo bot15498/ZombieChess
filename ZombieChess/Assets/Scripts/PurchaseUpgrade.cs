@@ -25,6 +25,9 @@ public class PurchaseUpgrade : MonoBehaviour
                 subsequentUpgradeButton.SetActive(true);
             }
             //disable purchase button
+        }else if (uManager.PawnUpgradeCosts[purchaseID] > uManager.zombieBucks)
+        {
+            notEnoughMoney();
         }
     }
 
@@ -38,6 +41,9 @@ public class PurchaseUpgrade : MonoBehaviour
                 subsequentUpgradeButton.SetActive(true);
             }
             //disable purchase button
+        }else if (uManager.RookUpgradeCosts[purchaseID] > uManager.zombieBucks)
+        {
+            notEnoughMoney();
         }
     }
 
@@ -52,6 +58,10 @@ public class PurchaseUpgrade : MonoBehaviour
             }
             //disable purchase button
         }
+        else if (uManager.KnightUpgradeCosts[purchaseID] > uManager.zombieBucks)
+        {
+            notEnoughMoney();
+        }
     }
 
     public void BishopUpgrade()
@@ -64,6 +74,10 @@ public class PurchaseUpgrade : MonoBehaviour
                 subsequentUpgradeButton.SetActive(true);
             }
             //disable purchase button
+        }
+        else if (uManager.BishopUpgradeCosts[purchaseID] > uManager.zombieBucks)
+        {
+            notEnoughMoney();
         }
     }
 
@@ -78,6 +92,10 @@ public class PurchaseUpgrade : MonoBehaviour
             }
             //disable purchase button
         }
+        else if (uManager.QueenUpgradeCosts[purchaseID] > uManager.zombieBucks)
+        {
+            notEnoughMoney();
+        }
     }
     public void KingUpgrade()
     {
@@ -90,6 +108,15 @@ public class PurchaseUpgrade : MonoBehaviour
             }
             //disable purchase button
         }
+        else if (uManager.KingUpgradeCosts[purchaseID] > uManager.zombieBucks)
+        {
+            notEnoughMoney();
+        }
+    }
+
+    void notEnoughMoney()
+    {
+        // do not enough money stuff
     }
 
 }
