@@ -343,6 +343,7 @@ public class BoardStateManager : MonoBehaviour
         {
             int openTileIdx = Random.Range(0, openTiles.Count);
             board.PlacePiece(openTiles[openTileIdx].xCoord, openTiles[openTileIdx].yCoord, CurrentTurn.Zombie, zombie);
+            openTiles.Remove(openTiles[openTileIdx]);
         }
 
         return toSpawn != numZombies;
