@@ -45,6 +45,7 @@ public class BoardStateManager : MonoBehaviour
     private BoardTile currSelectedBoardTile;
     private List<BoardTile> possiblePlacesToMove = new List<BoardTile>();
     private List<BoardTile> possiblePlacesToAttack = new List<BoardTile>();
+    private CMGrouping cmgroup;
 
     private void Awake()
     {
@@ -80,6 +81,7 @@ public class BoardStateManager : MonoBehaviour
         board.PlacePiece(4, 0, CurrentTurn.Player, kingPrefab);
 
         ZombieSpawnCheck();
+        cmgroup = GetComponent<CMGrouping>();
     }
 
     void Update()
@@ -93,6 +95,12 @@ public class BoardStateManager : MonoBehaviour
                     detector.canClickPiece = true;
                     detector.canClickTile = false;
                 }
+                else
+                {
+                    cmgroup.CheckNewGroup();
+                }
+
+
                 currState = GameState.WaitForPieceSelect;
                 break;
             case GameState.WaitForPieceSelect:

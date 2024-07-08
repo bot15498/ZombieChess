@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CMGrouping : MonoBehaviour
@@ -13,15 +14,14 @@ public class CMGrouping : MonoBehaviour
         
     }
 
-    public void addZombietoGroup(Transform zombie)
+ 
+    public void CheckNewGroup()
     {
-        targetgroup.AddMember(zombie, 1f, 0f);
-    }
+        targetgroup.m_Targets = BoardStateManager.current.board.allPieces.Values.Where(x => x.owner == CurrentTurn.Zombie).Select(x => new CinemachineTargetGroup.Target { target = x.transform, radius = 1f, weight = 0f }).ToArray();
 
-    public void emptytargetgroup(Transform zombie)
-    {
-        targetgroup.RemoveMember(zombie);
 
     }
+
+
 
 }
