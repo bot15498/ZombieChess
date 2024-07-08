@@ -882,7 +882,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_NoiseProfile: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   m_PivotOffset: {x: 0, y: 0, z: 0}
-  m_AmplitudeGain: 0.32
+  m_AmplitudeGain: 0.16
   m_FrequencyGain: 0.28
   mNoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!114 &216451889
@@ -4271,7 +4271,7 @@ MonoBehaviour:
   m_HorizontalAxis:
     Value: 0
     m_SpeedMode: 0
-    m_MaxSpeed: 200
+    m_MaxSpeed: 100
     m_AccelTime: 0.1
     m_DecelTime: 0.1
     m_InputAxisName: Mouse X
@@ -4307,7 +4307,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_NoiseProfile: {fileID: 11400000, guid: a3dacaec0287d7444b4bd276816e1666, type: 2}
   m_PivotOffset: {x: 0, y: 0, z: 0}
-  m_AmplitudeGain: 1
+  m_AmplitudeGain: 0.57
   m_FrequencyGain: 1
   mNoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
@@ -4325,7 +4325,6 @@ GameObject:
   - component: {fileID: 963194229}
   - component: {fileID: 963194230}
   - component: {fileID: 963194232}
-  - component: {fileID: 963194233}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4463,8 +4462,8 @@ MonoBehaviour:
   m_UpdateMethod: 2
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
-    m_Style: 4
-    m_Time: 2
+    m_Style: 1
+    m_Time: 1
     m_CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -4492,18 +4491,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canClickPiece: 0
   canClickTile: 0
---- !u!114 &963194233
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d894ebdc08a9b346b05b5c4caf6c97e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &991281323
 GameObject:
   m_ObjectHideFlags: 0
@@ -6352,7 +6339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: 887047ab4dc20cd4b9b588ed0569343e, type: 2}
   m_DrawDistance: 1000
-  m_FadeScale: 0.893
+  m_FadeScale: 0.809
   m_StartAngleFade: 180
   m_EndAngleFade: 180
   m_UVScale: {x: 1, y: 1}
@@ -6671,7 +6658,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1532966475}
   m_LocalRotation: {x: 0.53278726, y: -0, z: -0, w: 0.8462492}
-  m_LocalPosition: {x: 11.2, y: 11, z: -6.94}
+  m_LocalPosition: {x: 8.45, y: 11, z: -6.94}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7221,7 +7208,7 @@ GameObject:
   - component: {fileID: 1679977437}
   - component: {fileID: 1679977436}
   m_Layer: 0
-  m_Name: GroupCam
+  m_Name: EnemyCam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7429,6 +7416,7 @@ GameObject:
   - component: {fileID: 1686012274}
   - component: {fileID: 1686012276}
   - component: {fileID: 1686012275}
+  - component: {fileID: 1686012277}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Gamemanager
@@ -7560,6 +7548,22 @@ MonoBehaviour:
   - target: {fileID: 0}
     weight: 1
     radius: 0
+--- !u!114 &1686012277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1686012271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d894ebdc08a9b346b05b5c4caf6c97e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strategicCam: {fileID: 780711596}
+  FirstPersoncam: {fileID: 1944683974}
+  enemyCam: {fileID: 1679977435}
+  BookCam: {fileID: 1532966475}
 --- !u!1 &1708500835
 GameObject:
   m_ObjectHideFlags: 3
@@ -8331,7 +8335,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1944683974}
   m_LocalRotation: {x: 0.118383124, y: -0, z: -0, w: 0.99296796}
-  m_LocalPosition: {x: 2.009, y: 9.43, z: -14.61}
+  m_LocalPosition: {x: 2.009, y: 8.46, z: -11.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
