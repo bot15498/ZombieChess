@@ -11,8 +11,8 @@ public class Pawn : MoveablePiece
     private bool isFirstMove = true;
 
     private bool canBackwardsMove = false;
-    private bool canAttackForwards = true;
-    private bool canChainKill = true;
+    private bool canAttackForwards = false;
+    private bool canChainKill = false;
     private bool explodeBoardOnPromotion = false;
     private bool canEnPassant = false;
 
