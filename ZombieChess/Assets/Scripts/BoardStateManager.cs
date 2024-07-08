@@ -89,6 +89,7 @@ public class BoardStateManager : MonoBehaviour
         switch (currState)
         {
             case GameState.TurnStart:
+                Debug.Log("Turn start: " + currentTurn);
                 // Any animation or something.
                 if (currentTurn == CurrentTurn.Player)
                 {
@@ -104,6 +105,7 @@ public class BoardStateManager : MonoBehaviour
                 currState = GameState.WaitForPieceSelect;
                 break;
             case GameState.WaitForPieceSelect:
+                Debug.Log("WaitForPieceSelect: " + currentTurn);
                 if (currentTurn == CurrentTurn.Player)
                 {
                     // Wait for player to select the piece to move
@@ -119,6 +121,7 @@ public class BoardStateManager : MonoBehaviour
                 }
                 break;
             case GameState.PieceSelected:
+                Debug.Log("PieceSelected: " + currentTurn);
                 if (currentTurn == CurrentTurn.Player)
                 {
                     // Piece selected. Highlight the spots you can move to, then go to next state
@@ -142,6 +145,7 @@ public class BoardStateManager : MonoBehaviour
                 }
                 break;
             case GameState.WaitForPieceMove:
+                Debug.Log("WaitForPieceMove: " + currentTurn);
                 if (currentTurn == CurrentTurn.Player)
                 {
                     // Wait for player to select a place to move to
@@ -187,18 +191,24 @@ public class BoardStateManager : MonoBehaviour
                 }
                 break;
             case GameState.PieceMove:
+                Debug.Log("PieceMove: " + currentTurn);
                 if (currentTurn == CurrentTurn.Player)
                 {
                     // If piece has more than one move, go to previous state. Otherwise go forward in time.
                     if (board.objectsMoving.Count == 0)
                     {
                         currSelectedPiece.numActions--;
+                        Debug.Log("actions left: " + currSelectedPiece.numActions.ToString());
                         if (currSelectedPiece.numActions > 0)
                         {
                             // Recalculate the pieces' allowed places it can move / attack
-                            possiblePlacesToMove = currSelectedPiece.PreviewMove();
-                            possiblePlacesToAttack = currSelectedPiece.PreviewAttack();
-                            currState = GameState.WaitForPieceMove;
+                            Debug.Log("Action Reset!");
+                            SetTileHighlightColor(possiblePlacesToMove, TileHighlightType.Idle);
+                            SetTileHighlightColor(possiblePlacesToAttack, TileHighlightType.Idle);
+                            detector.canClickTile = true;
+                            detector.canClickPiece = false;
+                            currSelectedBoardTile = null;
+                            currState = GameState.PieceSelected;
                         }
                         else
                         {
@@ -216,6 +226,7 @@ public class BoardStateManager : MonoBehaviour
                 }
                 break;
             case GameState.TurnEnd:
+                Debug.Log("TurnEnd: " + currentTurn);
                 // animation
                 if (currentTurn == CurrentTurn.Player)
                 {

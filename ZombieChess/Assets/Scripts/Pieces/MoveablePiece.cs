@@ -38,7 +38,7 @@ public abstract class MoveablePiece: MonoBehaviour
         this.owner = owner;
         return true;
     }
-    public bool Attack(int targetXPos, int targetYPos)
+    public virtual bool Attack(int targetXPos, int targetYPos)
     {
         // Do damage
         MoveablePiece enemy;
