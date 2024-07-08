@@ -220,6 +220,7 @@ MonoBehaviour:
   tile2Prefab: {fileID: 5760001661751187078, guid: e17ce4ec3903af246917bf7fef474671, type: 3}
   gridStep: 1
   pieceYOffset: 0.15
+  jumpHeight: 1.5
   minXPos: 0
   minYPos: 0
   maxXPos: 0

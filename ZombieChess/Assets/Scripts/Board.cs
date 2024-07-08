@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class Board : MonoBehaviour
     public GameObject tile2Prefab;
     public float gridStep;
     public float pieceYOffset;
+    public float jumpHeight = 0.5f;
     public Dictionary<(int xPos, int yPos), MoveablePiece> allPieces = new Dictionary<(int xPos, int yPos), MoveablePiece>();
     public Dictionary<(int xPos, int yPos), BoardTile> theBoard = new Dictionary<(int xPos, int yPos), BoardTile>();
     public int minXPos = 0;
@@ -70,7 +72,7 @@ public class Board : MonoBehaviour
         return true;
     }
 
-    public bool MovePiece(GameObject obj, int newXPos, int newYPos)
+    public bool MovePiece(GameObject obj, int newXPos, int newYPos, Func<GameObject, int, int, float, IEnumerator> moveCoroutine)
     {
         MoveablePiece piece = obj.GetComponent<MoveablePiece>();
         if (piece != null)
@@ -80,11 +82,11 @@ public class Board : MonoBehaviour
             // Move it physically
             // If this is a zombie, give it a random delay before hand
             float delay = 0f;
-            if(piece.owner == CurrentTurn.Zombie)
+            if (piece.owner == CurrentTurn.Zombie)
             {
-                delay = Random.Range(0f, 1f);
+                delay = UnityEngine.Random.Range(0f, 1f);
             }
-            StartCoroutine(MovePieceLerp(obj, newXPos, newYPos, delay));
+            StartCoroutine(moveCoroutine(obj, newXPos, newYPos, delay));
             return true;
         }
         else
@@ -93,7 +95,12 @@ public class Board : MonoBehaviour
         }
     }
 
-    private IEnumerator MovePieceLerp(GameObject obj, int newXPos, int newYPos, float delay = 0f)
+    public bool MovePiece(GameObject obj, int newXPos, int newYPos)
+    {
+        return MovePiece(obj, newXPos, newYPos, MovePieceLerp);
+    }
+
+    private IEnumerator MovePieceLerp(GameObject obj, int newXPos, int newYPos, float delay)
     {
         yield return new WaitForSeconds(delay);
         objectsMoving.Add(obj.GetComponent<MoveablePiece>());
@@ -107,6 +114,42 @@ public class Board : MonoBehaviour
                 break;
             }
             obj.transform.position = Vector3.Lerp(origPosition, newPosition, Mathf.Sin(elapsedTime / moveTime * (Mathf.PI / 2)));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        if (obj)
+        {
+            obj.transform.position = newPosition;
+            objectsMoving.Remove(obj.GetComponent<MoveablePiece>());
+        }
+
+        yield return null;
+    }
+
+    public bool MovePieceJump(GameObject obj, int newXPos, int newYPos)
+    {
+        return MovePiece(obj, newXPos, newYPos, MovePieceJumpLerp);
+    }
+
+    public IEnumerator MovePieceJumpLerp(GameObject obj, int newXPos, int newYPos, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        objectsMoving.Add(obj.GetComponent<MoveablePiece>());
+        // Pick 3 points to lerp between, the start and end, and the midpoint with some elevation to make it jump
+        Vector3 origPosition = obj.transform.position;
+        Vector3 newPosition = new Vector3(newXPos * gridStep, 0 + pieceYOffset, newYPos * gridStep) + transform.position;
+        Vector3 centerPoint = Vector3.Lerp(origPosition, newPosition, 0.5f) + Vector3.up * jumpHeight;
+        float elapsedTime = 0;
+        while (elapsedTime < moveTime)
+        {
+            if (!obj)
+            {
+                break;
+            }
+            // https://gamedev.stackexchange.com/questions/157642/moving-a-2d-object-along-circular-arc-between-two-points
+            Vector3 m1 = Vector3.Lerp(origPosition, centerPoint, elapsedTime / moveTime);
+            Vector3 m2 = Vector3.Lerp(centerPoint, newPosition, elapsedTime / moveTime);
+            obj.transform.position = Vector3.Lerp(m1, m2, elapsedTime / moveTime);
             elapsedTime += Time.deltaTime;
             yield return null;
         }

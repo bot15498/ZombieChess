@@ -27,10 +27,9 @@ public abstract class MoveablePiece: MonoBehaviour
         board.allPieces.Add((xPos, yPos), this);
 
         // move the actual thing
-        board.MovePiece(gameObject, newXPos, newYPos);
-
-        return true;
+        return board.MovePiece(gameObject, newXPos, newYPos);
     }
+
     public virtual bool Spawn(Board board, int xPos, int yPos, CurrentTurn owner)
     {
         this.board = board;

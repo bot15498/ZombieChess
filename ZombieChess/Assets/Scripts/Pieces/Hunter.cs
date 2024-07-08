@@ -9,6 +9,21 @@ public class Hunter : MoveablePiece, IZombiePiece
     public int jumpRadius = 3;
     private int currPounceCharge = 0;
     private BoardTile target = null;
+
+    public override bool Move(int newXPos, int newYPos)
+    {
+        // Custom move that uses a special jump
+        board.allPieces.Remove((xPos, yPos));
+        xPos = newXPos;
+        yPos = newYPos;
+        board.allPieces.Add((xPos, yPos), this);
+
+        // move the actual thing
+        board.MovePieceJump(gameObject, newXPos, newYPos);
+
+        return true;
+    }
+
     public override List<BoardTile> PreviewAttack()
     {
         List<BoardTile> validMoves = GetAllValidMoveTiles();
