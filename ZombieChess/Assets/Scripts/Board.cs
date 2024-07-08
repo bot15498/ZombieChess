@@ -103,6 +103,12 @@ public class Board : MonoBehaviour
     private IEnumerator MovePieceLerp(GameObject obj, int newXPos, int newYPos, float delay)
     {
         yield return new WaitForSeconds(delay);
+        
+        if (!obj)
+        {
+            yield return null;
+        }
+
         objectsMoving.Add(obj.GetComponent<MoveablePiece>());
         Vector3 origPosition = obj.transform.position;
         Vector3 newPosition = new Vector3(newXPos * gridStep, 0 + pieceYOffset, newYPos * gridStep) + transform.position;
@@ -117,6 +123,7 @@ public class Board : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+
         if (obj)
         {
             obj.transform.position = newPosition;

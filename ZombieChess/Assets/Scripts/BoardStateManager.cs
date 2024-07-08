@@ -222,6 +222,10 @@ public class BoardStateManager : MonoBehaviour
                     if(board.objectsMoving.Count == 0)
                     {
                         currState = GameState.TurnEnd;
+                    } 
+                    else
+                    {
+                        board.objectsMoving.RemoveAll(item => item == null);
                     }
                 }
                 break;
