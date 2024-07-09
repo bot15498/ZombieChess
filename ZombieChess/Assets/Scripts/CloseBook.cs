@@ -27,8 +27,9 @@ public class CloseBook : MonoBehaviour
         {
             anim.SetBool("openbook", false);
             anim.SetBool("Hover", false);
+            cm.closebook();
             //book.SetActive(false);
-            cm.activateFPSCam();
+            cm.ActivateMainCam();
             bookcontrol.bookclose();
         }
     }

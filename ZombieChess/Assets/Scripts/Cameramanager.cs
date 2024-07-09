@@ -9,11 +9,14 @@ public class Cameramanager : MonoBehaviour
     public GameObject FirstPersoncam;
     public GameObject enemyCam;
     public GameObject BookCam;
+    bool isStrategic;
+    bool bookisopen;
 
 
     void Start()
     {
-        
+        isStrategic = false;
+        bookisopen = false;
     }
 
     // Update is called once per frame
@@ -21,21 +24,35 @@ public class Cameramanager : MonoBehaviour
     {
         
     }
-
-    public void activateStrategicCam()
+    public void closebook()
     {
-        strategicCam.SetActive(true);
-        FirstPersoncam.SetActive(false);
-        enemyCam.SetActive(false);
-        BookCam.SetActive(false);
+        bookisopen = false;
     }
 
-    public void activateFPSCam()
+    public void toggleStrategicCam()
     {
+        if (bookisopen == false)
+        {
+            isStrategic = !isStrategic;
+            ActivateMainCam();
+        }
+    }
+
+    public void ActivateMainCam()
+    {
+        if (isStrategic == false) { 
         strategicCam.SetActive(false);
         FirstPersoncam.SetActive(true);
         enemyCam.SetActive(false);
         BookCam.SetActive(false);
+        }else if(isStrategic == true)
+        {
+            strategicCam.SetActive(true);
+            FirstPersoncam.SetActive(false);
+            enemyCam.SetActive(false);
+            BookCam.SetActive(false);
+        }
+       
     }
 
     public void activateBookCam()
@@ -44,6 +61,8 @@ public class Cameramanager : MonoBehaviour
         FirstPersoncam.SetActive(false);
         enemyCam.SetActive(false);
         BookCam.SetActive(true);
+        bookisopen = true;
+
     }
 
     public void activatEnemyCam()
