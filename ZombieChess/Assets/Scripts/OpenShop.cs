@@ -33,11 +33,14 @@ public class OpenShop : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            CM.activateBookCam();
-            bookisopen = true;
-            StartCoroutine(ExampleCoroutine());
+            if (bookisopen == false)
+            {
+                CM.activateBookCam();
+                bookisopen = true;
+                anim.SetBool("openbook", true);
+                StartCoroutine(ExampleCoroutine());
+            }
 
-            anim.Play("Book_Open");
         }
     }
 
@@ -69,7 +72,7 @@ public class OpenShop : MonoBehaviour
         
         if(bookisopen == true)
         {
-            upgradeanim.Play("upgrade_open");
+            upgradeanim.SetBool("open",true);
         }
         
     }
@@ -79,10 +82,10 @@ public class OpenShop : MonoBehaviour
 
         yield return new WaitForSeconds(0.25f);
 
-        upgradeanim.Play("upgrade_close");
+        upgradeanim.SetBool("open", false);
 
         //After we have waited 5 seconds print the time again.
-
+        yield return new WaitForSeconds(0.5f);
         bookisopen = false;
         
     }

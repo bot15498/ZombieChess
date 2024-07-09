@@ -23,10 +23,13 @@ public class CloseBook : MonoBehaviour
 
     public void closeBook()
     {
-        anim.Play("Book_Close");
-     
-        //book.SetActive(false);
-        cm.activateFPSCam();
-        bookcontrol.bookclose();
+        if (bookcontrol.bookisopen == true)
+        {
+            anim.SetBool("openbook", false);
+            anim.SetBool("Hover", false);
+            //book.SetActive(false);
+            cm.activateFPSCam();
+            bookcontrol.bookclose();
+        }
     }
 }
