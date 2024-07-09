@@ -53,4 +53,7 @@ public class Cameramanager : MonoBehaviour
         enemyCam.SetActive(true);
         BookCam.SetActive(false);
     }
+
+
+
 }
