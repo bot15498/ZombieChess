@@ -108,7 +108,6 @@ public abstract class MoveablePiece : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.name);
         MoveablePiece enemy;
         if (collision.gameObject.TryGetComponent(out enemy) && enemy.owner != owner)
         {
@@ -133,10 +132,12 @@ public abstract class MoveablePiece : MonoBehaviour
             Vector3 newPosition = board.GetPositionForGridPosition(tile);
             float elapsedTime = 0;
             float totalTime = moveTileSpeed * (tile.transform.position - transform.position).magnitude;
-            while (Mathf.Sin(elapsedTime / totalTime * (Mathf.PI / 2)) <= 0.98f)
+            //while (Mathf.Sin(elapsedTime / totalTime * (Mathf.PI / 2)) <= 0.98f)
+            while (elapsedTime < totalTime)
             {
                 if (!gameObject) { break; }
-                transform.position = Vector3.Lerp(origPosition, newPosition, Mathf.Sin(elapsedTime / totalTime * (Mathf.PI / 2)));
+                //transform.position = Vector3.Lerp(origPosition, newPosition, Mathf.Sin(elapsedTime / totalTime * (Mathf.PI / 2)));
+                transform.position = Vector3.Lerp(origPosition, newPosition, elapsedTime / totalTime);
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }

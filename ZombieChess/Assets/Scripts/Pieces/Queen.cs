@@ -6,9 +6,27 @@ using static UnityEngine.UI.GridLayoutGroup;
 
 public class Queen : MoveablePiece
 {
+    [SerializeField]
+    private bool canKnightMove = false;
+
+    [SerializeField]
+    private bool canMoveAfterAttack = false;
+    [SerializeField]
+    private bool didAttack = false;
+
+    [SerializeField]
+    private bool canExtraMovePoint = false;
+    [SerializeField]
+    private int noMoveChargeCount = 0;
+    [SerializeField]
+    private bool didMoveThisTurn = false;
+
+
     void Start()
     {
         UpgradeManager.current.ActivateQueenUpgrade += QueenUpgrade;
+        BoardStateManager.current.TurnStartAction += OnTurnStart;
+        BoardStateManager.current.TurnEndAction += OnTurnEnd;
     }
 
     void QueenUpgrade(int id)
@@ -16,18 +34,55 @@ public class Queen : MoveablePiece
         switch (id)
         {
             case 0:
-                //upgrade stuff goes here upgrade id 0
-                Debug.Log("AAAAAAAA");
+                // Can move like a knight
+                canKnightMove = true;
                 break;
-
-            case 1:
-                //upgrade stuff goes here upgrade id 1 
+            case 5:
+                // After you attack a piece, can move one more time, but can't take another piece.
+                canMoveAfterAttack = true;
                 break;
-
-            default:
-
+            case 7:
+                // Every turn you sit there, you gain an extra action point
+                canExtraMovePoint = true;
                 break;
         }
+    }
+
+    private void OnTurnStart(int turnCount)
+    {
+        didMoveThisTurn = false;
+        didAttack = false;
+        if (canExtraMovePoint)
+        {
+            numActions = maxNumActions + noMoveChargeCount;
+        }
+    }
+
+    private void OnTurnEnd(int turnCount)
+    {
+        if (canExtraMovePoint && !didMoveThisTurn)
+        {
+            noMoveChargeCount++;
+        }
+    }
+
+    public override bool Move(int newXPos, int newYPos)
+    {
+        // Reset the move counter 
+        noMoveChargeCount = 0;
+        didMoveThisTurn = true;
+        return base.Move(newXPos, newYPos);
+    }
+
+    public override bool Attack(int targetXPos, int targetYPos)
+    {
+        bool returnval = base.Attack(targetXPos, targetYPos);
+        if(canMoveAfterAttack && numActions == 1)
+        {
+            didAttack = true;
+            numActions++;
+        }
+        return returnval;
     }
 
     public override List<BoardTile> PreviewMove()
@@ -41,6 +96,12 @@ public class Queen : MoveablePiece
     {
         // Give all the possible places that the queen can attack.
         List<BoardTile> result = new List<BoardTile>();
+        if(canMoveAfterAttack && didAttack && numActions == 1)
+        {
+            // when you last did an attack, don't allow another attack. Only moveemnt
+            return result;  
+        }
+
         MoveablePiece enemyPiece;
         foreach (BoardTile tile in GetAllValidMoveTiles())
         {
@@ -152,6 +213,23 @@ public class Queen : MoveablePiece
             if (board.allPieces.ContainsKey((xPos - i, yPos - i)) || !tile.canBeOccupied)
             {
                 break;
+            }
+        }
+
+        if (canKnightMove)
+        {
+            int[] signs = new int[] { -1, 1 };
+            int baseLongRange = 2;
+            int baseShortRange = 1;
+            foreach (int longSign in signs)
+            {
+                foreach (int shortSign in signs)
+                {
+                    // Long step goes North or South - Short step goes East or West
+                    if (board.theBoard.TryGetValue((xPos + shortSign * baseShortRange, yPos + longSign * baseLongRange), out tile) && tile.canBeOccupied) { result.Add(tile); }
+                    // Long step goes East or West - Short step goes North or South
+                    if (board.theBoard.TryGetValue((xPos + longSign * baseLongRange, yPos + shortSign * baseShortRange), out tile) && tile.canBeOccupied) { result.Add(tile); }
+                }
             }
         }
 

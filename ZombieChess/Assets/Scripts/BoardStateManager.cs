@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,8 @@ public class BoardStateManager : MonoBehaviour
     public GameState currState;
     public CurrentTurn currentTurn;
     public int turnCount = 1;
+    public event Action<int> TurnStartAction;
+    public event Action<int> TurnEndAction;
 
     private int zombieLevel = 0;
     private MoveablePiece currSelectedPiece;
@@ -95,6 +98,7 @@ public class BoardStateManager : MonoBehaviour
                 {
                     detector.canClickPiece = true;
                     detector.canClickTile = false;
+                    TurnStartAction(turnCount);
                 }
                 else
                 {
@@ -239,6 +243,8 @@ public class BoardStateManager : MonoBehaviour
                     currSelectedPiece = null;
                     currSelectedBoardTile = null;
                     possiblePlacesToMove.Clear();
+                    possiblePlacesToAttack.Clear();
+                    TurnEndAction(turnCount);
                 }
                 else
                 {
@@ -324,20 +330,20 @@ public class BoardStateManager : MonoBehaviour
             // based on the spawn level, do something different
             if (zombieLevel >= 0 && zombieLevel <= 2)
             {
-                int numZombies = Random.Range(3, 5);
+                int numZombies = UnityEngine.Random.Range(3, 5);
                 SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
                 SpawnZombieAtBackRow(3, 1, chargerPrefab);
                 SpawnZombieAtBackRow(3, 1, hunterPrefab);
             }
             else if (zombieLevel > 2 && zombieLevel <= 4)
             {
-                int numZombies = Random.Range(2,4);
+                int numZombies = UnityEngine.Random.Range(2,4);
                 SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
                 SpawnZombieAtBackRow(3, 1, boomerPrefab);
             }
             else
             {
-                int numZombies = Random.Range(5, 8);
+                int numZombies = UnityEngine.Random.Range(5, 8);
                 SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
                 SpawnZombieAtBackRow(3, 2, boomerPrefab);
             }
@@ -364,7 +370,7 @@ public class BoardStateManager : MonoBehaviour
 
         for (int i = 0; i < toSpawn; i++)
         {
-            int openTileIdx = Random.Range(0, openTiles.Count);
+            int openTileIdx = UnityEngine.Random.Range(0, openTiles.Count);
             board.PlacePiece(openTiles[openTileIdx].xCoord, openTiles[openTileIdx].yCoord, CurrentTurn.Zombie, zombie);
             openTiles.Remove(openTiles[openTileIdx]);
         }

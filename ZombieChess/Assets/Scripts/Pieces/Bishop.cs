@@ -13,7 +13,7 @@ public class Bishop : MoveablePiece
     [SerializeField]
     private bool piercing = false;
     [SerializeField]
-    private int numRicochetCount = 0; 
+    private int numRicochetCount = 0;
 
     void Start()
     {
@@ -48,10 +48,6 @@ public class Bishop : MoveablePiece
             case 5:
                 // martyrdom - when this unit dies, delete all enemies on same color tile
                 ismartyr = true;
-                break;
-
-            default:
-
                 break;
         }
     }
@@ -108,22 +104,67 @@ public class Bishop : MoveablePiece
     {
         // Give all the possible places that the bishop can move to.
         List<BoardTile> result = GetAllValidMoveTiles(xPos, yPos);
-        if(numRicochetCount == 1)
-        {
-            // Figure out if tile is a edge or not
-            List<BoardTile> edges = new List<BoardTile>();
-            foreach(BoardTile tile in result)
-            {
-                if((tile.xCoord == board.maxXPos || tile.xCoord == board.minXPos
-                    || tile.yCoord == board.maxYPos || tile.yCoord == board.minYPos)
-                    && (tile.xCoord != board.maxXPos && tile.yCoord != board.maxYPos))
-                {
-                    edges.Add(tile);
-                }
-            }
-            result.AddRange(GetAllValidMoveTiles(xPos, yPos));
-        }
+        //if (numRicochetCount > 0)
+        //{
+        //    // Start to build the move paths dictionary
+        //    MovePaths.Clear();
+        //    foreach(BoardTile tile in result)
+        //    {
+        //        MovePaths.Add(tile, new List<BoardTile> { tile });
+        //    }
+        //    for(int i=0; i<numRicochetCount; i++)
+        //    {
+                
+        //    }
+        //}
         return result.Where(x => !board.allPieces.ContainsKey((x.xCoord, x.yCoord))).ToList();
+    }
+
+    public override bool Move(int newXPos, int newYPos)
+    {
+        if (piercing)
+        {
+            AttackTiles.Clear();
+            // add all the tiles that the bishop is going to move on. 
+            BoardTile lastTile;
+            board.theBoard.TryGetValue((xPos, yPos), out lastTile);
+            BoardTile endTile;
+            board.theBoard.TryGetValue((newXPos, newYPos), out endTile);
+
+            // Check for how the bishop is going to get to where it's going.
+            List<BoardTile> currMovePaths;
+            if (!MovePaths.ContainsKey(endTile))
+            {
+                currMovePaths = new List<BoardTile> { endTile };
+            }
+            else
+            {
+                currMovePaths = MovePaths[endTile];
+            }
+
+            // Do a very dumb way to figure out what tile are in the kill line.
+            foreach (BoardTile nextTile in currMovePaths)
+            {
+                int xdir = nextTile.xCoord - lastTile.xCoord < 0 ? -1 : nextTile.xCoord - lastTile.xCoord > 0 ? 1 : 0;
+                int ydir = nextTile.yCoord - lastTile.yCoord < 0 ? -1 : nextTile.yCoord - lastTile.yCoord > 0 ? 1 : 0;
+                // dangerous!
+                int currX = lastTile.xCoord;
+                int currY = lastTile.yCoord;
+                BoardTile tileToadd;
+                while (currX != nextTile.xCoord || currY != nextTile.yCoord)
+                {
+                    currX += xdir;
+                    currY += ydir;
+                    if (board.theBoard.TryGetValue((currX, currY), out tileToadd))
+                    {
+                        AttackTiles.Add(tileToadd);
+                    }
+                }
+                // Set the last tile reference
+                lastTile = nextTile;
+            }
+        }
+        return base.Move(newXPos, newYPos);
     }
 
     public override List<BoardTile> PreviewAttack()
