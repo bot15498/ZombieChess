@@ -10,10 +10,19 @@ public class Pawn : MoveablePiece
     [SerializeField]
     private bool isFirstMove = true;
 
+    [SerializeField]
     private bool canBackwardsMove = false;
+
+    [SerializeField]
     private bool canAttackForwards = false;
+
+    [SerializeField]
     private bool canChainKill = false;
+
+    [SerializeField]
     private bool explodeBoardOnPromotion = false;
+
+    [SerializeField]
     private bool canEnPassant = false;
 
     void Start()
@@ -72,12 +81,13 @@ public class Pawn : MoveablePiece
         bool pieceMoved = base.Move(newXPos, newYPos);
         if (newYPos == board.maxYPos && explodeBoardOnPromotion)
         {
-            this.Die();
+            
             List<MoveablePiece> zomPieces = board.allPieces.Values.Where(x => x.owner != this.owner).ToList();
             foreach (MoveablePiece zom in zomPieces)
             {
                 zom.Die();
             }
+            this.Die();
             return pieceMoved;
         }
         else
@@ -164,10 +174,19 @@ public class Pawn : MoveablePiece
             board.theBoard.TryGetValue((xPos + 1, yPos + 1), out tile);
             result.Add(tile);
         }
-        if (this.canAttackForwards && board.allPieces.TryGetValue((xPos, yPos + 1), out enemyPiece) && enemyPiece.owner != owner)
+        if (this.canAttackForwards)
         {
-            board.theBoard.TryGetValue((xPos, yPos + 1), out tile);
-            result.Add(tile);
+            if (board.allPieces.TryGetValue((xPos, yPos + 1), out enemyPiece) && enemyPiece.owner != owner)
+            {
+                board.theBoard.TryGetValue((xPos, yPos + 1), out tile);
+                result.Add(tile);
+            }
+            if (this.isFirstMove && board.allPieces.TryGetValue((xPos, yPos + 2), out enemyPiece) && enemyPiece.owner != owner && !board.allPieces.ContainsKey((xPos, yPos + 1)))
+            {
+                board.theBoard.TryGetValue((xPos, yPos + 2), out tile);
+                result.Add(tile);
+            }
+            
         }
         if (this.canEnPassant)
         {
