@@ -195,6 +195,7 @@ public class BoardStateManager : MonoBehaviour
                 if (currentTurn == CurrentTurn.Player)
                 {
                     // If piece has more than one move, go to previous state. Otherwise go forward in time.
+                    board.objectsMoving = board.objectsMoving.Where(x => x != null).ToList();
                     if (board.objectsMoving.Count == 0)
                     {
                         currSelectedPiece.numActions--;
