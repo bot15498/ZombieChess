@@ -7,21 +7,30 @@ public class Hunter : MoveablePiece, IZombiePiece
 {
     public int pounceCharge = 1;
     public int jumpRadius = 3;
+    public float jumpHeight = 1.5f;
     private int currPounceCharge = 0;
     private BoardTile target = null;
 
     public override bool Move(int newXPos, int newYPos)
     {
-        // Custom move that uses a special jump
-        board.allPieces.Remove((xPos, yPos));
-        xPos = newXPos;
-        yPos = newYPos;
-        board.allPieces.Add((xPos, yPos), this);
-
-        // move the actual thing
-        board.MovePieceJump(gameObject, newXPos, newYPos);
-
-        return true;
+        // For hunter, use the special jump lerp movement routine
+        BoardTile targetTile;
+        if (board.theBoard.TryGetValue((newXPos, newYPos), out targetTile))
+        {
+            // Move the piece according to the key. If you can't find a key, then do just a simple move. 
+            List<BoardTile> placesToMove;
+            if (!MovePaths.TryGetValue(targetTile, out placesToMove))
+            {
+                placesToMove = new List<BoardTile> { targetTile };
+            }
+            float startDelay = owner == CurrentTurn.Zombie ? Random.Range(0f, 1f) : 0;
+            StartCoroutine(DoPieceJumpMovement(placesToMove, jumpHeight, startDelay, 0f));
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public override List<BoardTile> PreviewAttack()

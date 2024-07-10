@@ -23,7 +23,7 @@ public class BoardTile : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
     public void SetCoord(int x, int y)
@@ -34,7 +34,7 @@ public class BoardTile : MonoBehaviour
 
     public void Highlight(TileHighlightType highLightType)
     {
-        switch(highLightType)
+        switch (highLightType)
         {
             case TileHighlightType.Move:
                 GetComponent<MeshRenderer>().material.color = ApplyColorTint(startMaterialColor, Color.blue);
@@ -50,12 +50,9 @@ public class BoardTile : MonoBehaviour
 
     private Color ApplyColorTint(Color incolor, Color tint)
     {
-        float red = (tint.r - 0.5f) * incolor.r + incolor.r;
-        float green = (tint.g - 0.5f) * incolor.g + incolor.g;
-        float blue = (tint.b - 0.5f) * incolor.b + incolor.b;
-        Debug.Log(incolor);
-        Debug.Log(tint);
-        Debug.Log($"{red}, {green}, {blue}");
-        return new Color(red, green, blue); 
+        float red = Mathf.Clamp((tint.r * 2.5f - 0.5f) * incolor.r + incolor.r, 0f, 1f);
+        float green = Mathf.Clamp((tint.g * 2.5f - 0.5f) * incolor.g + incolor.g, 0f, 1f);
+        float blue = Mathf.Clamp((tint.b * 2.5f - 0.5f) * incolor.b + incolor.b, 0f, 1f);
+        return new Color(red, green, blue);
     }
 }

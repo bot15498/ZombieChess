@@ -96,7 +96,6 @@ public class Pawn : MoveablePiece
             enemy.health--;
             if (enemy.health <= 0)
             {
-                justKilledKing = enemy.GetComponent<King>() != null;
                 enemy.Die();
                 if (this.canChainKill)
                 {
@@ -111,7 +110,6 @@ public class Pawn : MoveablePiece
             enemy.health--;
             if (enemy.health <= 0)
             {
-                justKilledKing = enemy.GetComponent<King>() != null;
                 enemy.Die();
                 if (this.canChainKill)
                 {

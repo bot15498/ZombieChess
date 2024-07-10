@@ -72,28 +72,22 @@ Attacks all spaces next to itÅfs move path
     public override bool Attack(int targetXPos, int targetYPos)
     {
         // Do damage
-        MoveablePiece enemy;
-        if (board.allPieces.TryGetValue((targetXPos, targetYPos), out enemy) && enemy.owner != owner)
+        AttackTiles.Clear();
+        BoardTile target;
+        if (board.theBoard.TryGetValue((targetXPos, targetYPos), out target))
         {
-            enemy.health--;
-            if (enemy.health <= 0)
-            {
-                if (canChainKill)
-                {
-                    this.numActions++;
-                }
-                justKilledKing = enemy.GetComponent<King>() != null;
-                enemy.Die();
-            }
-        }
-
-        // If we are normal attacking, and we defeat the enemy, then also do a move.
-        if (!board.allPieces.ContainsKey((targetXPos, targetYPos)))
-        {
+            AttackTiles.Add(target);
             Move(targetXPos, targetYPos);
+            if (canChainKill)
+            {
+                this.numActions++;
+            }
+            return true;
         }
-
-        return true;
+        else
+        {
+            return false;
+        }
     }
 
     public override List<BoardTile> PreviewMove()

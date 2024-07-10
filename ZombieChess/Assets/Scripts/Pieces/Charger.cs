@@ -92,7 +92,6 @@ public class Charger : MoveablePiece, IZombiePiece
                     this.grappling = true;
                     this.grappleTarget = enemyPiece;
                     this.grappleTarget.numActions = 0;
-                    this.grappleTarget.maxNumActions = 0;
                 }
                 else
                 {
@@ -138,7 +137,7 @@ public class Charger : MoveablePiece, IZombiePiece
     {
         if (grappling)
         {
-            grappleTarget.maxNumActions = 1; // TODO: set to actual max num (from upgrades probably)
+            grappleTarget.numActions = grappleTarget.maxNumActions; 
         }
 
         // delete yourself from the board

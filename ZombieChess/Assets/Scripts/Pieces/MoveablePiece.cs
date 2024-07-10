@@ -1,33 +1,53 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public abstract class MoveablePiece: MonoBehaviour
+public abstract class MoveablePiece : MonoBehaviour
 {
     public int health { get; set; } = 1;
     public int maxHealth { get; set; } = 1;
     public int numActions { get; set; } = 1;
     public int maxNumActions { get; set; } = 1;
+    public float moveTileSpeed { get; set; } = 0.1f; // Measured in seconds spent between unity world units
     public int xPos { get; set; } = 0;
     public int yPos { get; set; } = 0;
     public bool canAct { get; set; } = true;
     public int size { get; set; } = 1;
-    protected bool justKilledKing = false;
     public CurrentTurn owner { get; set; }
+    public bool isMoving { get; set; } = false;
+    public BoardTile moveTarget { get; set; }
     protected Board board { get; set; }
+    protected Rigidbody rb { get; set; }
+    // For all the possible places that a piece will end at, get the places that the piece has to move to before it reaches the end.
+    // For simple movement, this will just be a list of length 1 with the end being the same as the key
+    public Dictionary<BoardTile, List<BoardTile>> MovePaths { get; set; } = new Dictionary<BoardTile, List<BoardTile>>();
+    // For the current movement, Get the places that are going to be attacked by this turn. 
+    public List<BoardTile> AttackTiles { get; set; } = new List<BoardTile>();
     public abstract List<BoardTile> PreviewMove();
     public abstract List<BoardTile> PreviewAttack();
 
     public virtual bool Move(int newXPos, int newYPos)
     {
-        // Update the board with the new place we are at 
-        board.allPieces.Remove((xPos, yPos));
-        xPos = newXPos;
-        yPos = newYPos;
-        board.allPieces.Add((xPos, yPos), this);
-
-        // move the actual thing
-        return board.MovePiece(gameObject, newXPos, newYPos);
+        // When running preview move, it is assumed that MovePaths and Attack tiles are populated. 
+        // If they aren't, assume that they are empty, and we are just doing a simple move. 
+        BoardTile targetTile;
+        if (board.theBoard.TryGetValue((newXPos, newYPos), out targetTile))
+        {
+            // Move the piece according to the key. If you can't find a key, then do just a simple move. 
+            List<BoardTile> placesToMove;
+            if (!MovePaths.TryGetValue(targetTile, out placesToMove))
+            {
+                placesToMove = new List<BoardTile> { targetTile };
+            }
+            float startDelay = owner == CurrentTurn.Zombie ? Random.Range(0f, 1f) : 0;
+            StartCoroutine(DoPieceMovement(placesToMove, startDelay, 0f));
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public virtual bool Spawn(Board board, int xPos, int yPos, CurrentTurn owner)
@@ -36,34 +56,35 @@ public abstract class MoveablePiece: MonoBehaviour
         this.xPos = xPos;
         this.yPos = yPos;
         this.owner = owner;
+        rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
         return true;
     }
     public virtual bool Attack(int targetXPos, int targetYPos)
     {
-        // Do damage
-        MoveablePiece enemy;
-        if (board.allPieces.TryGetValue((targetXPos, targetYPos), out enemy) && enemy.owner != owner)
+        // The default attack behavior is to just move the piece to the place you are attacking
+        AttackTiles.Clear();
+        BoardTile target;
+        if (board.theBoard.TryGetValue((targetXPos, targetYPos), out target))
         {
-            enemy.health--;
-            if (enemy.health <= 0)
-            {
-                justKilledKing = enemy.GetComponent<King>() != null;
-                enemy.Die();
-            }
-        }
-
-        // If we are normal attacking, and we defeat the enemy, then also do a move.
-        if (!board.allPieces.ContainsKey((targetXPos, targetYPos)))
-        {
+            AttackTiles.Add(target);
             Move(targetXPos, targetYPos);
+            return true;
         }
-
-        return true;
+        else
+        {
+            return false;
+        }
     }
     public virtual bool Die()
     {
         // delete yourself from the board
         board.allPieces.Remove((xPos, yPos));
+        if (GetComponent<King>() != null)
+        {
+            // you are the king and you just died.
+            BoardStateManager.current.Lose();
+        }
         // delete yourself from existence
         Destroy(gameObject);
         return true;
@@ -82,15 +103,91 @@ public abstract class MoveablePiece: MonoBehaviour
     {
         // Checks to see if the player has lost the game
         //If you are a zombie and are at minYPos, then you lose
-        if(owner == CurrentTurn.Zombie && yPos == board.minYPos)
+        return owner == CurrentTurn.Zombie && yPos == board.minYPos;
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log(collision.gameObject.name);
+        MoveablePiece enemy;
+        if (collision.gameObject.TryGetComponent(out enemy) && enemy.owner != owner)
         {
-            return true;
+            BoardTile tile;
+            if (board.theBoard.TryGetValue((enemy.xPos, enemy.yPos), out tile) && AttackTiles.Contains(tile))
+            {
+                // Hit an enemy on a square you meant to attack, do damage to them. 
+                enemy.Die();
+            }
         }
-        if(owner == CurrentTurn.Zombie && justKilledKing)
+    }
+
+    protected IEnumerator DoPieceMovement(List<BoardTile> placesToMove, float delay, float interDelay)
+    {
+        board.objectsMoving.Add(this);
+        yield return new WaitForSeconds(delay);
+
+        foreach (BoardTile tile in placesToMove)
         {
-            return true;
+            // Move the piece to the target tile
+            Vector3 origPosition = transform.position;
+            Vector3 newPosition = board.GetPositionForGridPosition(tile);
+            float elapsedTime = 0;
+            float totalTime = moveTileSpeed * (tile.transform.position - transform.position).magnitude;
+            while (Mathf.Sin(elapsedTime / totalTime * (Mathf.PI / 2)) <= 0.98f)
+            {
+                if (!gameObject) { break; }
+                transform.position = Vector3.Lerp(origPosition, newPosition, Mathf.Sin(elapsedTime / totalTime * (Mathf.PI / 2)));
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+            transform.position = newPosition;
+            yield return new WaitForSeconds(interDelay);
         }
 
-        return false;
+        // Update the board
+        // Todo, if there is a piece there, where do you end up?
+        board.allPieces.Remove((xPos, yPos));
+        xPos = placesToMove.Last().xCoord;
+        yPos = placesToMove.Last().yCoord;
+        board.allPieces.Add((xPos, yPos), this);
+
+        board.objectsMoving.Remove(this);
+        yield return null;
+    }
+
+    protected IEnumerator DoPieceJumpMovement(List<BoardTile> placesToMove, float jumpHeight, float delay, float interDelay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        board.objectsMoving.Add(this);
+        foreach (BoardTile tile in placesToMove)
+        {
+            // Move the piece to the target tile
+            Vector3 origPosition = transform.position;
+            Vector3 newPosition = board.GetPositionForGridPosition(tile);
+            Vector3 centerPosition = Vector3.Lerp(origPosition, newPosition, 0.5f) + Vector3.up * jumpHeight;
+            float elapsedTime = 0;
+            float totalTime = moveTileSpeed * (tile.transform.position - transform.position).magnitude;
+            while (elapsedTime < totalTime)
+            {
+                if (!gameObject) { break; }
+                Vector3 m1 = Vector3.Lerp(origPosition, centerPosition, elapsedTime / totalTime);
+                Vector3 m2 = Vector3.Lerp(centerPosition, newPosition, elapsedTime / totalTime);
+                transform.position = Vector3.Lerp(m1, m2, elapsedTime / totalTime);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+            yield return new WaitForSeconds(interDelay);
+        }
+
+        // Update the board
+        // Todo, if there is a piece there, where do you end up?
+        board.allPieces.Remove((xPos, yPos));
+        xPos = placesToMove.Last().xCoord;
+        yPos = placesToMove.Last().yCoord;
+        board.allPieces.Add((xPos, yPos), this);
+
+        board.objectsMoving.Remove(this);
+        yield return null;
     }
 }
