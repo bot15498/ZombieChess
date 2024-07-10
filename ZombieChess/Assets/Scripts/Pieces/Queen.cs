@@ -37,11 +37,11 @@ public class Queen : MoveablePiece
                 // Can move like a knight
                 canKnightMove = true;
                 break;
-            case 5:
+            case 4:
                 // After you attack a piece, can move one more time, but can't take another piece.
                 canMoveAfterAttack = true;
                 break;
-            case 7:
+            case 6:
                 // Every turn you sit there, you gain an extra action point
                 canExtraMovePoint = true;
                 break;

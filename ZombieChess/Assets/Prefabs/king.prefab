@@ -145,6 +145,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFirstMove: 1
+  queenSynergy: 0
+  queenTeleportJumpHeight: 100
+  queenSynergyTiles: []
 --- !u!65 &3479640299139264317
 BoxCollider:
   m_ObjectHideFlags: 0

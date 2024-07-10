@@ -9,14 +9,41 @@ public class King : MoveablePiece
 {
     public bool isFirstMove = true;
 
+    [SerializeField]
+    private bool queenSynergy = false;
+    [SerializeField]
+    private float queenTeleportJumpHeight = 100f;
+    [SerializeField]
+    private List<BoardTile> queenSynergyTiles = new List<BoardTile>();
+
     void Start()
     {
         UpgradeManager.current.ActivateKingUpgrade += KingUpgrade;
+        BoardStateManager.current.TurnStartAction += OnturnStart;
+    }
+
+    void KingUpgrade(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                //upgrade stuff goes here upgrade id 0
+                Debug.Log("AAAAAAAA");
+                break;
+            case 4:
+                queenSynergy = true;
+                break;
+        }
+    }
+
+    private void OnturnStart(int turnCount)
+    {
+        
     }
 
     public override bool Move(int newXPos, int newYPos)
     {
-        if(isFirstMove)
+        if (isFirstMove)
         {
             List<Rook> rooks = board.allPieces.Values.Where(x => x.GetComponent<Rook>() != null).Cast<Rook>().ToList();
             foreach (Rook rook in rooks)
@@ -34,25 +61,23 @@ public class King : MoveablePiece
             }
         }
         isFirstMove = false;
-        return base.Move(newXPos, newYPos);
-    }
 
-    void KingUpgrade(int id)
-    {
-        switch (id)
+        // Teleporting to the queen
+        BoardTile targetTile;
+        if(queenSynergy && board.theBoard.TryGetValue((newXPos, newYPos), out targetTile) && queenSynergyTiles.Contains(targetTile))
         {
-            case 0:
-                //upgrade stuff goes here upgrade id 0
-                Debug.Log("AAAAAAAA");
-                break;
-
-            case 1:
-                //upgrade stuff goes here upgrade id 1 
-                break;
-
-            default:
-
-                break;
+            // do a jump instead of a normal move
+            List<BoardTile> placesToMove;
+            if (!MovePaths.TryGetValue(targetTile, out placesToMove))
+            {
+                placesToMove = new List<BoardTile> { targetTile };
+            }
+            StartCoroutine(DoPieceJumpMovement(placesToMove, queenTeleportJumpHeight, 0f, 0f));
+            return true;
+        }
+        else
+        {
+            return base.Move(newXPos, newYPos);
         }
     }
 
@@ -97,6 +122,29 @@ public class King : MoveablePiece
                 }
             }
         }
+
+        if (queenSynergy)
+        {
+            queenSynergyTiles.Clear();
+            // add all possible spaces to move around the queen.
+            List<MoveablePiece> queens = board.allPieces.Values.Where(x => x.GetComponent<Queen>() != null).ToList();
+            foreach (MoveablePiece queen in queens)
+            {
+                for (int xdiff = -1; xdiff <= 1; xdiff++)
+                {
+                    for (int ydiff = -1; ydiff <= 1; ydiff++)
+                    {
+                        if(!board.allPieces.ContainsKey((queen.xPos + xdiff, queen.yPos + ydiff)) && board.theBoard.TryGetValue((queen.xPos + xdiff, queen.yPos + ydiff), out tile))
+                        {
+                            // There is not a piece on this tile and the tile exists
+                            result.Add(tile);
+                            // You better believe I'm doing this a stupid way
+                            queenSynergyTiles.Add(tile);
+                        }
+                    }
+                }
+            }
+        }
         return result;
     }
 
@@ -123,6 +171,37 @@ public class King : MoveablePiece
                 }
             }
         }
+
+        if (queenSynergy)
+        {
+            // add all possible spaces to move around the queen.
+            List<MoveablePiece> queens = board.allPieces.Values.Where(x => x.GetComponent<Queen>() != null).ToList();
+            foreach (MoveablePiece queen in queens)
+            {
+                for (int xdiff = -1; xdiff <= 1; xdiff++)
+                {
+                    for (int ydiff = -1; ydiff <= 1; ydiff++)
+                    {
+                        if (board.allPieces.TryGetValue((queen.xPos + xdiff, queen.yPos + ydiff), out enemyPiece) 
+                            && enemyPiece.owner != owner
+                            && board.theBoard.TryGetValue((queen.xPos + xdiff, queen.yPos + ydiff), out tile))
+                        {
+                            // There is an enemy piece on this tile and the tile exists
+                            result.Add(tile);
+                            // You better believe I'm doing this a stupid way
+                            queenSynergyTiles.Add(tile);
+                        }
+                    }
+                }
+            }
+        }
         return result;
+    }
+
+    public override bool Die()
+    {
+        // the king just died!!!!
+        BoardStateManager.current.Lose();
+        return base.Die();
     }
 }

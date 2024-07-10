@@ -28,12 +28,7 @@ public class Rook : MoveablePiece
                 //upgrade stuff goes here
                 Debug.Log("AAAAAAAA");
                 break;
-
-            case 1:
-
-                break;
-
-            default:
+            case 3:
 
                 break;
         }

@@ -80,11 +80,6 @@ public abstract class MoveablePiece : MonoBehaviour
     {
         // delete yourself from the board
         board.allPieces.Remove((xPos, yPos));
-        if (GetComponent<King>() != null)
-        {
-            // you are the king and you just died.
-            BoardStateManager.current.Lose();
-        }
         // delete yourself from existence
         Destroy(gameObject);
         return true;
@@ -178,6 +173,7 @@ public abstract class MoveablePiece : MonoBehaviour
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
+            transform.position = newPosition;
             yield return new WaitForSeconds(interDelay);
         }
 
