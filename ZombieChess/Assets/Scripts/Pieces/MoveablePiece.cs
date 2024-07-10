@@ -58,12 +58,24 @@ public abstract class MoveablePiece : MonoBehaviour
         this.owner = owner;
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
+        BoardStateManager.current.TurnStartAction += GenericOnTurnStart;
+        BoardStateManager.current.TurnEndAction += GenericOnTurnEnd;
         return true;
     }
+
+    private void GenericOnTurnStart(int turnCount)
+    {
+        AttackTiles.Clear();
+    }
+
+    private void GenericOnTurnEnd(int turnCount)
+    {
+
+    }
+
     public virtual bool Attack(int targetXPos, int targetYPos)
     {
         // The default attack behavior is to just move the piece to the place you are attacking
-        AttackTiles.Clear();
         BoardTile target;
         if (board.theBoard.TryGetValue((targetXPos, targetYPos), out target))
         {
@@ -101,7 +113,7 @@ public abstract class MoveablePiece : MonoBehaviour
         return owner == CurrentTurn.Zombie && yPos == board.minYPos;
     }
 
-    public void OnCollisionEnter(Collision collision)
+    public virtual void OnCollisionEnter(Collision collision)
     {
         MoveablePiece enemy;
         if (collision.gameObject.TryGetComponent(out enemy) && enemy.owner != owner)
@@ -153,9 +165,9 @@ public abstract class MoveablePiece : MonoBehaviour
 
     protected IEnumerator DoPieceJumpMovement(List<BoardTile> placesToMove, float jumpHeight, float delay, float interDelay)
     {
+        board.objectsMoving.Add(this);
         yield return new WaitForSeconds(delay);
 
-        board.objectsMoving.Add(this);
         foreach (BoardTile tile in placesToMove)
         {
             // Move the piece to the target tile
