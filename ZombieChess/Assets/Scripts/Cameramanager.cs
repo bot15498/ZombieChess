@@ -9,14 +9,17 @@ public class Cameramanager : MonoBehaviour
     public GameObject FirstPersoncam;
     public GameObject enemyCam;
     public GameObject BookCam;
+    public GameObject zombookCam;
     bool isStrategic;
-    bool bookisopen;
+    public bool bookisopen;
+    bool zombookopen;
 
 
     void Start()
     {
         isStrategic = false;
         bookisopen = false;
+        zombookopen = false;
     }
 
     // Update is called once per frame
@@ -45,12 +48,15 @@ public class Cameramanager : MonoBehaviour
         FirstPersoncam.SetActive(true);
         enemyCam.SetActive(false);
         BookCam.SetActive(false);
+        zombookCam.SetActive(false);
+
         }else if(isStrategic == true)
         {
             strategicCam.SetActive(true);
             FirstPersoncam.SetActive(false);
             enemyCam.SetActive(false);
             BookCam.SetActive(false);
+            zombookCam.SetActive(false);
         }
        
     }
@@ -61,8 +67,21 @@ public class Cameramanager : MonoBehaviour
         FirstPersoncam.SetActive(false);
         enemyCam.SetActive(false);
         BookCam.SetActive(true);
+        zombookCam.SetActive(false);
         bookisopen = true;
 
+    }
+
+    public void activatezombookcam()
+    {
+     
+            strategicCam.SetActive(false);
+            FirstPersoncam.SetActive(false);
+            enemyCam.SetActive(false);
+            BookCam.SetActive(false);
+            zombookCam.SetActive(true);    
+            zombookopen = true;
+        
     }
 
     public void activatEnemyCam()
@@ -71,6 +90,7 @@ public class Cameramanager : MonoBehaviour
         FirstPersoncam.SetActive(false);
         enemyCam.SetActive(true);
         BookCam.SetActive(false);
+        zombookCam.SetActive(false);
     }
 
 
