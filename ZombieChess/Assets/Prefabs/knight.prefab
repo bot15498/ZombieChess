@@ -144,6 +144,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af83a6ab9115b4d4489ccddfc975bcf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canChainKill: 0
+  immuneOnKill: 0
+  maxLongRange: 2
+  maxShortRange: 1
+  canPassbyKill: 0
 --- !u!65 &7960348434025169940
 BoxCollider:
   m_ObjectHideFlags: 0
