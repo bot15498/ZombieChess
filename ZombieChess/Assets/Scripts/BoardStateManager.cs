@@ -63,26 +63,26 @@ public class BoardStateManager : MonoBehaviour
         // First make the board a 8x8 board. We start with 1 tile, so increase it by 7
         board.theBoard.Add((0, 0), startTile.GetComponent<BoardTile>());
         board.ExpandBoard(7, BoardDirections.East);
-        board.ExpandBoard(13, BoardDirections.North); board.ExpandBoard(13, BoardDirections.West);
+        board.ExpandBoard(13, BoardDirections.North); board.ExpandBoard(4, BoardDirections.West); board.ExpandBoard(4, BoardDirections.West);
 
         // On Start, set up the board like a normal chess match
+        board.PlacePiece(-4, 1, CurrentTurn.Player, pawnPrefab);
+        board.PlacePiece(-3, 1, CurrentTurn.Player, pawnPrefab);
+        board.PlacePiece(-2, 1, CurrentTurn.Player, pawnPrefab);
+        board.PlacePiece(-1, 1, CurrentTurn.Player, pawnPrefab);
         board.PlacePiece(0, 1, CurrentTurn.Player, pawnPrefab);
         board.PlacePiece(1, 1, CurrentTurn.Player, pawnPrefab);
         board.PlacePiece(2, 1, CurrentTurn.Player, pawnPrefab);
         board.PlacePiece(3, 1, CurrentTurn.Player, pawnPrefab);
-        board.PlacePiece(4, 1, CurrentTurn.Player, pawnPrefab);
-        board.PlacePiece(5, 1, CurrentTurn.Player, pawnPrefab);
-        board.PlacePiece(6, 1, CurrentTurn.Player, pawnPrefab);
-        board.PlacePiece(7, 1, CurrentTurn.Player, pawnPrefab);
 
-        board.PlacePiece(0, 0, CurrentTurn.Player, rookPrefab);
-        board.PlacePiece(7, 0, CurrentTurn.Player, rookPrefab);
-        board.PlacePiece(1, 0, CurrentTurn.Player, knightPrefab);
-        board.PlacePiece(6, 0, CurrentTurn.Player, knightPrefab);
-        board.PlacePiece(2, 0, CurrentTurn.Player, bishopPrefab);
-        board.PlacePiece(5, 0, CurrentTurn.Player, bishopPrefab);
-        board.PlacePiece(3, 0, CurrentTurn.Player, queenPrefab);
-        board.PlacePiece(4, 0, CurrentTurn.Player, kingPrefab);
+        board.PlacePiece(-4, 0, CurrentTurn.Player, rookPrefab);
+        board.PlacePiece(3, 0, CurrentTurn.Player, rookPrefab);
+        board.PlacePiece(-3, 0, CurrentTurn.Player, knightPrefab);
+        board.PlacePiece(2, 0, CurrentTurn.Player, knightPrefab);
+        board.PlacePiece(-2, 0, CurrentTurn.Player, bishopPrefab);
+        board.PlacePiece(1, 0, CurrentTurn.Player, bishopPrefab);
+        board.PlacePiece(-1, 0, CurrentTurn.Player, queenPrefab);
+        board.PlacePiece(0, 0, CurrentTurn.Player, kingPrefab);
 
         ZombieSpawnCheck();
         cmgroup = GetComponent<CMGrouping>();
