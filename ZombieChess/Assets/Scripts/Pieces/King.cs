@@ -51,7 +51,7 @@ public class King : MoveablePiece
 
     private void OnturnStart(int turnCount)
     {
-        
+
     }
 
     public override bool Move(int newXPos, int newYPos)
@@ -77,7 +77,7 @@ public class King : MoveablePiece
 
         // Teleporting to the queen
         BoardTile targetTile;
-        if(queenSynergy && board.theBoard.TryGetValue((newXPos, newYPos), out targetTile) && queenSynergyTiles.Contains(targetTile))
+        if (queenSynergy && board.theBoard.TryGetValue((newXPos, newYPos), out targetTile) && queenSynergyTiles.Contains(targetTile))
         {
             // do a jump instead of a normal move
             List<BoardTile> placesToMove;
@@ -147,7 +147,7 @@ public class King : MoveablePiece
                 {
                     for (int ydiff = -1; ydiff <= 1; ydiff++)
                     {
-                        if(!board.allPieces.ContainsKey((queen.xPos + xdiff, queen.yPos + ydiff)) && board.theBoard.TryGetValue((queen.xPos + xdiff, queen.yPos + ydiff), out tile))
+                        if (!board.allPieces.ContainsKey((queen.xPos + xdiff, queen.yPos + ydiff)) && board.theBoard.TryGetValue((queen.xPos + xdiff, queen.yPos + ydiff), out tile))
                         {
                             // There is not a piece on this tile and the tile exists
                             result.Add(tile);
@@ -195,7 +195,7 @@ public class King : MoveablePiece
                 {
                     for (int ydiff = -1; ydiff <= 1; ydiff++)
                     {
-                        if (board.allPieces.TryGetValue((queen.xPos + xdiff, queen.yPos + ydiff), out enemyPiece) 
+                        if (board.allPieces.TryGetValue((queen.xPos + xdiff, queen.yPos + ydiff), out enemyPiece)
                             && enemyPiece.owner != owner
                             && board.theBoard.TryGetValue((queen.xPos + xdiff, queen.yPos + ydiff), out tile))
                         {
@@ -227,7 +227,7 @@ public class King : MoveablePiece
             if (board.theBoard.TryGetValue((enemy.xPos, enemy.yPos), out tile) && AttackTiles.Contains(tile))
             {
                 // Hit an enemy on a square you meant to attack, do damage to them. 
-                if(!canChainReaction)
+                if (!canChainReaction)
                 {
                     enemy.Die();
                 }
@@ -239,17 +239,17 @@ public class King : MoveablePiece
                     piecesToSearch.Enqueue(new List<MoveablePiece> { enemy });
                     for (int i = 0; i < maxChainKill + 1; i++)
                     {
-                        if(piecesToSearch.Count == 0) { break; }
+                        if (piecesToSearch.Count == 0) { break; }
                         List<MoveablePiece> currPiecesListToSearch = piecesToSearch.Dequeue();
-                        foreach(MoveablePiece tosearch in currPiecesListToSearch)
+                        foreach (MoveablePiece tosearch in currPiecesListToSearch)
                         {
                             List<MoveablePiece> toad = new List<MoveablePiece>();
-                            for(int x=-1; x<= 1; x++)
+                            for (int x = -1; x <= 1; x++)
                             {
-                                for (int y=-1; y<= 1; y++)
+                                for (int y = -1; y <= 1; y++)
                                 {
-                                    if(x==0 && y==0) { continue; }
-                                    if(board.allPieces.TryGetValue((tosearch.xPos + x, tosearch.yPos + y), out enemy) && enemy.owner != owner && !foundPieces.Contains(enemy))
+                                    if (x == 0 && y == 0) { continue; }
+                                    if (board.allPieces.TryGetValue((tosearch.xPos + x, tosearch.yPos + y), out enemy) && enemy.owner != owner && !foundPieces.Contains(enemy))
                                     {
                                         toad.Add(enemy);
                                     }
@@ -260,7 +260,7 @@ public class King : MoveablePiece
                         }
                     }
 
-                    foreach(MoveablePiece piece in foundPieces)
+                    foreach (MoveablePiece piece in foundPieces)
                     {
                         // This should do it in bfs order I think?
                         piece.Die();
