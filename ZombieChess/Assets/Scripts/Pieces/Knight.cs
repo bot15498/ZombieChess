@@ -6,29 +6,31 @@ using static UnityEngine.UI.GridLayoutGroup;
 
 public class Knight : MoveablePiece
 {
-    /*
-     * 
-     * Killing a piece allows it to jump again
-After a kill immune to capture for a turn
-More move range
-Can have multiple upgrades
-Extend vertical range
-Extend horizontal range
-Attacks all spaces next to itÅfs move path
-
-     */
-
-    private bool canChainKill = true;
-    private bool immuneOnKill = true;
+    private static int[] signs = new int[] { -1, 1 };
 
     private int baseLongRange = 2;
     private int baseShortRange = 1;
-    private int maxLongRange = 2;
-    private int maxShortRange = 1;
-    
-    private bool canPassbyKill = true;
 
-    private static int[] signs = new int[] {-1, 1};
+    [SerializeField]
+    private bool canChainKill = false;
+
+    [SerializeField]
+    private bool immuneOnKill = false;
+
+    [SerializeField]
+    private int maxLongRange = 2;
+
+    [SerializeField]
+    private int maxShortRange = 1;
+
+    [SerializeField]
+    private bool canPassbyKill = false;
+
+    [SerializeField]
+    private float waitAfterStop = 0.5f;
+
+    [SerializeField]
+    private float killInterWait = 0.1f;
 
     void Start()
     {
@@ -44,7 +46,7 @@ Attacks all spaces next to itÅfs move path
                 this.canChainKill = true;
                 break;
 
-            // immune on kill
+            //
             case 1:
                 this.immuneOnKill = true;
                 break;
@@ -69,18 +71,116 @@ Attacks all spaces next to itÅfs move path
         }
     }
 
+    public override bool Move(int newXPos, int newYPos)
+    {
+        bool yLong = (Mathf.Abs(newYPos - this.yPos) > Mathf.Abs(newXPos - this.xPos));
+        int oldYPos = this.yPos;
+        int oldXPos = this.xPos;
+        int longSign;
+        int shortSign;
+        if (yLong)
+        {
+            longSign = newYPos - this.yPos > 0 ? 1 : -1;
+            shortSign = newXPos - this.xPos > 0 ? 1 : -1;
+        }
+        else
+        {
+            longSign = newXPos - this.xPos > 0 ? 1 : -1;
+            shortSign = newYPos - this.yPos > 0 ? 1 : -1;
+        }
+        //Debug.Log(yLong.ToString() + " " + longSign.ToString() + " " + shortSign.ToString() + " (" + oldYPos.ToString() + " " + oldXPos.ToString() + ") to (" + newYPos.ToString() + " " + newXPos.ToString() + ") ");
+
+
+        if (base.Move(newXPos, newYPos))
+        {
+            if(this.canPassbyKill) // TODO: make knight zigzag between all the enemies
+            {
+                List<BoardTile> fullPathTiles = new List<BoardTile>();
+                BoardTile longStepIntermediate;
+                BoardTile shortStepIntermediate;
+
+                if (yLong)
+                {
+                    
+                    for (int stepsToLong = oldYPos + longSign; newYPos - stepsToLong != 0; stepsToLong += longSign)
+                    {
+                        board.theBoard.TryGetValue((oldXPos, stepsToLong), out longStepIntermediate);
+                        fullPathTiles.Add(longStepIntermediate);
+                    }
+                    for (int stepsToShort = oldXPos + shortSign; newXPos - stepsToShort != 0; stepsToShort += shortSign)
+                    {
+                        board.theBoard.TryGetValue((stepsToShort, newYPos), out shortStepIntermediate);
+                        fullPathTiles.Add(shortStepIntermediate);
+                    }
+                }
+                else
+                {
+                    for (int stepsToLong = oldXPos + longSign; newXPos - stepsToLong != 0; stepsToLong += longSign)
+                    {
+                        board.theBoard.TryGetValue((stepsToLong, oldYPos), out longStepIntermediate);
+                        fullPathTiles.Add(longStepIntermediate);
+                    }
+                    for (int stepsToShort = oldYPos + shortSign; newYPos - stepsToShort != 0; stepsToShort += shortSign)
+                    {
+                        board.theBoard.TryGetValue((newXPos, stepsToShort), out shortStepIntermediate);
+                        fullPathTiles.Add(shortStepIntermediate);
+                    }
+                }
+
+                HashSet<BoardTile> tilesToAttackPassby = new HashSet<BoardTile>();
+                foreach (BoardTile pathTile in fullPathTiles)
+                {
+                    foreach (BoardTile neighborTile in this.GetTileNeighbors(pathTile))
+                    {
+                        tilesToAttackPassby.Add(neighborTile);
+                    }
+                }
+
+                List<MoveablePiece> enemies = new List<MoveablePiece>();
+                MoveablePiece enemy;
+                foreach (BoardTile tileToAttack in tilesToAttackPassby)
+                {
+                    if (board.allPieces.TryGetValue((tileToAttack.xCoord, tileToAttack.yCoord), out enemy) && enemy.owner != owner)
+                    {
+                        enemies.Add(enemy);
+                        if (this.canChainKill)
+                        {
+                            this.numActions = 2;
+                        }
+                    }
+                }
+                if (enemies.Count > 0)
+                {
+                    BoardTile targetTile;
+                    board.theBoard.TryGetValue((newXPos, newYPos), out targetTile);
+
+                    List<BoardTile> placesToMove;
+                    MovePaths.TryGetValue(targetTile, out placesToMove);
+                    
+                    float totalTime = 0;
+                    foreach (BoardTile tile in placesToMove)
+                    {
+                        totalTime += (moveTileSpeed * (tile.transform.position - transform.position).magnitude);
+                    }
+                        
+                    StartCoroutine(this.killPassbyEnemies(enemies, totalTime));
+                }
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public override bool Attack(int targetXPos, int targetYPos)
     {
-        // Do damage
-        AttackTiles.Clear();
-        BoardTile target;
-        if (board.theBoard.TryGetValue((targetXPos, targetYPos), out target))
+        if (base.Attack(targetXPos, targetYPos)) 
         {
-            AttackTiles.Add(target);
-            Move(targetXPos, targetYPos);
-            if (canChainKill)
+            if (this.canChainKill)
             {
-                this.numActions++;
+                this.numActions = 2;
             }
             return true;
         }
@@ -114,9 +214,18 @@ Attacks all spaces next to itÅfs move path
 
     private List<BoardTile> GetAllValidMoveTiles()
     {
+        // Start to build the move paths dictionary
+        this.MovePaths.Clear();
+
         // This returns all valid move tiles, regardless if something is there or not
         List<BoardTile> result = new List<BoardTile>();
         BoardTile tile;
+        int newXPos;
+        int newYPos;
+        
+        List<BoardTile> pathTiles;
+        BoardTile longStep;
+        BoardTile shortStep;
 
         for (int longSteps = this.baseLongRange; longSteps <= this.maxLongRange; longSteps++)
         {
@@ -127,13 +236,67 @@ Attacks all spaces next to itÅfs move path
                     foreach (int shortSign in signs)
                     {
                         // Long step goes North or South - Short step goes East or West
-                        if (board.theBoard.TryGetValue((xPos + shortSign * shortSteps, yPos + longSign * longSteps), out tile) && tile.canBeOccupied) { result.Add(tile); }
+                        newXPos = this.xPos + shortSign * shortSteps;
+                        newYPos = this.yPos + longSign * longSteps;
+                        if (board.theBoard.TryGetValue((newXPos, newYPos), out tile) && tile.canBeOccupied) { 
+                            result.Add(tile);
+
+                            pathTiles = new List<BoardTile>();
+                            board.theBoard.TryGetValue((this.xPos, newYPos), out longStep);
+                            pathTiles.Add(longStep);
+                            board.theBoard.TryGetValue((newXPos, newYPos), out shortStep);
+                            pathTiles.Add(shortStep);
+                            MovePaths[tile] = pathTiles;
+                        }
+
                         // Long step goes East or West - Short step goes North or South
-                        if (board.theBoard.TryGetValue((xPos + longSign * longSteps, yPos + shortSign * shortSteps), out tile) && tile.canBeOccupied) { result.Add(tile); }
+                        newXPos = this.xPos + longSign * longSteps;
+                        newYPos = this.yPos + shortSign * shortSteps;
+                        if (board.theBoard.TryGetValue((newXPos, newYPos), out tile) && tile.canBeOccupied) {
+                            result.Add(tile);
+
+                            pathTiles = new List<BoardTile>();
+                            board.theBoard.TryGetValue((newXPos, this.yPos), out longStep);
+                            pathTiles.Add(longStep);
+                            board.theBoard.TryGetValue((newXPos, newYPos), out shortStep);
+                            pathTiles.Add(shortStep);
+                            MovePaths[tile] = pathTiles;
+                        }
                     }
                 }
             }
         }
         return result;
     }
+
+    private List<BoardTile> GetTileNeighbors(BoardTile tile)
+    {
+        int[] steps = new int[] { -1, 0, 1 };
+        List<BoardTile> result = new List<BoardTile>();
+        BoardTile neighbor;
+
+        foreach (int verticalStep in steps)
+        {
+            foreach (int horizontalStep in steps)
+            {
+                if (!(horizontalStep == 0 && verticalStep == 0) && board.theBoard.TryGetValue((tile.xCoord + horizontalStep, tile.yCoord + verticalStep), out neighbor) && neighbor.canBeOccupied) { result.Add(neighbor); }
+            }
+        }
+
+        return result;
+    }
+
+    private IEnumerator killPassbyEnemies(List<MoveablePiece> enemies, float initialWait)
+    {
+        yield return new WaitForSeconds(initialWait + this.waitAfterStop);
+
+        foreach (MoveablePiece enemy in enemies)
+        {
+            enemy.Die();
+            yield return new WaitForSeconds(this.killInterWait);
+        }
+
+        yield return null;
+    }
 }
+
