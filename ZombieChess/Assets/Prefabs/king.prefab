@@ -144,6 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 543f76407e99ca042856e00d10c40298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bloodDecal: {fileID: 5148016183293206408, guid: ef17e6d188ed272479118ff3c26fe078, type: 3}
   isFirstMove: 1
   queenSynergy: 0
   queenTeleportJumpHeight: 100

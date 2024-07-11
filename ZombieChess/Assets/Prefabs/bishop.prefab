@@ -144,6 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d82cddd064be9144dbe8943e4cfac241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bloodDecal: {fileID: 5148016183293206408, guid: ef17e6d188ed272479118ff3c26fe078, type: 3}
   ismartyr: 0
   hasRookMovement: 0
   piercing: 0

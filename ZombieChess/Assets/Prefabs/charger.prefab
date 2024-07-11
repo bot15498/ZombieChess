@@ -157,6 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c5a5dd08f741294ab8c6491673f0811, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bloodDecal: {fileID: 5148016183293206408, guid: ef17e6d188ed272479118ff3c26fe078, type: 3}
   initialWaitTimer: 3
 --- !u!54 &5546745340818837551
 Rigidbody:

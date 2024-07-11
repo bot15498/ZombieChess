@@ -17,6 +17,9 @@ public abstract class MoveablePiece : MonoBehaviour
     public CurrentTurn owner { get; set; }
     public bool isMoving { get; set; } = false;
     public BoardTile moveTarget { get; set; }
+
+    [SerializeField]
+    public GameObject bloodDecal;
     protected Board board { get; set; }
     protected Rigidbody rb { get; set; }
     // For all the possible places that a piece will end at, get the places that the piece has to move to before it reaches the end.
@@ -93,6 +96,7 @@ public abstract class MoveablePiece : MonoBehaviour
         // delete yourself from the board
         board.allPieces.Remove((xPos, yPos));
         // delete yourself from existence
+        Instantiate(bloodDecal, gameObject.transform.position, bloodDecal.transform.rotation);
         Destroy(gameObject);
         return true;
     }

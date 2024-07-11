@@ -453,6 +453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdc2f0e0348411c4d997a9cb9349a9e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bloodDecal: {fileID: 5148016183293206408, guid: ef17e6d188ed272479118ff3c26fe078, type: 3}
   pounceCharge: 1
   jumpRadius: 5
   jumpHeight: 1.5

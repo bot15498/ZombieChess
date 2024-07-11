@@ -113,4 +113,9 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
+    public void addMoney(int moneytoadd)
+    {
+        zombieBucks += moneytoadd;
+    }
+
 }

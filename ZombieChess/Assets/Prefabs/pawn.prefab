@@ -144,7 +144,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8f3d333de672094096233a2e98b3b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bloodDecal: {fileID: 5148016183293206408, guid: ef17e6d188ed272479118ff3c26fe078, type: 3}
   isFirstMove: 1
+  canBackwardsMove: 0
+  canAttackForwards: 0
+  canChainKill: 0
+  explodeBoardOnPromotion: 0
+  canEnPassant: 0
 --- !u!65 &5885891785173408661
 BoxCollider:
   m_ObjectHideFlags: 0

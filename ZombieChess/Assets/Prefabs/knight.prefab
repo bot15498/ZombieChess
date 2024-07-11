@@ -144,11 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af83a6ab9115b4d4489ccddfc975bcf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canChainKill: 0
-  immuneOnKill: 0
-  maxLongRange: 2
-  maxShortRange: 1
-  canPassbyKill: 0
+  bloodDecal: {fileID: 5148016183293206408, guid: ef17e6d188ed272479118ff3c26fe078, type: 3}
 --- !u!65 &7960348434025169940
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -144,6 +144,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abe6131d194dba54da017429f0414394, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bloodDecal: {fileID: 5148016183293206408, guid: ef17e6d188ed272479118ff3c26fe078, type: 3}
+  canKnightMove: 0
+  canMoveAfterAttack: 0
+  didAttack: 0
+  canExtraMovePoint: 0
+  noMoveChargeCount: 0
+  didMoveThisTurn: 0
 --- !u!65 &6289682636420224582
 BoxCollider:
   m_ObjectHideFlags: 0
