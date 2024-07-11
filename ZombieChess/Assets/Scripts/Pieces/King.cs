@@ -10,6 +10,9 @@ public class King : MoveablePiece
     public bool isFirstMove = true;
 
     [SerializeField]
+    private bool canChainReaction = false;
+
+    [SerializeField]
     private bool queenSynergy = false;
     [SerializeField]
     private float queenTeleportJumpHeight = 100f;
@@ -29,6 +32,9 @@ public class King : MoveablePiece
             case 0:
                 //upgrade stuff goes here upgrade id 0
                 Debug.Log("AAAAAAAA");
+                break;
+            case 1:
+                canChainReaction = true;
                 break;
             case 4:
                 queenSynergy = true;
@@ -203,5 +209,10 @@ public class King : MoveablePiece
         // the king just died!!!!
         BoardStateManager.current.Lose();
         return base.Die();
+    }
+
+    public override void OnCollisionEnter(Collision collision)
+    {
+        base.OnCollisionEnter(collision);
     }
 }
