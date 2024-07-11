@@ -58,6 +58,20 @@ public class Charger : MoveablePiece, IZombiePiece
         return result[0];
     }
 
+    public override void OnCollisionEnter(Collision collision)
+    {
+        MoveablePiece friendly;
+        if (collision.gameObject.TryGetComponent(out friendly) && friendly.owner == owner)
+        {
+            BoardTile tile;
+            if (board.theBoard.TryGetValue((friendly.xPos, friendly.yPos), out tile) && AttackTiles.Contains(tile))
+            {
+                // Hit an enemy on a square you meant to attack, do damage to them. 
+                friendly.Die();
+            }
+        }
+    }
+
     public void ZombieAiAction()
     {
         if (waitTimer > 0)
@@ -71,15 +85,7 @@ public class Charger : MoveablePiece, IZombiePiece
             {
                 MoveablePiece enemyPiece;
 
-                // Kill all zombies in the way
-                foreach (BoardTile tile in this.GetValidMovePath())
-                {
-                    if (board.allPieces.TryGetValue((tile.xCoord, tile.yCoord), out enemyPiece) && enemyPiece.owner == owner)
-                    {
-                        // If it's a zombie, kill it
-                        enemyPiece.Die();
-                    }
-                }
+                this.AttackTiles.AddRange(this.GetValidMovePath());
 
                 if (board.allPieces.TryGetValue((validMove.xCoord, validMove.yCoord), out enemyPiece) && enemyPiece.owner != owner)
                 {
