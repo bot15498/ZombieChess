@@ -17,7 +17,7 @@ public class Cameramanager : MonoBehaviour
 
     void Start()
     {
-        isStrategic = false;
+        isStrategic = true;
         bookisopen = false;
         zombookopen = false;
     }

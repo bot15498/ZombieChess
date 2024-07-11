@@ -113,3 +113,5 @@ MonoBehaviour:
   xCoord: 0
   yCoord: 0
   canBeOccupied: 1
+  highlightblue: {fileID: 2100000, guid: 7034ad4082dcb10458289c0fa5af3714, type: 2}
+  highlightred: {fileID: 2100000, guid: 3405a1bde69234e47807c6dcaabd9193, type: 2}

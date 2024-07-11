@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8900e0d6d18eea949a9194ed1bc3d347, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moneyValue: 0
+  _moneyValue: 2
   bloodDecal: {fileID: 5148016183293206408, guid: ef17e6d188ed272479118ff3c26fe078, type: 3}
   alertRadius: 2
   turnsUntilExplode: 1

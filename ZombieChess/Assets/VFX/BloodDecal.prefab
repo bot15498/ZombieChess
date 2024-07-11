@@ -53,7 +53,7 @@ MonoBehaviour:
   m_UVScale: {x: 1, y: 1}
   m_UVBias: {x: 0, y: 0}
   m_ScaleMode: 0
-  m_Offset: {x: 0, y: -0.42107543, z: 0.7908225}
+  m_Offset: {x: 0, y: -0.42107543, z: 1.22}
   m_Size: {x: 1.8792105, y: 1.8, z: 2.4608555}
   m_FadeFactor: 1
 --- !u!114 &5148016183293206413

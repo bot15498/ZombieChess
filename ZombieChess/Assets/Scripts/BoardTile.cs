@@ -15,10 +15,16 @@ public class BoardTile : MonoBehaviour
     public int yCoord = 0;
     public bool canBeOccupied = true;
     private Color startMaterialColor;
+    public Material highlightblue;
+    public Material highlightred;
+    private Material defaultmat;
+    private MeshRenderer mr;
 
     void Start()
     {
         startMaterialColor = GetComponent<MeshRenderer>().material.color;
+        mr = GetComponent<MeshRenderer>();
+        defaultmat = mr.material;
     }
 
     void Update()
@@ -37,13 +43,16 @@ public class BoardTile : MonoBehaviour
         switch (highLightType)
         {
             case TileHighlightType.Move:
-                GetComponent<MeshRenderer>().material.color = ApplyColorTint(startMaterialColor, Color.blue);
+                //GetComponent<MeshRenderer>().material.color = ApplyColorTint(startMaterialColor, Color.blue);
+                mr.material = highlightblue;
                 break;
             case TileHighlightType.Attack:
-                GetComponent<MeshRenderer>().material.color = ApplyColorTint(startMaterialColor, Color.red);
+                //GetComponent<MeshRenderer>().material.color = ApplyColorTint(startMaterialColor, Color.red);
+                mr.material = highlightred;
                 break;
             case TileHighlightType.Idle:
-                GetComponent<MeshRenderer>().material.color = startMaterialColor;
+                //GetComponent<MeshRenderer>().material.color = startMaterialColor;
+                mr.material = defaultmat;
                 break;
         }
     }
