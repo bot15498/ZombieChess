@@ -24,6 +24,8 @@ public abstract class MoveablePiece : MonoBehaviour
 
     [SerializeField]
     public GameObject bloodDecal;
+
+
     protected Board board { get; set; }
     protected Rigidbody rb { get; set; }
     // For all the possible places that a piece will end at, get the places that the piece has to move to before it reaches the end.
@@ -33,6 +35,7 @@ public abstract class MoveablePiece : MonoBehaviour
     public List<BoardTile> AttackTiles { get; set; } = new List<BoardTile>();
     public abstract List<BoardTile> PreviewMove();
     public abstract List<BoardTile> PreviewAttack();
+
 
     public virtual bool Move(int newXPos, int newYPos)
     {

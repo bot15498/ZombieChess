@@ -65,6 +65,7 @@ public class Board : MonoBehaviour
         // Instantiate object
         Vector3 pos = new Vector3(xPos * gridStep, 0 + pieceYOffset, yPos * gridStep) + transform.position;
         GameObject newObject = Instantiate(obj, pos, Quaternion.identity, transform);
+
         MoveablePiece piece = newObject.GetComponent<MoveablePiece>();
         piece.Spawn(this, xPos, yPos, owner);
         allPieces.Add((xPos, yPos), piece);
