@@ -44,6 +44,7 @@ public class BoardStateManager : MonoBehaviour
     public event Action<int> TurnEndAction;
 
     private int zombieLevel = 0;
+    private bool canCancelPlayerAction = true;
     private MoveablePiece currSelectedPiece;
     private BoardTile currSelectedBoardTile;
     private List<BoardTile> possiblePlacesToMove = new List<BoardTile>();
@@ -98,6 +99,7 @@ public class BoardStateManager : MonoBehaviour
                 {
                     detector.canClickPiece = true;
                     detector.canClickTile = false;
+                    canCancelPlayerAction = true;
                     TurnStartAction(turnCount);
                 }
                 else
@@ -173,7 +175,7 @@ public class BoardStateManager : MonoBehaviour
 
                         currState = GameState.PieceMove;
                     }
-                    if (Input.GetMouseButtonDown(1))
+                    if (canCancelPlayerAction && Input.GetMouseButtonDown(1))
                     {
                         // Cancelled!
                         SetTileHighlightColor(possiblePlacesToMove, TileHighlightType.Idle);
@@ -213,6 +215,7 @@ public class BoardStateManager : MonoBehaviour
                             detector.canClickTile = true;
                             detector.canClickPiece = false;
                             currSelectedBoardTile = null;
+                            canCancelPlayerAction = false;
                             currState = GameState.PieceSelected;
                         }
                         else
