@@ -143,10 +143,10 @@ public class Knight : MoveablePiece
                     if (board.allPieces.TryGetValue((tileToAttack.xCoord, tileToAttack.yCoord), out enemy) && enemy.owner != owner)
                     {
                         enemies.Add(enemy);
-                        if (this.canChainKill)
-                        {
-                            this.numActions = 2;
-                        }
+                        // if (this.canChainKill)
+                        // {
+                        //    this.numActions = 2;
+                        // }
                     }
                 }
                 if (enemies.Count > 0)
