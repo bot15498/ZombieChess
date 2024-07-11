@@ -139,12 +139,7 @@ public class Charger : MoveablePiece, IZombiePiece
         {
             grappleTarget.numActions = grappleTarget.maxNumActions; 
         }
-
-        // delete yourself from the board
-        board.allPieces.Remove((xPos, yPos));
-        // delete yourself from existence
-        Destroy(gameObject);
-        return true;
+        return base.Die();
     }
 
     // Start is called before the first frame update

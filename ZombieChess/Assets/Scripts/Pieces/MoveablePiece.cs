@@ -5,6 +5,9 @@ using UnityEngine;
 
 public abstract class MoveablePiece : MonoBehaviour
 {
+    [SerializeField]
+    private int _moneyValue = 0;
+
     public int health { get; set; } = 1;
     public int maxHealth { get; set; } = 1;
     public int numActions { get; set; } = 1;
@@ -12,6 +15,7 @@ public abstract class MoveablePiece : MonoBehaviour
     public float moveTileSpeed { get; set; } = 0.1f; // Measured in seconds spent between unity world units
     public int xPos { get; set; } = 0;
     public int yPos { get; set; } = 0;
+    public int moneyValue { get => _moneyValue; set => _moneyValue = value; }   
     public bool canAct { get; set; } = true;
     public int size { get; set; } = 1;
     public CurrentTurn owner { get; set; }
@@ -93,6 +97,7 @@ public abstract class MoveablePiece : MonoBehaviour
     }
     public virtual bool Die()
     {
+        UpgradeManager.current.addMoney(moneyValue);
         // delete yourself from the board
         board.allPieces.Remove((xPos, yPos));
         // delete yourself from existence
