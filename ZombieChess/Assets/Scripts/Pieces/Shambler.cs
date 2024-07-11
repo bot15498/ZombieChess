@@ -28,20 +28,34 @@ public class Shambler : MoveablePiece, IZombiePiece
         List<BoardTile> result = new List<BoardTile>();
         BoardTile tile;
         MoveablePiece enemyPiece;
+        // stuff for rook
+        Rook rook;
         if (board.allPieces.TryGetValue((xPos, yPos - 1), out enemyPiece) && enemyPiece.owner != owner)
         {
-            board.theBoard.TryGetValue((xPos, yPos - 1), out tile);
-            result.Add(tile);
+            rook = enemyPiece.GetComponent<Rook>();
+            if(rook == null || !rook.isImmunteToShambler)
+            {
+                board.theBoard.TryGetValue((xPos, yPos - 1), out tile);
+                result.Add(tile);
+            }
         }
         if (board.allPieces.TryGetValue((xPos - 1, yPos - 1), out enemyPiece) && enemyPiece.owner != owner)
         {
-            board.theBoard.TryGetValue((xPos - 1, yPos - 1), out tile);
-            result.Add(tile);
+            rook = enemyPiece.GetComponent<Rook>();
+            if (rook == null || !rook.isImmunteToShambler)
+            {
+                board.theBoard.TryGetValue((xPos - 1, yPos - 1), out tile);
+                result.Add(tile);
+            }
         }
         if (board.allPieces.TryGetValue((xPos + 1, yPos - 1), out enemyPiece) && enemyPiece.owner != owner)
         {
-            board.theBoard.TryGetValue((xPos + 1, yPos - 1), out tile);
-            result.Add(tile);
+            rook = enemyPiece.GetComponent<Rook>();
+            if (rook == null || !rook.isImmunteToShambler)
+            {
+                board.theBoard.TryGetValue((xPos + 1, yPos - 1), out tile);
+                result.Add(tile);
+            }
         }
         return result;
     }

@@ -9,6 +9,8 @@ public class Rook : MoveablePiece
 {
     public bool isFirstMove = true;
 
+    public bool isImmunteToShambler = false;
+
     void Start()
     {
         UpgradeManager.current.ActivateRookUpgrade += RookUpgrade;
@@ -29,10 +31,9 @@ public class Rook : MoveablePiece
                 Debug.Log("AAAAAAAA");
                 break;
             case 3:
-
+                isImmunteToShambler = true;
                 break;
         }
-        //Do upgrade stuff
     }
 
     public override List<BoardTile> PreviewMove()

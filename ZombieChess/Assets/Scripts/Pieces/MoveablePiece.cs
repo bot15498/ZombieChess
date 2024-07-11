@@ -50,21 +50,20 @@ public abstract class MoveablePiece : MonoBehaviour
 
             // Update the board
             // Todo, if there is a piece there, where do you end up?
-            if(!board.allPieces.ContainsKey((placesToMove.Last().xCoord, placesToMove.Last().yCoord)))
+            board.allPieces.Remove((xPos, yPos));
+            xPos = placesToMove.Last().xCoord;
+            yPos = placesToMove.Last().yCoord;
+            if (board.allPieces.ContainsKey((xPos, yPos)))
             {
+                // If you are moving somewhere, it's assumed that you already passed the check that something is there or not.
+                // If something is there, kick it out, you are going to be there soon. 
                 board.allPieces.Remove((xPos, yPos));
-                xPos = placesToMove.Last().xCoord;
-                yPos = placesToMove.Last().yCoord;
-                board.allPieces.Add((xPos, yPos), this);
+            }
+            board.allPieces.Add((xPos, yPos), this);
 
-                float startDelay = owner == CurrentTurn.Zombie ? Random.Range(0f, 1f) : 0;
-                StartCoroutine(DoPieceMovement(placesToMove, startDelay, 0f));
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            float startDelay = owner == CurrentTurn.Zombie ? Random.Range(0f, 1f) : 0;
+            StartCoroutine(DoPieceMovement(placesToMove, startDelay, 0f));
+            return true;
         }
         else
         {
