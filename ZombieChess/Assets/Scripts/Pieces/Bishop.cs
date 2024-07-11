@@ -102,22 +102,80 @@ public class Bishop : MoveablePiece
 
     public override List<BoardTile> PreviewMove()
     {
+        // filter out the attacks
+        return GetAllMovesAndAttacks().Where(x => !board.allPieces.ContainsKey((x.xCoord, x.yCoord))).ToList();
+    }
+
+    public override List<BoardTile> PreviewAttack()
+    {
+        // Give all the possible places that the bishop can attack to.
+        List<BoardTile> result = new List<BoardTile>();
+        MoveablePiece enemyPiece;
+        foreach (BoardTile tile in GetAllMovesAndAttacks())
+        {
+            if (board.allPieces.TryGetValue((tile.xCoord, tile.yCoord), out enemyPiece) && enemyPiece.owner != owner)
+            {
+                result.Add(tile);
+            }
+        }
+        return result;
+    }
+
+    private List<BoardTile> GetAllMovesAndAttacks()
+    {
         // Give all the possible places that the bishop can move to.
         List<BoardTile> result = GetAllValidMoveTiles(xPos, yPos);
-        //if (numRicochetCount > 0)
-        //{
-        //    // Start to build the move paths dictionary
-        //    MovePaths.Clear();
-        //    foreach(BoardTile tile in result)
-        //    {
-        //        MovePaths.Add(tile, new List<BoardTile> { tile });
-        //    }
-        //    for(int i=0; i<numRicochetCount; i++)
-        //    {
-                
-        //    }
-        //}
-        return result.Where(x => !board.allPieces.ContainsKey((x.xCoord, x.yCoord))).ToList();
+        if (numRicochetCount > 0)
+        {
+            // Start to build the move paths dictionary
+            MovePaths.Clear();
+            foreach (BoardTile tile in result)
+            {
+                MovePaths.Add(tile, new List<BoardTile> { tile });
+            }
+
+            // I wrote this at like 3am I have no idea if it works.
+            List<BoardTile> tilesToLookAt = result;
+            for (int i = 0; i < numRicochetCount; i++)
+            {
+                foreach (BoardTile tile in GetBorderTiles(tilesToLookAt))
+                {
+                    List<BoardTile> bounceTiles = GetAllValidMoveTiles(tile.xCoord, tile.yCoord);
+                    foreach (BoardTile currBounceTile in bounceTiles)
+                    {
+                        if (!MovePaths.ContainsKey(currBounceTile))
+                        {
+                            List<BoardTile> toad = new List<BoardTile>();
+                            toad.AddRange(MovePaths[tile]);
+                            toad.Add(currBounceTile);
+                            MovePaths.Add(currBounceTile, toad);
+                        }
+                    }
+                    tilesToLookAt.AddRange(bounceTiles);
+                }
+            }
+        }
+        return result;
+    }
+
+    private List<BoardTile> GetBorderTiles(ICollection<BoardTile> intiles)
+    {
+        List<BoardTile> result = new List<BoardTile>();
+        foreach(BoardTile tile in intiles)
+        {
+            // check if at the border or not
+            if(tile.xCoord == board.maxXPos
+                || tile.xCoord == board.minXPos
+                || tile.yCoord == board.maxYPos
+                || tile.yCoord == board.minYPos)
+            {
+                result.Add(tile);
+            }
+            // Check if we are going to hit a friendly piece if we go any further
+            // TODO: this
+        }
+
+        return result;
     }
 
     public override bool Move(int newXPos, int newYPos)
@@ -167,21 +225,6 @@ public class Bishop : MoveablePiece
         return base.Move(newXPos, newYPos);
     }
 
-    public override List<BoardTile> PreviewAttack()
-    {
-        // Give all the possible places that the bishop can attack to.
-        List<BoardTile> result = new List<BoardTile>();
-        MoveablePiece enemyPiece;
-        foreach (BoardTile tile in GetAllValidMoveTiles(xPos, yPos))
-        {
-            if (board.allPieces.TryGetValue((tile.xCoord, tile.yCoord), out enemyPiece) && enemyPiece.owner != owner)
-            {
-                result.Add(tile);
-            }
-        }
-        return result;
-    }
-
     private List<BoardTile> GetAllValidMoveTiles(int currXPos, int currYPos)
     {
         // This returns all valid move tiles, regardless if something is there or not
@@ -189,19 +232,19 @@ public class Bishop : MoveablePiece
         BoardTile tile;
         MoveablePiece piece;
 
-        int northEastMaxCheck = Mathf.Min(board.maxXPos - currXPos, board.maxYPos - yPos);
-        int northWestMaxCheck = Mathf.Min(currXPos - board.minXPos, board.maxYPos - yPos);
-        int southEastMaxCheck = Mathf.Min(board.maxXPos - currXPos, yPos - board.minYPos);
-        int southWestMaxCheck = Mathf.Min(currXPos - board.minXPos, yPos - board.minYPos);
+        int northEastMaxCheck = Mathf.Min(board.maxXPos - currXPos, board.maxYPos - currYPos);
+        int northWestMaxCheck = Mathf.Min(currXPos - board.minXPos, board.maxYPos - currYPos);
+        int southEastMaxCheck = Mathf.Min(board.maxXPos - currXPos, currYPos - board.minYPos);
+        int southWestMaxCheck = Mathf.Min(currXPos - board.minXPos, currYPos - board.minYPos);
 
         // Check going north east
         for (int i = 1; i <= northEastMaxCheck; i++)
         {
-            if (board.theBoard.TryGetValue((currXPos + i, yPos + i), out tile) && tile.canBeOccupied)
+            if (board.theBoard.TryGetValue((currXPos + i, currYPos + i), out tile) && tile.canBeOccupied)
             {
                 result.Add(tile);
             }
-            if (board.allPieces.TryGetValue((currXPos + i, yPos + i), out piece))
+            if (board.allPieces.TryGetValue((currXPos + i, currYPos + i), out piece))
             {
                 if (piece.owner == owner || !tile.canBeOccupied)
                 {
@@ -218,11 +261,11 @@ public class Bishop : MoveablePiece
         // check going north weast
         for (int i = 1; i <= northWestMaxCheck; i++)
         {
-            if (board.theBoard.TryGetValue((currXPos - i, yPos + i), out tile) && tile.canBeOccupied)
+            if (board.theBoard.TryGetValue((currXPos - i, currYPos + i), out tile) && tile.canBeOccupied)
             {
                 result.Add(tile);
             }
-            if (board.allPieces.TryGetValue((currXPos - i, yPos + i), out piece))
+            if (board.allPieces.TryGetValue((currXPos - i, currYPos + i), out piece))
             {
                 if (piece.owner == owner || !tile.canBeOccupied)
                 {
@@ -237,11 +280,11 @@ public class Bishop : MoveablePiece
         // check going south east
         for (int i = 1; i <= southEastMaxCheck; i++)
         {
-            if (board.theBoard.TryGetValue((currXPos + i, yPos - i), out tile) && tile.canBeOccupied)
+            if (board.theBoard.TryGetValue((currXPos + i, currYPos - i), out tile) && tile.canBeOccupied)
             {
                 result.Add(tile);
             }
-            if (board.allPieces.TryGetValue((currXPos + i, yPos - i), out piece))
+            if (board.allPieces.TryGetValue((currXPos + i, currYPos - i), out piece))
             {
                 if (piece.owner == owner || !tile.canBeOccupied)
                 {
@@ -256,11 +299,11 @@ public class Bishop : MoveablePiece
         // check going south weast
         for (int i = 1; i <= southWestMaxCheck; i++)
         {
-            if (board.theBoard.TryGetValue((currXPos - i, yPos - i), out tile) && tile.canBeOccupied)
+            if (board.theBoard.TryGetValue((currXPos - i, currYPos - i), out tile) && tile.canBeOccupied)
             {
                 result.Add(tile);
             }
-            if (board.allPieces.TryGetValue((currXPos - i, yPos - i), out piece))
+            if (board.allPieces.TryGetValue((currXPos - i, currYPos - i), out piece))
             {
                 if (piece.owner == owner || !tile.canBeOccupied)
                 {
@@ -277,7 +320,7 @@ public class Bishop : MoveablePiece
         {
             // Also add the rook behavior
             // north check
-            for (int i = yPos + 1; i <= board.maxYPos; i++)
+            for (int i = currYPos + 1; i <= board.maxYPos; i++)
             {
                 if (board.theBoard.TryGetValue((currXPos, i), out tile) && tile.canBeOccupied) { result.Add(tile); }
                 if ((board.allPieces.ContainsKey((currXPos, i)) && !piercing) || !tile.canBeOccupied)
@@ -299,7 +342,7 @@ public class Bishop : MoveablePiece
             }
 
             // south check
-            for (int i = yPos - 1; i >= board.minYPos; i--)
+            for (int i = currYPos - 1; i >= board.minYPos; i--)
             {
                 if (board.theBoard.TryGetValue((currXPos, i), out tile) && tile.canBeOccupied) { result.Add(tile); }
                 if (board.allPieces.TryGetValue((currXPos, i), out piece))
@@ -318,8 +361,8 @@ public class Bishop : MoveablePiece
             // weast check
             for (int i = currXPos - 1; i >= board.minXPos; i--)
             {
-                if (board.theBoard.TryGetValue((i, yPos), out tile) && tile.canBeOccupied) { result.Add(tile); }
-                if (board.allPieces.TryGetValue((i, yPos), out piece))
+                if (board.theBoard.TryGetValue((i, currYPos), out tile) && tile.canBeOccupied) { result.Add(tile); }
+                if (board.allPieces.TryGetValue((i, currYPos), out piece))
                 {
                     if (piece.owner == owner || !tile.canBeOccupied)
                     {
@@ -335,8 +378,8 @@ public class Bishop : MoveablePiece
             // east check
             for (int i = currXPos + 1; i <= board.maxXPos; i++)
             {
-                if (board.theBoard.TryGetValue((i, yPos), out tile) && tile.canBeOccupied) { result.Add(tile); }
-                if (board.allPieces.TryGetValue((i, yPos), out piece))
+                if (board.theBoard.TryGetValue((i, currYPos), out tile) && tile.canBeOccupied) { result.Add(tile); }
+                if (board.allPieces.TryGetValue((i, currYPos), out piece))
                 {
                     if (piece.owner == owner || !tile.canBeOccupied)
                     {
