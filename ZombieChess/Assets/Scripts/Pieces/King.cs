@@ -11,6 +11,8 @@ public class King : MoveablePiece
 
     [SerializeField]
     private bool canChainReaction = false;
+    [SerializeField]
+    private int maxChainKill = 0;
 
     [SerializeField]
     private bool queenSynergy = false;
@@ -35,6 +37,11 @@ public class King : MoveablePiece
                 break;
             case 1:
                 canChainReaction = true;
+                maxChainKill += 2;
+                break;
+            case 2:
+                canChainReaction = true;
+                maxChainKill += 2;
                 break;
             case 4:
                 queenSynergy = true;
@@ -213,6 +220,53 @@ public class King : MoveablePiece
 
     public override void OnCollisionEnter(Collision collision)
     {
-        base.OnCollisionEnter(collision);
+        MoveablePiece enemy;
+        if (collision.gameObject.TryGetComponent(out enemy) && enemy.owner != owner)
+        {
+            BoardTile tile;
+            if (board.theBoard.TryGetValue((enemy.xPos, enemy.yPos), out tile) && AttackTiles.Contains(tile))
+            {
+                // Hit an enemy on a square you meant to attack, do damage to them. 
+                if(!canChainReaction)
+                {
+                    enemy.Die();
+                }
+                else
+                {
+                    // If you can chain reaction, and you kill something, then we are going to bfs find all the nearby pieces and kill them as well.
+                    List<MoveablePiece> foundPieces = new List<MoveablePiece>();
+                    Queue<List<MoveablePiece>> piecesToSearch = new Queue<List<MoveablePiece>>();
+                    piecesToSearch.Enqueue(new List<MoveablePiece> { enemy });
+                    for (int i = 0; i < maxChainKill + 1; i++)
+                    {
+                        if(piecesToSearch.Count == 0) { break; }
+                        List<MoveablePiece> currPiecesListToSearch = piecesToSearch.Dequeue();
+                        foreach(MoveablePiece tosearch in currPiecesListToSearch)
+                        {
+                            List<MoveablePiece> toad = new List<MoveablePiece>();
+                            for(int x=-1; x<= 1; x++)
+                            {
+                                for (int y=-1; y<= 1; y++)
+                                {
+                                    if(x==0 && y==0) { continue; }
+                                    if(board.allPieces.TryGetValue((tosearch.xPos + x, tosearch.yPos + y), out enemy) && enemy.owner != owner && !foundPieces.Contains(enemy))
+                                    {
+                                        toad.Add(enemy);
+                                    }
+                                }
+                            }
+                            piecesToSearch.Enqueue(toad);
+                            foundPieces.Add(tosearch);
+                        }
+                    }
+
+                    foreach(MoveablePiece piece in foundPieces)
+                    {
+                        // This should do it in bfs order I think?
+                        piece.Die();
+                    }
+                }
+            }
+        }
     }
 }
