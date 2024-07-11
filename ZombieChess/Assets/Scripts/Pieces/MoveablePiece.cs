@@ -47,6 +47,14 @@ public abstract class MoveablePiece : MonoBehaviour
             {
                 placesToMove = new List<BoardTile> { targetTile };
             }
+
+            // Update the board
+            // Todo, if there is a piece there, where do you end up?
+            board.allPieces.Remove((xPos, yPos));
+            xPos = placesToMove.Last().xCoord;
+            yPos = placesToMove.Last().yCoord;
+            board.allPieces.Add((xPos, yPos), this);
+
             float startDelay = owner == CurrentTurn.Zombie ? Random.Range(0f, 1f) : 0;
             StartCoroutine(DoPieceMovement(placesToMove, startDelay, 0f));
             return true;
@@ -160,13 +168,6 @@ public abstract class MoveablePiece : MonoBehaviour
             transform.position = newPosition;
             yield return new WaitForSeconds(interDelay);
         }
-
-        // Update the board
-        // Todo, if there is a piece there, where do you end up?
-        board.allPieces.Remove((xPos, yPos));
-        xPos = placesToMove.Last().xCoord;
-        yPos = placesToMove.Last().yCoord;
-        board.allPieces.Add((xPos, yPos), this);
 
         board.objectsMoving.Remove(this);
         yield return null;
