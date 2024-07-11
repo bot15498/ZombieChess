@@ -53,11 +53,11 @@ public abstract class MoveablePiece : MonoBehaviour
             board.allPieces.Remove((xPos, yPos));
             xPos = placesToMove.Last().xCoord;
             yPos = placesToMove.Last().yCoord;
-            if (board.allPieces.ContainsKey((xPos, yPos)))
+            if (board.allPieces.ContainsKey((placesToMove.Last().xCoord, placesToMove.Last().yCoord)))
             {
                 // If you are moving somewhere, it's assumed that you already passed the check that something is there or not.
                 // If something is there, kick it out, you are going to be there soon. 
-                board.allPieces.Remove((xPos, yPos));
+                board.allPieces.Remove((placesToMove.Last().xCoord, placesToMove.Last().yCoord));
             }
             board.allPieces.Add((xPos, yPos), this);
 
@@ -113,7 +113,11 @@ public abstract class MoveablePiece : MonoBehaviour
     {
         UpgradeManager.current.addMoney(moneyValue);
         // delete yourself from the board
-        board.allPieces.Remove((xPos, yPos));
+        MoveablePiece thisPiece;
+        if(board.allPieces.TryGetValue((xPos, yPos), out thisPiece) && thisPiece == this)
+        {
+            board.allPieces.Remove((xPos, yPos));
+        }
         // delete yourself from existence
         Instantiate(bloodDecal, gameObject.transform.position, bloodDecal.transform.rotation);
         Destroy(gameObject);
