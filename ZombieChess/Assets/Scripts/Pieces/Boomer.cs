@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Boomer : MoveablePiece, IZombiePiece
@@ -57,15 +58,14 @@ public class Boomer : MoveablePiece, IZombiePiece
             if (turnsUntilExplode < 0)
             {
                 // time to explode
+                Die();
                 int numShamblersToSpawn = Random.Range(2, 5);
-                List<BoardTile> freespaces = FreeSpaces(explodeRadius);
+                List<BoardTile> freespaces = FreeSpaces(explodeRadius).OrderBy(x => Random.Range(0f, 1f)).ToList();
                 numShamblersToSpawn = Mathf.Min(numShamblersToSpawn, freespaces.Count);
                 for (int i = 0; i < numShamblersToSpawn; i++)
                 {
-                    int spawnLocIdx = Random.Range(0, freespaces.Count);
-                    board.PlacePiece(freespaces[spawnLocIdx].xCoord, freespaces[spawnLocIdx].yCoord, CurrentTurn.Zombie, BoardStateManager.current.shamblerPrefab);
+                    board.PlacePiece(freespaces[i].xCoord, freespaces[i].yCoord, CurrentTurn.Zombie, BoardStateManager.current.shamblerPrefab);
                 }
-                Die();
             }
         }
         else
