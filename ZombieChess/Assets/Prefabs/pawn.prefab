@@ -26,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4126888727082621601}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.17364816, y: 0, z: 0, w: 0.9848078}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 1
@@ -34,7 +34,7 @@ Transform:
   - {fileID: 1171891133770184104}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!114 &4126888727082621606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48,13 +48,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moneyValue: 0
+  isGrappled: 0
   bloodDecal: {fileID: 5148016183293206408, guid: ef17e6d188ed272479118ff3c26fe078, type: 3}
+  stuneffect: {fileID: 0}
   isFirstMove: 1
   canBackwardsMove: 0
   canAttackForwards: 0
   canChainKill: 0
   explodeBoardOnPromotion: 0
   canEnPassant: 0
+  explosion: {fileID: 1994589064536966039, guid: 2a077011bf6f14d489bd9b4579bc44dd, type: 3}
 --- !u!65 &5885891785173408661
 BoxCollider:
   m_ObjectHideFlags: 0

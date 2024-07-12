@@ -22,8 +22,10 @@ public abstract class MoveablePiece : MonoBehaviour
     public bool isMoving { get; set; } = false;
     public BoardTile moveTarget { get; set; }
 
+
     [SerializeField]
     public GameObject bloodDecal;
+    public GameObject stuneffect;
 
 
     protected Board board { get; set; }
@@ -95,6 +97,21 @@ public abstract class MoveablePiece : MonoBehaviour
     private void GenericOnTurnEnd(int turnCount)
     {
 
+    }
+
+    public virtual void grapple(bool isgrappled)
+    {
+        if(stuneffect != null)
+        {
+            if(isgrappled == true)
+            {
+                stuneffect.SetActive(true);
+            }
+            else
+            {
+                stuneffect.SetActive(false);
+            }
+        }
     }
 
     public virtual bool Attack(int targetXPos, int targetYPos)

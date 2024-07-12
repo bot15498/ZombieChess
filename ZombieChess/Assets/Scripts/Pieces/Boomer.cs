@@ -55,9 +55,11 @@ public class Boomer : MoveablePiece, IZombiePiece
         if (isArmed)
         {
             turnsUntilExplode--;
+            //Swell up animation goes here
             if (turnsUntilExplode < 0)
             {
-                // time to explode
+                // time to explode 
+                //explode animation
                 Die();
                 int numShamblersToSpawn = Random.Range(2, 5);
                 List<BoardTile> freespaces = FreeSpaces(explodeRadius).OrderBy(x => Random.Range(0f, 1f)).ToList();

@@ -26,15 +26,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4126888727082621601}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.17364816, y: 0, z: 0, w: 0.9848078}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.41603, y: 0.41603, z: 0.41603}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1553517899211639488}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!114 &8467804171906377556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49,6 +49,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moneyValue: 0
   bloodDecal: {fileID: 5148016183293206408, guid: ef17e6d188ed272479118ff3c26fe078, type: 3}
+  canChainKill: 0
+  immuneOnKill: 0
+  maxLongRange: 2
+  maxShortRange: 1
+  canPassbyKill: 0
+  waitAfterStop: 0.5
+  killInterWait: 0.1
 --- !u!65 &7960348434025169940
 BoxCollider:
   m_ObjectHideFlags: 0

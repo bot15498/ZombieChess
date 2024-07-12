@@ -43,6 +43,7 @@ public class BoardStateManager : MonoBehaviour
     public event Action<int> TurnStartAction;
     public event Action<int> TurnEndAction;
 
+    public int zombieSpawnInterval;
     private int zombieLevel = 0;
     private bool canCancelPlayerAction = true;
     private MoveablePiece currSelectedPiece;
@@ -50,6 +51,7 @@ public class BoardStateManager : MonoBehaviour
     private List<BoardTile> possiblePlacesToMove = new List<BoardTile>();
     private List<BoardTile> possiblePlacesToAttack = new List<BoardTile>();
     private CMGrouping cmgroup;
+    private LoserController losecontrol;
 
     private void Awake()
     {
@@ -86,6 +88,7 @@ public class BoardStateManager : MonoBehaviour
 
         ZombieSpawnCheck();
         cmgroup = GetComponent<CMGrouping>();
+        losecontrol = GetComponent<LoserController>();
     }
 
     void Update()

@@ -25,6 +25,7 @@ public class Pawn : MoveablePiece
     [SerializeField]
     private bool canEnPassant = false;
 
+    public GameObject explosion;
     void Start()
     {
         UpgradeManager.current.ActivatePawnUpgrade += pawnUpgrade;
@@ -85,6 +86,7 @@ public class Pawn : MoveablePiece
             List<MoveablePiece> zomPieces = board.allPieces.Values.Where(x => x.owner != this.owner).ToList();
             foreach (MoveablePiece zom in zomPieces)
             {
+                Instantiate(explosion, transform.position, transform.rotation);
                 zom.Die();
             }
             this.Die();
@@ -107,6 +109,7 @@ public class Pawn : MoveablePiece
             if (enemy.health <= 0)
             {
                 enemy.Die();
+                
                 if (this.canChainKill)
                 {
                     this.numActions += 1;
