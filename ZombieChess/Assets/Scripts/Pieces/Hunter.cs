@@ -37,6 +37,9 @@ public class Hunter : MoveablePiece, IZombiePiece
             }
             board.allPieces.Add((xPos, yPos), this);
 
+            // Face wher we are going
+            FaceObject(targetTile.transform);
+
             float startDelay = owner == CurrentTurn.Zombie ? Random.Range(0f, 1f) : 0;
             StartCoroutine(DoPieceJumpMovement(placesToMove, jumpHeight, startDelay, 0f));
             return true;
@@ -130,9 +133,19 @@ public class Hunter : MoveablePiece, IZombiePiece
         return result;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    void FixedUpdate()
     {
+        if(target != null)
+        {
+            // face the target
+            FaceObject(target.transform);
+        }
+    }
 
+    private void FaceObject(Transform obj)
+    {
+        Vector3 direction = obj.position - transform.position;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Euler(0f, rotation.eulerAngles.y + 180, 0f);
     }
 }
