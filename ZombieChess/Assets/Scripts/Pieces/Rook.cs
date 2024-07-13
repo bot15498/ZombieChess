@@ -53,12 +53,7 @@ public class Rook : MoveablePiece
     public override bool Move(int newXPos, int newYPos)
     {
         isFirstMove = false;
-        bool returnval = base.Move(newXPos, newYPos);
-        if (hasAoeOnAttack)
-        {
-            StartCoroutine(AoeKill());
-        }
-        return returnval;
+        return base.Move(newXPos, newYPos);
     }
 
     public override bool Attack(int targetXPos, int targetYPos)
@@ -81,7 +76,12 @@ public class Rook : MoveablePiece
         }
         else
         {
-            return base.Attack(targetXPos, targetYPos);
+            bool returnval = base.Attack(targetXPos, targetYPos);
+            if (hasAoeOnAttack)
+            {
+                StartCoroutine(AoeKill());
+            }
+            return returnval;
         }
     }
 
