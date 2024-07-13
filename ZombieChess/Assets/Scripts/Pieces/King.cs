@@ -85,6 +85,20 @@ public class King : MoveablePiece
             {
                 placesToMove = new List<BoardTile> { targetTile };
             }
+
+            // Update the board
+            // Todo, if there is a piece there, where do you end up?
+            board.allPieces.Remove((xPos, yPos));
+            xPos = placesToMove.Last().xCoord;
+            yPos = placesToMove.Last().yCoord;
+            if (board.allPieces.ContainsKey((placesToMove.Last().xCoord, placesToMove.Last().yCoord)))
+            {
+                // If you are moving somewhere, it's assumed that you already passed the check that something is there or not.
+                // If something is there, kick it out, you are going to be there soon. 
+                board.allPieces.Remove((placesToMove.Last().xCoord, placesToMove.Last().yCoord));
+            }
+            board.allPieces.Add((xPos, yPos), this);
+
             StartCoroutine(DoPieceJumpMovement(placesToMove, queenTeleportJumpHeight, 0f, 0f));
             return true;
         }

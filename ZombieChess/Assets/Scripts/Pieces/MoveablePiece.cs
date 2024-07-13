@@ -229,13 +229,6 @@ public abstract class MoveablePiece : MonoBehaviour
             yield return new WaitForSeconds(interDelay);
         }
 
-        // Update the board
-        // Todo, if there is a piece there, where do you end up?
-        board.allPieces.Remove((xPos, yPos));
-        xPos = placesToMove.Last().xCoord;
-        yPos = placesToMove.Last().yCoord;
-        board.allPieces.Add((xPos, yPos), this);
-
         board.objectsMoving.Remove(this);
         yield return null;
     }
