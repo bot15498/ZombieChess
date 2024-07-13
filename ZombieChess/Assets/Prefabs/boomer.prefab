@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5885891785173408661}
   - component: {fileID: 8299647594818321118}
   - component: {fileID: 6675180401693119714}
+  - component: {fileID: 219840206354860054}
   m_Layer: 0
   m_Name: boomer
   m_TagString: Untagged
@@ -62,13 +63,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moneyValue: 2
-  isGrappled: 0
   bloodDecal: {fileID: 5148016183293206408, guid: ef17e6d188ed272479118ff3c26fe078, type: 3}
   stuneffect: {fileID: 0}
-  alertRadius: 2
+  alertRadius: 3
   turnsUntilExplode: 1
   explodeRadius: 1
   isArmed: 0
+  bloodexplosion: {fileID: 4441961998336784213, guid: ae7d230f73d04ff49ae67a752bfd8f1f, type: 3}
 --- !u!54 &6675180401693119714
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -85,6 +86,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!95 &219840206354860054
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4126888727082621601}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 568934e592fb3e7448443d27de5d05e8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &9085696576957167556
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,6 +287,30 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 73c9943e86730ad4e9cb452101fcc3c0, type: 3}
       propertyPath: m_Name
       value: Boomer
+      objectReference: {fileID: 0}
+    - target: {fileID: 2322090331346152023, guid: 73c9943e86730ad4e9cb452101fcc3c0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 17.42347
+      objectReference: {fileID: 0}
+    - target: {fileID: 2322090331346152023, guid: 73c9943e86730ad4e9cb452101fcc3c0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 17.42347
+      objectReference: {fileID: 0}
+    - target: {fileID: 2322090331346152023, guid: 73c9943e86730ad4e9cb452101fcc3c0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 17.42347
+      objectReference: {fileID: 0}
+    - target: {fileID: 2322090331346152023, guid: 73c9943e86730ad4e9cb452101fcc3c0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2322090331346152023, guid: 73c9943e86730ad4e9cb452101fcc3c0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.90901715
+      objectReference: {fileID: 0}
+    - target: {fileID: 2322090331346152023, guid: 73c9943e86730ad4e9cb452101fcc3c0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3050057954054338368, guid: 73c9943e86730ad4e9cb452101fcc3c0, type: 3}
       propertyPath: m_Materials.Array.data[0]

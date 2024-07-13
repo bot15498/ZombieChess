@@ -13,6 +13,8 @@ public class Boomer : MoveablePiece, IZombiePiece
     private int explodeRadius = 1;
     [SerializeField]
     private bool isArmed = false;
+    Animator anim;
+    public GameObject bloodexplosion;
 
     public override List<BoardTile> PreviewAttack()
     {
@@ -56,10 +58,13 @@ public class Boomer : MoveablePiece, IZombiePiece
         {
             turnsUntilExplode--;
             //Swell up animation goes here
+            anim.Play("Swell");
+
             if (turnsUntilExplode < 0)
             {
                 // time to explode 
                 //explode animation
+                Instantiate(bloodexplosion, transform.position, transform.rotation);
                 Die();
                 int numShamblersToSpawn = Random.Range(2, 5);
                 List<BoardTile> freespaces = FreeSpaces(explodeRadius).OrderBy(x => Random.Range(0f, 1f)).ToList();
@@ -139,6 +144,6 @@ public class Boomer : MoveablePiece, IZombiePiece
     // Start is called before the first frame update
     void Start()
     {
-
+        anim = GetComponent<Animator>();
     }
 }

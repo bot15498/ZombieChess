@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static UnityEngine.UI.GridLayoutGroup;
+using TMPro;
 
 public class Queen : MoveablePiece
 {
@@ -20,13 +21,21 @@ public class Queen : MoveablePiece
     private int noMoveChargeCount = 0;
     [SerializeField]
     private bool didMoveThisTurn = false;
+    public TextMeshProUGUI turncharges;
 
+    public 
 
     void Start()
     {
         UpgradeManager.current.ActivateQueenUpgrade += QueenUpgrade;
         BoardStateManager.current.TurnStartAction += OnTurnStart;
         BoardStateManager.current.TurnEndAction += OnTurnEnd;
+        
+    }
+
+    public void Update()
+    {
+        turncharges.text = numActions.ToString();
     }
 
     void QueenUpgrade(int id)
@@ -44,6 +53,7 @@ public class Queen : MoveablePiece
             case 6:
                 // Every turn you sit there, you gain an extra action point
                 canExtraMovePoint = true;
+                turncharges.gameObject.SetActive(true);
                 break;
         }
     }
