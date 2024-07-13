@@ -98,6 +98,8 @@ public class Charger : MoveablePiece, IZombiePiece
                     this.grappling = true;
                     this.grappleTarget = enemyPiece;
                     this.grappleTarget.numActions = 0;
+                    //set grapple bool here
+                    this.grappleTarget.grapple(true);
                 }
                 else
                 {
@@ -143,7 +145,10 @@ public class Charger : MoveablePiece, IZombiePiece
     {
         if (grappling)
         {
-            grappleTarget.numActions = grappleTarget.maxNumActions; 
+            grappleTarget.numActions = grappleTarget.maxNumActions;
+
+            //ungrapple
+            this.grappleTarget.grapple(false);
         }
         return base.Die();
     }

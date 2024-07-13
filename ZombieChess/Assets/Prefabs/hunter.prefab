@@ -63,6 +63,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moneyValue: 4
   bloodDecal: {fileID: 5148016183293206408, guid: ef17e6d188ed272479118ff3c26fe078, type: 3}
+  stuneffect: {fileID: 7175809977009666422, guid: 5ad32cf3df0871d4d88a81c0055a7463, type: 3}
   pounceCharge: 1
   jumpRadius: 5
   jumpHeight: 3
@@ -222,11 +223,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4316d2c07f8d78040b1be152606dc715, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.93
+      value: 1.732
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4316d2c07f8d78040b1be152606dc715, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.165
+      value: -0.022
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4316d2c07f8d78040b1be152606dc715, type: 3}
       propertyPath: m_LocalRotation.w

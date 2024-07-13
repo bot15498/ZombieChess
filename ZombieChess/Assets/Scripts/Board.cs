@@ -26,6 +26,7 @@ public class Board : MonoBehaviour
     public int maxYPos = 0;
     public List<MoveablePiece> objectsMoving = new List<MoveablePiece>();
     public float moveTime = 0.5f;
+    public Vector3 spawnrotationoffset;
 
     void Start()
     {
@@ -64,7 +65,8 @@ public class Board : MonoBehaviour
 
         // Instantiate object
         Vector3 pos = new Vector3(xPos * gridStep, 0 + pieceYOffset, yPos * gridStep) + transform.position;
-        GameObject newObject = Instantiate(obj, pos, Quaternion.identity, transform);
+        //GameObject newObject = Instantiate(obj, pos, transform.rotation * Quaternion.Euler(spawnrotationoffset.x,spawnrotationoffset.y,spawnrotationoffset.z), transform);
+        GameObject newObject = Instantiate(obj, pos, obj.transform.rotation, transform);
 
         MoveablePiece piece = newObject.GetComponent<MoveablePiece>();
         piece.Spawn(this, xPos, yPos, owner);
