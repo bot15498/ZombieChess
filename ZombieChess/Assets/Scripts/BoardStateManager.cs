@@ -17,6 +17,7 @@ public enum GameState
     PieceSelected,
     WaitForPieceMove,
     PieceMove,
+    WaitForTurnEnd,
     TurnEnd
 }
 
@@ -54,6 +55,8 @@ public class BoardStateManager : MonoBehaviour
     private List<BoardTile> possiblePlacesToAttack = new List<BoardTile>();
     private CMGrouping cmgroup;
     private LoserController losecontrol;
+    private float turnDelay = 1f;
+    private float currTurnDelay = 0f;
 
     private void Awake()
     {
@@ -227,7 +230,7 @@ public class BoardStateManager : MonoBehaviour
                         }
                         else
                         {
-                            currState = GameState.TurnEnd;
+                            currState = GameState.WaitForTurnEnd;
                         }
                     }
                 }
@@ -236,12 +239,19 @@ public class BoardStateManager : MonoBehaviour
                     // Pause or something, i dunno
                     if(board.objectsMoving.Count == 0)
                     {
-                        currState = GameState.TurnEnd;
+                        currState = GameState.WaitForTurnEnd;
                     } 
                     else
                     {
                         board.objectsMoving.RemoveAll(item => item == null);
                     }
+                }
+                break;
+            case GameState.WaitForTurnEnd:
+                currTurnDelay += Time.deltaTime;
+                if(currTurnDelay > turnDelay)
+                {
+                    currState = GameState.TurnEnd;
                 }
                 break;
             case GameState.TurnEnd:
@@ -269,6 +279,7 @@ public class BoardStateManager : MonoBehaviour
                     ZombieSpawnCheck();
                 }
                 // change whose turn it is.
+                currTurnDelay = 0;
                 ResetMoveCount(currentTurn);
                 currentTurn = currentTurn == CurrentTurn.Player ? CurrentTurn.Zombie : CurrentTurn.Player;
                 currState = GameState.TurnStart;
@@ -302,6 +313,7 @@ public class BoardStateManager : MonoBehaviour
             if (piece.owner == whois)
             {
                 piece.numActions = piece.maxNumActions;
+                piece.AttackTiles.Clear();
             }
         }
     }
