@@ -64,7 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moneyValue: 2
   bloodDecal: {fileID: 5148016183293206408, guid: ef17e6d188ed272479118ff3c26fe078, type: 3}
-  stuneffect: {fileID: 0}
+  stuneffect: {fileID: 7175809977009666422, guid: 5ad32cf3df0871d4d88a81c0055a7463, type: 3}
   alertRadius: 3
   turnsUntilExplode: 1
   explodeRadius: 1

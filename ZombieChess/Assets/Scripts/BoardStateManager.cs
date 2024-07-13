@@ -42,6 +42,8 @@ public class BoardStateManager : MonoBehaviour
     public int turnCount = 1;
     public event Action<int> TurnStartAction;
     public event Action<int> TurnEndAction;
+    private int spawninterval = 5;
+    int endgamezombies = 0;
 
     public int zombieSpawnInterval;
     private int zombieLevel = 0;
@@ -89,6 +91,7 @@ public class BoardStateManager : MonoBehaviour
         ZombieSpawnCheck();
         cmgroup = GetComponent<CMGrouping>();
         losecontrol = GetComponent<LoserController>();
+
     }
 
     void Update()
@@ -125,7 +128,8 @@ public class BoardStateManager : MonoBehaviour
                 }
                 else if (currentTurn == CurrentTurn.Zombie)
                 {
-                    // Zombie moves all pieces at once, so go to next state.
+                   
+
                     currState = GameState.WaitForPieceMove;
                 }
                 break;
@@ -325,7 +329,7 @@ public class BoardStateManager : MonoBehaviour
             zombieLevel++;
             spawnNow = true;
         }
-        else if (turnCount % 5 == 0 && zombieLevel * 5 <= turnCount)
+        else if (turnCount % spawninterval == 0 && zombieLevel * spawninterval <= turnCount)
         {
             // 5 turns have passed, go up a level if you haven't already
             zombieLevel++;
@@ -337,22 +341,64 @@ public class BoardStateManager : MonoBehaviour
             // based on the spawn level, do something different
             if (zombieLevel >= 0 && zombieLevel <= 2)
             {
-                int numZombies = UnityEngine.Random.Range(3, 5);
+                int numZombies = UnityEngine.Random.Range(2, 3);
+                SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
+                //SpawnZombieAtBackRow(3, 1, chargerPrefab);
+                //SpawnZombieAtBackRow(3, 1, hunterPrefab);
+                
+            }
+            else if (zombieLevel > 2 && zombieLevel <= 4)
+            {
+                int numZombies = UnityEngine.Random.Range(2,3);
+                SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
+                SpawnZombieAtBackRow(3, 1, boomerPrefab);
+            }else if (zombieLevel == 5)
+            {
+
+                int numZombies = UnityEngine.Random.Range(2, 3);
+                SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
+                SpawnZombieAtBackRow(3, 1, boomerPrefab);
+                SpawnZombieAtBackRow(3, 1, chargerPrefab);
+            }else if(zombieLevel == 6)
+            {
+                int numZombies = UnityEngine.Random.Range(2, 3);
                 SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
                 SpawnZombieAtBackRow(3, 1, chargerPrefab);
                 SpawnZombieAtBackRow(3, 1, hunterPrefab);
             }
-            else if (zombieLevel > 2 && zombieLevel <= 4)
+            else if(zombieLevel == 7)
             {
-                int numZombies = UnityEngine.Random.Range(2,4);
-                SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
+                SpawnZombieAtBackRow(3, 2, shamblerPrefab);
                 SpawnZombieAtBackRow(3, 1, boomerPrefab);
+                SpawnZombieAtBackRow(3, 1, hunterPrefab);
+                SpawnZombieAtBackRow(3, 1, chargerPrefab);
             }
+            else if(zombieLevel == 8)
+            {
+                SpawnZombieAtBackRow(3, 12, shamblerPrefab);
+            }else if(zombieLevel == 9)
+            {
+                SpawnZombieAtBackRow(3, 5, boomerPrefab);
+                SpawnZombieAtBackRow(3, 2, hunterPrefab);
+                SpawnZombieAtBackRow(3, 2, chargerPrefab);
+                zombieSpawnInterval = 4;
+            }else if(zombieLevel == 10)
+            {
+                SpawnZombieAtBackRow(6, 7, shamblerPrefab);
+                SpawnZombieAtBackRow(3, 2, hunterPrefab);
+                SpawnZombieAtBackRow(3, 2, chargerPrefab);
+                SpawnZombieAtBackRow(3, 5, boomerPrefab);
+            }
+
             else
             {
-                int numZombies = UnityEngine.Random.Range(5, 8);
-                SpawnZombieAtBackRow(3, numZombies, shamblerPrefab);
-                SpawnZombieAtBackRow(3, 2, boomerPrefab);
+                int numZombies = UnityEngine.Random.Range(5, 10);
+
+                SpawnZombieAtBackRow(7, numZombies + endgamezombies, shamblerPrefab);
+                SpawnZombieAtBackRow(6, 2, boomerPrefab);
+                SpawnZombieAtBackRow(3, 1, hunterPrefab);
+                SpawnZombieAtBackRow(3, 2, chargerPrefab);
+                endgamezombies += 1;
             }
         }
     }
@@ -383,6 +429,19 @@ public class BoardStateManager : MonoBehaviour
         }
 
         return toSpawn != numZombies;
+    }
+
+    IEnumerator ExampleCoroutine()
+    {
+
+
+        //yield on a new YieldInstruction that waits for 5 seconds.
+        yield return new WaitForSeconds(10);
+
+        //currState = GameState.WaitForPieceMove;
+
+        //After we have waited 5 seconds print the time again.
+
     }
 
     public void Lose()
