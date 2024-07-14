@@ -111,7 +111,7 @@ public class Pawn : MoveablePiece
             {
                 enemy.Die();
                 
-                if (this.canChainKill)
+                if (this.canChainKill && targetYPos != board.maxYPos)
                 {
                     this.numActions += 1;
                 }
@@ -125,7 +125,7 @@ public class Pawn : MoveablePiece
             if (enemy.health <= 0)
             {
                 enemy.Die();
-                if (this.canChainKill)
+                if (this.canChainKill && targetYPos != board.maxYPos)
                 {
                     this.numActions++;
                 }

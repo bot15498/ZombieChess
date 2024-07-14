@@ -11296,11 +11296,11 @@ MonoBehaviour:
   boardAudioController: {fileID: 669394962}
   playerPieceSelect: {fileID: 8300000, guid: 205185cb504455b4c84f2efcdec75d4b, type: 3}
   playerPieceUnselect: {fileID: 8300000, guid: caac5158941bc254991f8cabdfec9f8a, type: 3}
-  playerPieceMove: {fileID: 8300000, guid: 205185cb504455b4c84f2efcdec75d4b, type: 3}
+  playerPieceMove: {fileID: 8300000, guid: 7bb91e580cdaa3b4aa3ae7190d84fac0, type: 3}
   playerPieceDeath: {fileID: 8300000, guid: caac5158941bc254991f8cabdfec9f8a, type: 3}
-  playerPawnNuke: {fileID: 8300000, guid: 51f102237e9359f43915b01e20040018, type: 3}
-  playerBishopMartyr: {fileID: 8300000, guid: 51f102237e9359f43915b01e20040018, type: 3}
-  playerKnightPassbyKill: {fileID: 8300000, guid: caac5158941bc254991f8cabdfec9f8a, type: 3}
+  playerPawnNuke: {fileID: 8300000, guid: 9a4c8af95c857404f927bfab1b55215a, type: 3}
+  playerBishopMartyr: {fileID: 8300000, guid: 2c501449cc094dd4390dc4601f30a05a, type: 3}
+  playerKnightPassbyKill: {fileID: 8300000, guid: e95613ed2225a9149ad07127285f6425, type: 3}
   zombiePieceSummon: {fileID: 0}
   zombieGroan: {fileID: 0}
   zombieDeath: {fileID: 8300000, guid: 60f9b97c4c90fee41909c32b10146251, type: 3}
@@ -22838,7 +22838,7 @@ MonoBehaviour:
   frontbutton: {fileID: 2071553662}
   backbutton: {fileID: 1282070473}
   bookAudioController: {fileID: 1481401283}
-  pageFlipping: {fileID: 8300000, guid: 60f9b97c4c90fee41909c32b10146251, type: 3}
+  pageFlipping: {fileID: 8300000, guid: 22933bf7d4ed4804982ab02c75f2b80e, type: 3}
 --- !u!224 &1424647599
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23867,8 +23867,8 @@ MonoBehaviour:
   bookisopen: 0
   upgradeanim: {fileID: 1286652441}
   bookAudioController: {fileID: 1481401283}
-  bookOpen: {fileID: 8300000, guid: 60f9b97c4c90fee41909c32b10146251, type: 3}
-  bookClose: {fileID: 8300000, guid: 60f9b97c4c90fee41909c32b10146251, type: 3}
+  bookOpen: {fileID: 8300000, guid: d658222be904ecf48aa0d08f22c7ed7e, type: 3}
+  bookClose: {fileID: 8300000, guid: 56559368c0d7ec149a4fc382af633cab, type: 3}
 --- !u!95 &1481401282
 Animator:
   serializedVersion: 4
