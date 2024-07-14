@@ -39,7 +39,10 @@ public class Book : MonoBehaviour
         float angle = -180;
         ForwardButtonActions();
         pages[index].SetAsLastSibling();
-        this.bookAudioController.PlayOneShot(this.pageFlipping, 1.0f);
+        //this.bookAudioController.PlayOneShot(this.pageFlipping, 1.0f);
+        this.bookAudioController.clip = this.pageFlipping;
+        this.bookAudioController.pitch = (Random.Range(0.6f, .9f));
+        this.bookAudioController.Play();
         StartCoroutine(Rotate(angle, true));
     }
 
@@ -64,7 +67,10 @@ public class Book : MonoBehaviour
         float angle = 0;
         pages[index].SetAsLastSibling();
         BackbuttonActions();
-        this.bookAudioController.PlayOneShot(this.pageFlipping, 1.0f);
+        //this.bookAudioController.PlayOneShot(this.pageFlipping, 1.0f);
+        this.bookAudioController.clip = this.pageFlipping;
+        this.bookAudioController.pitch = (Random.Range(0.6f, .9f));
+        this.bookAudioController.Play();
         StartCoroutine(Rotate(angle, false));
     }
 

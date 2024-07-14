@@ -62,7 +62,10 @@ public class BestiaryManager : MonoBehaviour
     {
         if (activepage != currentpage.page1)
         {
-            this.bestiaryAudioManager.PlayOneShot(this.pageShuffle, 1.0f);
+            //this.bestiaryAudioManager.PlayOneShot(this.pageShuffle, 1.0f);
+            this.bestiaryAudioManager.clip = this.pageShuffle;
+            this.bestiaryAudioManager.pitch = (Random.Range(0.6f, .9f));
+            this.bestiaryAudioManager.Play();
         }
 
         if (activepage == currentpage.page2)
@@ -87,7 +90,10 @@ public class BestiaryManager : MonoBehaviour
     {
         if(activepage != currentpage.page2)
         {
-            this.bestiaryAudioManager.PlayOneShot(this.pageShuffle, 1.0f);
+            //this.bestiaryAudioManager.PlayOneShot(this.pageShuffle, 1.0f);
+            this.bestiaryAudioManager.clip = this.pageShuffle;
+            this.bestiaryAudioManager.pitch = (Random.Range(0.6f, .9f));
+            this.bestiaryAudioManager.Play();
 
             anim2.Play("zompage2_open");
 
@@ -107,7 +113,11 @@ public class BestiaryManager : MonoBehaviour
     {
         if (activepage != currentpage.page3)
         {
-            this.bestiaryAudioManager.PlayOneShot(this.pageShuffle, 1.0f);
+            //
+            //this.bestiaryAudioManager.PlayOneShot(this.pageShuffle, 1.0f);
+            this.bestiaryAudioManager.clip = this.pageShuffle;
+            this.bestiaryAudioManager.pitch = (Random.Range(0.6f, .9f));
+            this.bestiaryAudioManager.Play();
 
             anim3.Play("zompage3_open");
            
@@ -129,7 +139,10 @@ public class BestiaryManager : MonoBehaviour
     {
         if (activepage != currentpage.page4)
         {
-            this.bestiaryAudioManager.PlayOneShot(this.pageShuffle, 1.0f);
+            //this.bestiaryAudioManager.PlayOneShot(this.pageShuffle, 1.0f);
+            this.bestiaryAudioManager.clip = this.pageShuffle;
+            this.bestiaryAudioManager.pitch = (Random.Range(0.6f, .9f));
+            this.bestiaryAudioManager.Play();
 
             anim4.Play("zompage4_open");
             

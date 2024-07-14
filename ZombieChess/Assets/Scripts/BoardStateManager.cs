@@ -56,7 +56,7 @@ public class BoardStateManager : MonoBehaviour
     private List<BoardTile> possiblePlacesToAttack = new List<BoardTile>();
     private CMGrouping cmgroup;
     private LoserController losecontrol;
-    private float turnDelay = 1f;
+    private float turnDelay = 0.25f;
     private float currTurnDelay = 0f;
 
     private void Awake()
