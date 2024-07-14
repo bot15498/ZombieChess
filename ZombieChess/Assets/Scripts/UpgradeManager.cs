@@ -29,6 +29,12 @@ public class UpgradeManager : MonoBehaviour
     public bool[] QueenPurchaseStatus;
     public bool[] KingPurchaseStatus;
 
+    [Space(10)] // 10 pixels of spacing here.
+    [Header("============Upgrade Status Settings============")]
+    [Space(10)] // 10 pixels of spacing here.
+    public AudioSource upgradeAudioController;
+    public AudioClip buyUpgrade;
+
     private void Awake()
     {
         current = this;
@@ -43,8 +49,9 @@ public class UpgradeManager : MonoBehaviour
 
     public void PawnUpgrade(int UpgradeID)
     {
-         zombieBucks -= PawnUpgradeCosts[UpgradeID];
-         PawnPurchaseStatus[UpgradeID] = true;
+        zombieBucks -= PawnUpgradeCosts[UpgradeID];
+        PawnPurchaseStatus[UpgradeID] = true;
+        this.upgradeAudioController.PlayOneShot(this.buyUpgrade, 1.0f);
 
             if (ActivatePawnUpgrade != null)
             {
@@ -58,6 +65,7 @@ public class UpgradeManager : MonoBehaviour
     {
         zombieBucks -= RookUpgradeCosts[UpgradeID];
         RookPurchaseStatus[UpgradeID] = true;
+        this.upgradeAudioController.PlayOneShot(this.buyUpgrade, 1.0f);
 
         if (ActivateRookUpgrade != null)
         {
@@ -70,6 +78,7 @@ public class UpgradeManager : MonoBehaviour
     {
         zombieBucks -= KnightUpgradeCosts[UpgradeID];
         KnightPurchaseStatus[UpgradeID] = true;
+        this.upgradeAudioController.PlayOneShot(this.buyUpgrade, 1.0f);
 
         if (ActivateKnightUpgrade != null)
         {
@@ -82,6 +91,7 @@ public class UpgradeManager : MonoBehaviour
     {
         zombieBucks -= BishopUpgradeCosts[UpgradeID];
         BishopPurchaseStatus[UpgradeID] = true;
+        this.upgradeAudioController.PlayOneShot(this.buyUpgrade, 1.0f);
 
         if (ActivateBishopUpgrade != null)
         {
@@ -94,6 +104,7 @@ public class UpgradeManager : MonoBehaviour
     {
         zombieBucks -= QueenUpgradeCosts[UpgradeID];
         QueenPurchaseStatus[UpgradeID] = true;
+        this.upgradeAudioController.PlayOneShot(this.buyUpgrade, 1.0f);
 
         if (ActivateQueenUpgrade != null)
         {
@@ -105,6 +116,7 @@ public class UpgradeManager : MonoBehaviour
     {
         zombieBucks -= KingUpgradeCosts[UpgradeID];
         KingPurchaseStatus[UpgradeID] = true;
+        this.upgradeAudioController.PlayOneShot(this.buyUpgrade, 1.0f);
 
         if (ActivateKingUpgrade != null)
         {

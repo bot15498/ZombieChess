@@ -293,6 +293,7 @@ public class Knight : MoveablePiece
         foreach (MoveablePiece enemy in enemies)
         {
             enemy.Die();
+            board.boardAudioController.PlayOneShot(board.playerKnightPassbyKill, 1.0f);
             yield return new WaitForSeconds(this.killInterWait);
         }
 

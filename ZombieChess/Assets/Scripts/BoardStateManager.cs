@@ -132,8 +132,6 @@ public class BoardStateManager : MonoBehaviour
                 }
                 else if (currentTurn == CurrentTurn.Zombie)
                 {
-                   
-
                     currState = GameState.WaitForPieceMove;
                 }
                 break;
@@ -157,6 +155,9 @@ public class BoardStateManager : MonoBehaviour
                         SetTileHighlightColor(possiblePlacesToAttack, TileHighlightType.Attack);
                         detector.canClickTile = true;
                         detector.canClickPiece = false;
+
+                        board.boardAudioController.PlayOneShot(board.playerPieceSelect, 1.0f);
+                        
                         currState = GameState.WaitForPieceMove;
                     }
                 }
@@ -194,6 +195,9 @@ public class BoardStateManager : MonoBehaviour
                         detector.canClickTile = false;
                         detector.canClickPiece = true;
                         currSelectedPiece = null;
+
+                        board.boardAudioController.PlayOneShot(board.playerPieceUnselect, 1.0f);
+
                         currState = GameState.WaitForPieceSelect;
                     }
                 }
@@ -351,6 +355,8 @@ public class BoardStateManager : MonoBehaviour
 
         if (spawnNow)
         {
+            board.boardAudioController.PlayOneShot(board.zombiePieceSummon, 1.0f);
+
             // based on the spawn level, do something different
             if (zombieLevel >= 0 && zombieLevel <= 2)
             {
