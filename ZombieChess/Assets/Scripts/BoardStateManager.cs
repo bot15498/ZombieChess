@@ -46,6 +46,7 @@ public class BoardStateManager : MonoBehaviour
     private int spawninterval = 5;
     int endgamezombies = 0;
 
+    public LoserController lc;
     public int zombieSpawnInterval;
     private int zombieLevel = 0;
     private bool canCancelPlayerAction = true;
@@ -55,7 +56,7 @@ public class BoardStateManager : MonoBehaviour
     private List<BoardTile> possiblePlacesToAttack = new List<BoardTile>();
     private CMGrouping cmgroup;
     private LoserController losecontrol;
-    private float turnDelay = 1f;
+    private float turnDelay = 0.5f;
     private float currTurnDelay = 0f;
 
     private void Awake()
@@ -460,5 +461,7 @@ public class BoardStateManager : MonoBehaviour
     {
         // rip in peace lose 
         Debug.Log("You lose.");
+
+        lc.ITSLOSERTIME();
     }
 }

@@ -132,6 +132,8 @@ public abstract class MoveablePiece : MonoBehaviour
     public virtual bool Die()
     {
         UpgradeManager.current.addMoney(moneyValue);
+        StatsManager.SM.increaseZomkills();
+
         // delete yourself from the board
         MoveablePiece thisPiece;
         if(board.allPieces.TryGetValue((xPos, yPos), out thisPiece) && thisPiece == this)
