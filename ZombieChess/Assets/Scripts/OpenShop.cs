@@ -89,7 +89,7 @@ public class OpenShop : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
 
         upgradeanim.SetBool("open", false);
-        this.bookAudioController.PlayOneShot(this.bookClose, 1.0f);
+        this.bookAudioController.PlayOneShot(this.bookClose, 0.4f);
 
         //After we have waited 5 seconds print the time again.
         yield return new WaitForSeconds(0.5f);

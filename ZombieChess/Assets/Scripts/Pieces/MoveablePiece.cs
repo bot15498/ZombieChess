@@ -208,7 +208,7 @@ public abstract class MoveablePiece : MonoBehaviour
         }
 
         board.objectsMoving.Remove(this);
-        if (this.owner != CurrentTurn.Zombie) board.boardAudioController.PlayOneShot(board.playerPieceMove, 1.0f);
+        if (this.owner != CurrentTurn.Zombie) board.boardAudioController.PlayOneShot(board.playerPieceMove[Random.Range(0,board.playerPieceMove.Length)], 0.5f);
         yield return null;
     }
 

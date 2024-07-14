@@ -35,7 +35,7 @@ public class Board : MonoBehaviour
 
     public AudioClip playerPieceSelect;
     public AudioClip playerPieceUnselect;
-    public AudioClip playerPieceMove;
+    public AudioClip[] playerPieceMove;
     public AudioClip playerPieceDeath;
     public AudioClip playerPawnNuke;
     public AudioClip playerBishopMartyr;
