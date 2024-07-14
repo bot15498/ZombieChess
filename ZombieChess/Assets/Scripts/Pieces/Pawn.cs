@@ -89,6 +89,7 @@ public class Pawn : MoveablePiece
                 Instantiate(explosion, transform.position, transform.rotation);
                 zom.Die();
             }
+            board.boardAudioController.PlayOneShot(board.playerPawnNuke, 1.0f);
             this.Die();
             return pieceMoved;
         }
@@ -110,7 +111,7 @@ public class Pawn : MoveablePiece
             {
                 enemy.Die();
                 
-                if (this.canChainKill)
+                if (this.canChainKill && targetYPos != board.maxYPos)
                 {
                     this.numActions += 1;
                 }
@@ -124,7 +125,7 @@ public class Pawn : MoveablePiece
             if (enemy.health <= 0)
             {
                 enemy.Die();
-                if (this.canChainKill)
+                if (this.canChainKill && targetYPos != board.maxYPos)
                 {
                     this.numActions++;
                 }

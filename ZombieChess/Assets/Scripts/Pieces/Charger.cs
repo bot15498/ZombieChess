@@ -77,6 +77,7 @@ public class Charger : MoveablePiece, IZombiePiece
         if (waitTimer > 0)
         {
             waitTimer -= 1;
+            if (waitTimer == 0) board.boardAudioController.PlayOneShot(board.zombieChargerWindUp, 1.0f);
         }
         else
         {
@@ -106,6 +107,7 @@ public class Charger : MoveablePiece, IZombiePiece
                     // No Attacks, so move to the bottom of the board
                     this.Move(this.xPos, validMove.yCoord);
                 }
+                board.boardAudioController.PlayOneShot(board.zombieChargerCharge, 1.0f);
             }
             else if(grappling)
             {

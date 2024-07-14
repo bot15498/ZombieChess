@@ -27,9 +27,9 @@ public abstract class MoveablePiece : MonoBehaviour
     public GameObject bloodDecal;
     public GameObject stuneffect;
 
-
     protected Board board { get; set; }
     protected Rigidbody rb { get; set; }
+
     // For all the possible places that a piece will end at, get the places that the piece has to move to before it reaches the end.
     // For simple movement, this will just be a list of length 1 with the end being the same as the key
     public Dictionary<BoardTile, List<BoardTile>> MovePaths { get; set; } = new Dictionary<BoardTile, List<BoardTile>>();
@@ -38,6 +38,7 @@ public abstract class MoveablePiece : MonoBehaviour
     public abstract List<BoardTile> PreviewMove();
     public abstract List<BoardTile> PreviewAttack();
 
+    
 
     public virtual bool Move(int newXPos, int newYPos)
     {
@@ -86,6 +87,7 @@ public abstract class MoveablePiece : MonoBehaviour
         rb.isKinematic = true;
         BoardStateManager.current.TurnStartAction += GenericOnTurnStart;
         BoardStateManager.current.TurnEndAction += GenericOnTurnEnd;
+
         return true;
     }
 
@@ -132,12 +134,18 @@ public abstract class MoveablePiece : MonoBehaviour
     public virtual bool Die()
     {
         UpgradeManager.current.addMoney(moneyValue);
+        StatsManager.SM.increaseZomkills();
+
         // delete yourself from the board
         MoveablePiece thisPiece;
         if(board.allPieces.TryGetValue((xPos, yPos), out thisPiece) && thisPiece == this)
         {
             board.allPieces.Remove((xPos, yPos));
         }
+
+        if (this.owner != CurrentTurn.Zombie) board.boardAudioController.PlayOneShot(board.playerPieceDeath, 1.0f);
+        else board.boardAudioController.PlayOneShot(board.zombieDeath, 1.0f);
+
         // delete yourself from existence
         Instantiate(bloodDecal, gameObject.transform.position, bloodDecal.transform.rotation);
         Destroy(gameObject);
@@ -200,6 +208,7 @@ public abstract class MoveablePiece : MonoBehaviour
         }
 
         board.objectsMoving.Remove(this);
+        if (this.owner != CurrentTurn.Zombie) board.boardAudioController.PlayOneShot(board.playerPieceMove, 1.0f);
         yield return null;
     }
 

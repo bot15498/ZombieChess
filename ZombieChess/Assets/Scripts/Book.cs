@@ -14,7 +14,8 @@ public class Book : MonoBehaviour
     public GameObject frontbutton;
     public GameObject backbutton;
 
-
+    public AudioSource bookAudioController;
+    public AudioClip pageFlipping;
 
     // Start is called before the first frame update
     public void InitialState()
@@ -38,6 +39,7 @@ public class Book : MonoBehaviour
         float angle = -180;
         ForwardButtonActions();
         pages[index].SetAsLastSibling();
+        this.bookAudioController.PlayOneShot(this.pageFlipping, 1.0f);
         StartCoroutine(Rotate(angle, true));
     }
 
@@ -62,6 +64,7 @@ public class Book : MonoBehaviour
         float angle = 0;
         pages[index].SetAsLastSibling();
         BackbuttonActions();
+        this.bookAudioController.PlayOneShot(this.pageFlipping, 1.0f);
         StartCoroutine(Rotate(angle, false));
     }
 

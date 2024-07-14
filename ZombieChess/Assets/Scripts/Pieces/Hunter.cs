@@ -93,11 +93,12 @@ public class Hunter : MoveablePiece, IZombiePiece
         }
         else if (target == null && moves.Count > 0)
         {
-            // Nothing is in range, and we don't have a t arget. But we can move. So pick a place and move. 
+            // Nothing is in range, and we don't have at arget. But we can move. So pick a place and move. 
             // Lets move randomly for now for increased chaos
             int idx = Random.Range(0, moves.Count);
             BoardTile targetTile = moves[idx];
             Move(targetTile.xCoord, targetTile.yCoord);
+            board.boardAudioController.PlayOneShot(board.zombieHunterLeap, 1.0f);
         }
         else if(target != null && attacks.Contains(target) && currPounceCharge < pounceCharge)
         {
@@ -108,6 +109,7 @@ public class Hunter : MoveablePiece, IZombiePiece
         {
             // time to kill
             Attack(target.xCoord, target.yCoord);
+            board.boardAudioController.PlayOneShot(board.zombieHunterAttack, 1.0f);
         }
         // Other wise, you have no moves you can do
     }

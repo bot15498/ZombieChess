@@ -12,7 +12,10 @@ public class BestiaryManager : MonoBehaviour
     public Animator anim4;
     Animator anim;
     bool zombookopen;
-    
+
+    public AudioSource bestiaryAudioManager;
+    public AudioClip pageShuffle;
+
     public Cameramanager cm;
     void Start()
     {
@@ -57,6 +60,10 @@ public class BestiaryManager : MonoBehaviour
 
     public void activatePage1()
     {
+        if (activepage != currentpage.page1)
+        {
+            this.bestiaryAudioManager.PlayOneShot(this.pageShuffle, 1.0f);
+        }
 
         if (activepage == currentpage.page2)
         {
@@ -79,8 +86,9 @@ public class BestiaryManager : MonoBehaviour
     public void activatePage2()
     {
         if(activepage != currentpage.page2)
-
         {
+            this.bestiaryAudioManager.PlayOneShot(this.pageShuffle, 1.0f);
+
             anim2.Play("zompage2_open");
 
             if (activepage == currentpage.page3)
@@ -99,6 +107,8 @@ public class BestiaryManager : MonoBehaviour
     {
         if (activepage != currentpage.page3)
         {
+            this.bestiaryAudioManager.PlayOneShot(this.pageShuffle, 1.0f);
+
             anim3.Play("zompage3_open");
            
             if (activepage == currentpage.page2)
@@ -119,6 +129,8 @@ public class BestiaryManager : MonoBehaviour
     {
         if (activepage != currentpage.page4)
         {
+            this.bestiaryAudioManager.PlayOneShot(this.pageShuffle, 1.0f);
+
             anim4.Play("zompage4_open");
             
 

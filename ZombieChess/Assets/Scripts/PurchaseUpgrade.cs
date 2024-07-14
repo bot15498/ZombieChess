@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class PurchaseUpgrade : MonoBehaviour
 {
     public bool UpgradePrerequisite;
@@ -11,13 +10,15 @@ public class PurchaseUpgrade : MonoBehaviour
      
     UpgradeManager uManager;
     public int purchaseID;
+    public GameObject buymark;
 
     private void Awake()
     {
         uManager = GameObject.FindGameObjectWithTag("Gamemanager").GetComponent<UpgradeManager>();
-
+        
 
     }
+
     public void PawnUpgrade()
     {
         if (uManager.PawnUpgradeCosts[purchaseID] <= uManager.zombieBucks && uManager.PawnPurchaseStatus[purchaseID] == false)
@@ -39,6 +40,7 @@ public class PurchaseUpgrade : MonoBehaviour
                 }
             }
             //disable purchase button
+            buymark.SetActive(true);
         }else if (uManager.PawnUpgradeCosts[purchaseID] > uManager.zombieBucks)
         {
             notEnoughMoney();
@@ -57,8 +59,19 @@ public class PurchaseUpgrade : MonoBehaviour
                     subsequentupgrades.SetActive(true);
                 }
             }
+            if (UpgradeBranch == true)
+            {
+                foreach (GameObject rivalup in rivalupgrades)
+                {
+                    rivalup.SetActive(false);
+                }
+            }
+
+
             //disable purchase button
-        }else if (uManager.RookUpgradeCosts[purchaseID] > uManager.zombieBucks)
+            buymark.SetActive(true);
+        }
+        else if (uManager.RookUpgradeCosts[purchaseID] > uManager.zombieBucks)
         {
             notEnoughMoney();
         }
@@ -76,7 +89,16 @@ public class PurchaseUpgrade : MonoBehaviour
                     subsequentupgrades.SetActive(true);
                 }
             }
+
+            if (UpgradeBranch == true)
+            {
+                foreach (GameObject rivalup in rivalupgrades)
+                {
+                    rivalup.SetActive(false);
+                }
+            }
             //disable purchase button
+            buymark.SetActive(true);
         }
         else if (uManager.KnightUpgradeCosts[purchaseID] > uManager.zombieBucks)
         {
@@ -96,7 +118,16 @@ public class PurchaseUpgrade : MonoBehaviour
                     subsequentupgrades.SetActive(true);
                 }
             }
+
+            if (UpgradeBranch == true)
+            {
+                foreach (GameObject rivalup in rivalupgrades)
+                {
+                    rivalup.SetActive(false);
+                }
+            }
             //disable purchase button
+            buymark.SetActive(true);
         }
         else if (uManager.BishopUpgradeCosts[purchaseID] > uManager.zombieBucks)
         {
@@ -118,7 +149,16 @@ public class PurchaseUpgrade : MonoBehaviour
                     subsequentupgrades.SetActive(true);
                 }
             }
+
+            if (UpgradeBranch == true)
+            {
+                foreach (GameObject rivalup in rivalupgrades)
+                {
+                    rivalup.SetActive(false);
+                }
+            }
             //disable purchase button
+            buymark.SetActive(true);
         }
         else if (uManager.QueenUpgradeCosts[purchaseID] > uManager.zombieBucks)
         {
@@ -137,7 +177,17 @@ public class PurchaseUpgrade : MonoBehaviour
                     subsequentupgrades.SetActive(true);
                 }
             }
+
+            if (UpgradeBranch == true)
+            {
+                foreach (GameObject rivalup in rivalupgrades)
+                {
+                    rivalup.SetActive(false);
+                }
+            }
+
             //disable purchase button
+            buymark.SetActive(true);
         }
         else if (uManager.KingUpgradeCosts[purchaseID] > uManager.zombieBucks)
         {

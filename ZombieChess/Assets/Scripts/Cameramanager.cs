@@ -10,6 +10,7 @@ public class Cameramanager : MonoBehaviour
     public GameObject enemyCam;
     public GameObject BookCam;
     public GameObject zombookCam;
+    public GameObject loseCam;
     bool isStrategic;
     public bool bookisopen;
     bool zombookopen;
@@ -91,6 +92,18 @@ public class Cameramanager : MonoBehaviour
         enemyCam.SetActive(true);
         BookCam.SetActive(false);
         zombookCam.SetActive(false);
+    }
+
+    public void lose()
+    {
+        strategicCam.SetActive(false);
+        FirstPersoncam.SetActive(false);
+        enemyCam.SetActive(false);
+        BookCam.SetActive(false);
+        zombookCam.SetActive(false);
+        loseCam.SetActive(true);
+        this.enabled = false;
+        
     }
 
 

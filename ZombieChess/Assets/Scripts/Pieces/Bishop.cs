@@ -89,6 +89,8 @@ public class Bishop : MoveablePiece
                 }
             }
         }
+        board.boardAudioController.PlayOneShot(board.playerBishopMartyr, 1.0f);
+
         // delete yourself from existence
         base.Die();
         yield return null;
