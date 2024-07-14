@@ -56,7 +56,6 @@ public class Bishop : MoveablePiece
     {
         if (ismartyr)
         {
-            board.allPieces.Remove((xPos, yPos));
             StartCoroutine(DieSlowly());
             return true;
         }
@@ -91,7 +90,7 @@ public class Bishop : MoveablePiece
             }
         }
         // delete yourself from existence
-        Destroy(gameObject);
+        base.Die();
         yield return null;
     }
 
