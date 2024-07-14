@@ -89,6 +89,7 @@ public class Pawn : MoveablePiece
                 Instantiate(explosion, transform.position, transform.rotation);
                 zom.Die();
             }
+            board.boardAudioController.PlayOneShot(board.playerPawnNuke, 1.0f);
             this.Die();
             return pieceMoved;
         }

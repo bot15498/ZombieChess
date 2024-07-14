@@ -57,15 +57,17 @@ public class Boomer : MoveablePiece, IZombiePiece
         if (isArmed)
         {
             turnsUntilExplode--;
-            //Swell up animation goes here
-            anim.Play("Swell");
 
             if (turnsUntilExplode < 0)
             {
                 // time to explode 
+
+                board.boardAudioController.PlayOneShot(board.zombieBoomerBoom, 1.0f);
+
                 //explode animation
                 Instantiate(bloodexplosion, transform.position, transform.rotation);
                 Die();
+                
                 int numShamblersToSpawn = Random.Range(2, 5);
                 List<BoardTile> freespaces = FreeSpaces(explodeRadius).OrderBy(x => Random.Range(0f, 1f)).ToList();
                 numShamblersToSpawn = Mathf.Min(numShamblersToSpawn, freespaces.Count);
@@ -90,11 +92,15 @@ public class Boomer : MoveablePiece, IZombiePiece
             {
                 // didn't find anything. just arm yourslf.
                 isArmed = true;
+                anim.Play("Swell");
+                board.boardAudioController.PlayOneShot(board.zombieBoomerArm, 1.0f);
             }
             else if (closestEnemy.ManDistance(this) <= alertRadius)
             {
                 // arm myself
                 isArmed = true;
+                anim.Play("Swell");
+                board.boardAudioController.PlayOneShot(board.zombieBoomerArm, 1.0f);
             }
             else if (yPos <= (board.maxYPos - board.minYPos) / 2 + board.minYPos)
             {
@@ -103,6 +109,8 @@ public class Boomer : MoveablePiece, IZombiePiece
                 if (roll >= 0.5)
                 {
                     isArmed = true;
+                    anim.Play("Swell");
+                    board.boardAudioController.PlayOneShot(board.zombieBoomerArm, 1.0f);
                 }
             }
             else

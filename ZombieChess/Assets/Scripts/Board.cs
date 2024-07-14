@@ -28,6 +28,35 @@ public class Board : MonoBehaviour
     public float moveTime = 0.5f;
     public Vector3 spawnrotationoffset;
 
+    [Header("============Audio Settings============")]
+    [Space(10)] // 10 pixels of spacing here.
+
+    public AudioSource boardAudioController;
+
+    public AudioClip playerPieceSelect;
+    public AudioClip playerPieceUnselect;
+    public AudioClip playerPieceMove;
+    public AudioClip playerPieceDeath;
+    public AudioClip playerPawnNuke;
+    public AudioClip playerBishopMartyr;
+    public AudioClip playerKnightPassbyKill;
+
+    public AudioClip zombiePieceSummon;
+    public AudioClip zombieGroan;
+    public AudioClip zombieDeath;
+    public AudioClip zombieHunterLeap;
+    public AudioClip zombieHunterAttack;
+    public AudioClip zombieChargerWindUp;
+    public AudioClip zombieChargerCharge;
+    public AudioClip zombieBoomerArm;
+    public AudioClip zombieBoomerBoom;
+    
+    // public AudioClip loseSound;
+    // public AudioClip loseZombieLunge;
+    // public AudioClip losePlayerScream;
+
+
+
     void Start()
     {
 

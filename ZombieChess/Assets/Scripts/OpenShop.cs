@@ -11,6 +11,11 @@ public class OpenShop : MonoBehaviour
     public bool bookisopen;
     public Animator upgradeanim;
 
+    public AudioSource bookAudioController;
+    public AudioClip bookOpen;
+    public AudioClip bookClose;
+
+
     void Start()
     {
         CM = GameObject.FindGameObjectWithTag("Gamemanager").GetComponent<Cameramanager>();
@@ -38,6 +43,7 @@ public class OpenShop : MonoBehaviour
                 CM.activateBookCam();
                 bookisopen = true;
                 anim.SetBool("openbook", true);
+                this.bookAudioController.PlayOneShot(this.bookOpen, 1.0f);
                 StartCoroutine(ExampleCoroutine());
             }
 
@@ -55,8 +61,8 @@ public class OpenShop : MonoBehaviour
 
     public void bookclose()
     {
-        StartCoroutine(bookclosedelay());
         
+        StartCoroutine(bookclosedelay());
     }
 
 
@@ -83,6 +89,7 @@ public class OpenShop : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
 
         upgradeanim.SetBool("open", false);
+        this.bookAudioController.PlayOneShot(this.bookClose, 1.0f);
 
         //After we have waited 5 seconds print the time again.
         yield return new WaitForSeconds(0.5f);
